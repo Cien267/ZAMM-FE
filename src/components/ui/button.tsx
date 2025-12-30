@@ -19,6 +19,14 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        sky: "bg-sky-500 text-white hover:bg-sky-600 shadow-[0_1px_2px_rgba(14,165,233,0.4)] active:scale-95",
+        soft: "bg-primary/10 text-primary hover:bg-primary/20 border-transparent",
+        glass:
+          "bg-white/10 backdrop-blur-md border border-white/20 text-foreground hover:bg-white/20 shadow-sm",
+        shiny:
+          "bg-gradient-to-b from-primary to-primary/80 text-primary-foreground border-b-2 border-primary/50 shadow-inner hover:brightness-110 active:border-b-0 active:translate-y-[1px]",
+        brutal:
+          "border-2 border-foreground bg-background shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px]",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

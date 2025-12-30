@@ -99,4 +99,14 @@ export const authService = {
       throw error
     }
   },
+  async getAllUser(): Promise<User[]> {
+    try {
+      const response = await api.get<ApiResponse<User[]>>(
+        API_ENDPOINTS.AUTH.ALL_USER
+      )
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
 }

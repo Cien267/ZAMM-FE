@@ -1,6 +1,6 @@
 import { z } from "zod"
-
-export interface User {
+import type { BaseEntity } from "@/types"
+export interface User extends BaseEntity {
   id: string
   email: string
   fullName: string

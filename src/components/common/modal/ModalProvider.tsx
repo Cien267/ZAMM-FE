@@ -70,7 +70,9 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
           )}
 
           {modalConfig?.content && (
-            <div className="py-4">{modalConfig.content}</div>
+            <div className="py-4 overflow-x-hidden overflow-y-auto max-h-[80vh]">
+              {modalConfig.content}
+            </div>
           )}
 
           {modalConfig?.footer && (

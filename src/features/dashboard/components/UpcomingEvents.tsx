@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Calendar } from "lucide-react"
 import { useDashboardData } from "../hooks/useDashboardData"
-import { EVENT_STATUS } from "../../clients/constants"
+import { EVENT_STATUS } from "../../events/constants"
 
 export const UpcomingEvents: React.FC = () => {
   const { upcomingEventQuery } = useDashboardData()

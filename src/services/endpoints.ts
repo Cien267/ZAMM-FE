@@ -10,13 +10,15 @@ export const API_ENDPOINTS = {
     VERIFY_EMAIL: "/auth/verify-email",
     UPDATE_PROFILE: "/auth/update-profile",
     CHANGE_PASSWORD: "/auth/change-password",
+    ALL_USER: "/auth/get-all-users",
   },
-  CLIENTS: {
-    LIST: "/clients",
-    DETAIL: (id: string) => `/clients/${id}`,
-    CREATE: "/clients",
-    UPDATE: (id: string) => `/clients/${id}`,
-    DELETE: (id: string) => `/clients/${id}`,
+  PEOPLE: {
+    BASE: "/people",
+    DETAIL: (id: string) => `/people/${id}`,
+  },
+  COMPANIES: {
+    BASE: "/companies",
+    DETAIL: (id: string) => `/companies/${id}`,
   },
   DASHBOARD: {
     UPCOMING_EVENTS: "/dashboard/upcoming-events",

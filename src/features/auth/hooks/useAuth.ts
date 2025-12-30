@@ -15,6 +15,7 @@ export const authKeys = {
   all: ["auth"] as const,
   me: () => [...authKeys.all, "me"] as const,
   session: () => [...authKeys.all, "session"] as const,
+  users: () => [...authKeys.all, "users"] as const,
 }
 
 export const useAuth = () => {
@@ -119,6 +120,14 @@ export const useAuth = () => {
     }
   }, [isError, logoutStore, navigate])
 
+  const useGetAllUsers = () => {
+    return useQuery({
+      queryKey: authKeys.users(),
+      queryFn: () => authService.getAllUser(),
+      staleTime: 1000 * 60 * 5,
+    })
+  }
+
   return {
     user,
     isAuthenticated,
@@ -151,6 +160,8 @@ export const useAuth = () => {
     changePasswordAsync: changePasswordMutation.mutateAsync,
     isChangingPassword: changePasswordMutation.isPending,
     changePasswordError: changePasswordMutation.error,
+
+    useGetAllUsers,
   }
 }
 

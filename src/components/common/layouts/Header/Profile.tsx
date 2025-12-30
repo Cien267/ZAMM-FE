@@ -1,9 +1,6 @@
-import { useState } from "react"
-import { Lock, CalendarIcon } from "lucide-react"
-import { useForm, type Noop, type RefCallBack } from "react-hook-form"
+import { Lock } from "lucide-react"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { format } from "date-fns"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Form,
@@ -15,15 +12,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
+
 import { useAuth } from "@/features/auth/hooks/useAuth"
 import { Modal } from "@/components/common/modal"
-import { cn } from "@/lib/utils"
 import {
   UpdateProfileSchema,
   type UpdateProfileRequest,
@@ -31,10 +22,10 @@ import {
   type ChangePasswordRequest,
 } from "@/features/auth/types/auth.types"
 import { toast } from "sonner"
+import { DatePicker } from "@/components/common/DatePicker"
 
 const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
   const { user, updateProfileAsync, changePasswordAsync } = useAuth()
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false)
 
   const profileForm = useForm<UpdateProfileRequest>({
     resolver: zodResolver(UpdateProfileSchema),
@@ -46,12 +37,6 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
     },
   })
 
-  const [month, setMonth] = useState<Date>(
-    profileForm.getValues("dateOfBirth")
-      ? new Date(profileForm.getValues("dateOfBirth") as Date)
-      : new Date()
-  )
-
   const passwordForm = useForm<ChangePasswordRequest>({
     resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
@@ -60,29 +45,6 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
       confirmPassword: "",
     },
   })
-
-  const handleDateChange = (
-    field: {
-      onChange: any
-      onBlur?: Noop
-      value?: Date | undefined
-      disabled?: boolean | undefined
-      name?: "dateOfBirth"
-      ref?: RefCallBack
-    },
-    date: Date | undefined
-  ) => {
-    if (!date) {
-      field.onChange(undefined)
-      return
-    }
-    setMonth(date)
-    const normalizedDate = new Date(date)
-    normalizedDate.setHours(12, 0, 0, 0)
-    field.onChange(normalizedDate)
-
-    setIsCalendarOpen(false)
-  }
 
   const onSubmit = async (data: UpdateProfileRequest) => {
     try {
@@ -151,48 +113,14 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Date Of Birth</FormLabel>
-                      <Popover
-                        open={isCalendarOpen}
-                        onOpenChange={setIsCalendarOpen}
-                      >
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value &&
-                              field.value instanceof Date &&
-                              !isNaN(field.value.getTime()) ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            captionLayout="dropdown"
-                            selected={
-                              field.value instanceof Date
-                                ? field.value
-                                : field.value
-                                ? new Date(field.value)
-                                : undefined
-                            }
-                            month={month}
-                            onMonthChange={setMonth}
-                            onSelect={(date) => handleDateChange(field, date)}
-                            disabled={(date) => date > new Date()}
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <FormControl>
+                        <DatePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Pick a date"
+                          disableFutureDates
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}

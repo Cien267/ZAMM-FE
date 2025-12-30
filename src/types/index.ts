@@ -1,26 +1,23 @@
-export interface Client {
+export interface BaseEntity {
   id: string
-  name: string
-  email: string
-  phone: string
-  company: string
-  status: "active" | "inactive" | "pending"
-  avatar?: string
   createdAt: string
   updatedAt: string
+  deletedAt?: string
 }
 
 export interface PaginationParams {
-  page: number
-  limit: number
+  pageNumber?: number
+  pageSize?: number
   sortBy?: string
-  sortOrder?: "asc" | "desc"
+  sortDescending?: boolean
 }
 
 export interface PaginatedResponse<T> {
   data: T[]
-  total: number
-  page: number
-  limit: number
+  totalCount: number
+  pageNumber: number
+  pageSize: number
   totalPages: number
+  hasPreviousPage: boolean
+  hasNextPage: boolean
 }
