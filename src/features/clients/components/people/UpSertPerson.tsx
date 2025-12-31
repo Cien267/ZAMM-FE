@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useClients } from "../../hooks/useClients"
@@ -21,7 +22,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { MapPin } from "lucide-react"
+import { MapPin, Loader2 } from "lucide-react"
 import {
   TITLE_OPTIONS,
   GENDER_OPTIONS,
@@ -44,15 +45,24 @@ interface PeopleFormDialogProps {
   person?: Person | null
   brokers: User[]
   onClose: () => void
+  onSubmittingChange?: (isSubmitting: boolean) => void
+  onSubmit: (createdPerson: Person | null, action: "exit" | "add-asset") => void
 }
 
 export const PersonModalContent = ({
   person,
   brokers,
   onClose,
+  onSubmittingChange,
+  onSubmit: handleSubmit,
 }: PeopleFormDialogProps) => {
   const isEditing = !!person
-  const { createPersonAsync, updatePersonAsync } = useClients()
+  const {
+    createPersonAsync,
+    updatePersonAsync,
+    isCreatingPerson,
+    isUpdatingPerson,
+  } = useClients()
 
   const form = useForm<CreatePersonInput | UpdatePersonInput>({
     resolver: zodResolver(isEditing ? UpdatePersonSchema : CreatePersonSchema),
@@ -84,17 +94,26 @@ export const PersonModalContent = ({
 
   const onSubmit = async (data: CreatePersonInput) => {
     try {
+      let createdPerson = null
       if (isEditing && person) {
         await updatePersonAsync({ ...data, id: person.id })
       } else {
-        await createPersonAsync(data)
+        createdPerson = await createPersonAsync(data)
       }
+      const action = (window as any).__personFormAction || "exit"
       onClose()
       form.reset()
+      handleSubmit(createdPerson, action)
     } catch (error) {
       console.error("Form submission error:", error)
     }
   }
+
+  const isSubmitting = isCreatingPerson || isUpdatingPerson
+
+  useEffect(() => {
+    onSubmittingChange?.(isSubmitting)
+  }, [isSubmitting])
 
   return (
     <Form {...form} key={person?.id || "new-person"}>
@@ -121,13 +140,11 @@ export const PersonModalContent = ({
                     className="flex justify-start items-center gap-2"
                   >
                     {TITLE_OPTIONS.map((title) => (
-                      <div>
-                        <RadioGroupItem value={title} id={title}>
-                          <Label htmlFor={title} className="cursor-pointer">
-                            {title}
-                          </Label>
-                        </RadioGroupItem>
-                      </div>
+                      <RadioGroupItem key={title} value={title} id={title}>
+                        <Label htmlFor={title} className="cursor-pointer">
+                          {title}
+                        </Label>
+                      </RadioGroupItem>
                     ))}
                   </RadioGroup>
                   <FormMessage />
@@ -247,13 +264,11 @@ export const PersonModalContent = ({
                     className="flex justify-start items-center gap-2"
                   >
                     {GENDER_OPTIONS.map((gender) => (
-                      <div>
-                        <RadioGroupItem value={gender} id={gender}>
-                          <Label htmlFor={gender} className="cursor-pointer">
-                            {gender}
-                          </Label>
-                        </RadioGroupItem>
-                      </div>
+                      <RadioGroupItem key={gender} value={gender} id={gender}>
+                        <Label htmlFor={gender} className="cursor-pointer">
+                          {gender}
+                        </Label>
+                      </RadioGroupItem>
                     ))}
                   </RadioGroup>
                   <FormMessage />
@@ -274,13 +289,11 @@ export const PersonModalContent = ({
                     className="flex justify-start items-center gap-2"
                   >
                     {MARITAL_STATUS_OPTIONS.map((status) => (
-                      <div>
-                        <RadioGroupItem value={status} id={status}>
-                          <Label htmlFor={status} className="cursor-pointer">
-                            {status}
-                          </Label>
-                        </RadioGroupItem>
-                      </div>
+                      <RadioGroupItem key={status} value={status} id={status}>
+                        <Label htmlFor={status} className="cursor-pointer">
+                          {status}
+                        </Label>
+                      </RadioGroupItem>
                     ))}
                   </RadioGroup>
                   <FormMessage />
@@ -307,13 +320,11 @@ export const PersonModalContent = ({
                     className="flex justify-start items-center gap-2"
                   >
                     {PHONE_PREFERENCE_OPTIONS.map((prefer) => (
-                      <div>
-                        <RadioGroupItem value={prefer} id={prefer}>
-                          <Label htmlFor={prefer} className="cursor-pointer">
-                            {prefer}
-                          </Label>
-                        </RadioGroupItem>
-                      </div>
+                      <RadioGroupItem key={prefer} value={prefer} id={prefer}>
+                        <Label htmlFor={prefer} className="cursor-pointer">
+                          {prefer}
+                        </Label>
+                      </RadioGroupItem>
                     ))}
                   </RadioGroup>
                   <FormMessage />
@@ -440,28 +451,90 @@ export const openUpSertPersonModal = ({
   users: User[]
 }) => {
   const isEditing = !!person
-  Modal.open({
-    title: isEditing ? "Edit Person" : "Add New Person",
-    description: isEditing
-      ? "Update person information"
-      : "Enter person details",
-    content: (
-      <PersonModalContent
-        person={person}
-        brokers={users}
-        onClose={() => Modal.close()}
-      />
-    ),
-    footer: (
-      <div className="flex justify-end gap-3">
-        <Button type="button" variant="outline" onClick={() => Modal.close()}>
-          Cancel
-        </Button>
-        <Button type="submit" form="person-form">
-          {isEditing ? "Update Person" : "Create Person"}
-        </Button>
-      </div>
-    ),
-    className: "max-w-4xl!",
-  })
+  let isSubmitting = false
+
+  const handleFormSubmit = async (
+    createdPerson: Person | null,
+    action: "exit" | "add-asset"
+  ) => {
+    console.log({ action, createdPerson })
+    if (action == "add-asset" && createdPerson?.id) {
+      // openUpSertAssetModal({ person: createdPerson, users })
+    }
+  }
+
+  const updateFooter = () => {
+    Modal.open({
+      title: isEditing ? "Edit Person" : "Add New Person",
+      description: isEditing
+        ? "Update person information"
+        : "Enter person details",
+      content: (
+        <PersonModalContent
+          person={person}
+          brokers={users}
+          onClose={() => Modal.close()}
+          onSubmittingChange={(submitting) => {
+            isSubmitting = submitting
+            updateFooter()
+          }}
+          onSubmit={handleFormSubmit}
+        />
+      ),
+      footer: (
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => Modal.close()}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="person-form"
+            disabled={isSubmitting}
+            onClick={() => {
+              ;(window as any).__personFormAction = "exit"
+            }}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                {isEditing ? "Updating..." : "Creating..."}
+              </>
+            ) : isEditing ? (
+              "Update"
+            ) : (
+              "Create & Exit"
+            )}
+          </Button>
+
+          {!isEditing && (
+            <Button
+              type="submit"
+              form="person-form"
+              disabled={isSubmitting}
+              onClick={() => {
+                ;(window as any).__personFormAction = "add-asset"
+              }}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                "Create & Add Asset"
+              )}
+            </Button>
+          )}
+        </div>
+      ),
+      className: "max-w-4xl!",
+    })
+  }
+
+  updateFooter()
 }

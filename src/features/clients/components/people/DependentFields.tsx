@@ -149,16 +149,15 @@ export const DependentFields = ({ control }: DependentFieldsProps) => {
                         className="flex justify-start items-center gap-2"
                       >
                         {GENDER_OPTIONS.map((gender) => (
-                          <div>
-                            <RadioGroupItem value={gender} id={gender}>
-                              <Label
-                                htmlFor={gender}
-                                className="cursor-pointer"
-                              >
-                                {gender}
-                              </Label>
-                            </RadioGroupItem>
-                          </div>
+                          <RadioGroupItem
+                            key={gender}
+                            value={gender}
+                            id={gender}
+                          >
+                            <Label htmlFor={gender} className="cursor-pointer">
+                              {gender}
+                            </Label>
+                          </RadioGroupItem>
                         ))}
                       </RadioGroup>
                       <FormMessage />
@@ -207,6 +206,7 @@ export const DependentFields = ({ control }: DependentFieldsProps) => {
                         className="resize-none"
                         rows={3}
                         {...field}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />

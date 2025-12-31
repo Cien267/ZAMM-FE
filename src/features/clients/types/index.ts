@@ -62,17 +62,20 @@ const DependentSchema = z.object({
     .string()
     .max(VALIDATION.DEPENDENT.GENDER_MAX)
     .optional()
+    .nullable()
     .or(z.literal("")),
   relationship: z
     .string()
     .max(VALIDATION.DEPENDENT.RELATIONSHIP_MAX)
     .optional()
+    .nullable()
     .or(z.literal("")),
-  isStudent: z.boolean().optional(),
+  isStudent: z.boolean().optional().nullable(),
   notes: z
     .string()
     .max(VALIDATION.DEPENDENT.NOTES_MAX)
     .optional()
+    .nullable()
     .or(z.literal("")),
 })
 
