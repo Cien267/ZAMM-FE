@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner" // or your toast library
-import { clientKeys } from "./useClientQueries"
+import { clientKeys } from "../constants"
 import { clientService } from "../services/clientService"
 import type {
   CreatePersonInput,
@@ -20,7 +20,7 @@ export const useClients = () => {
       toast.success("Person created successfully!")
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to create person")
+      toast.error(error.message || "Failed to create person")
       console.error("Create person error:", error)
     },
   })
@@ -35,7 +35,7 @@ export const useClients = () => {
       toast.success("Person updated successfully!")
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to update person")
+      toast.error(error.message || "Failed to update person")
       console.error("Update person error:", error)
     },
   })
@@ -47,7 +47,7 @@ export const useClients = () => {
       toast.success("Person deleted successfully!")
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete person")
+      toast.error(error.message || "Failed to delete person")
       console.error("Delete person error:", error)
     },
   })
@@ -60,7 +60,7 @@ export const useClients = () => {
       toast.success("Company created successfully!")
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to create company")
+      toast.error(error.message || "Failed to create company")
       console.error("Create company error:", error)
     },
   })
@@ -75,7 +75,7 @@ export const useClients = () => {
       toast.success("Company updated successfully!")
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to update company")
+      toast.error(error.message || "Failed to update company")
       console.error("Update company error:", error)
     },
   })
@@ -87,7 +87,7 @@ export const useClients = () => {
       toast.success("Company deleted successfully!")
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to delete company")
+      toast.error(error.message || "Failed to delete company")
       console.error("Delete company error:", error)
     },
   })

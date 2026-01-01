@@ -44,7 +44,6 @@ import {
   MARITAL_STATUS_VARIANT_MAPPING,
 } from "../../constants"
 import { openUpSertPersonModal } from "./UpSertPerson"
-import { useAuth } from "@/features/auth/hooks/useAuth"
 
 export const PeopleTable = () => {
   const [query, setQuery] = useState<PersonQuery>({
@@ -52,14 +51,17 @@ export const PeopleTable = () => {
     pageSize: DEFAULT_PAGE_SIZE,
     sortBy: "Id",
     sortDescending: true,
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    brokerId: "",
   })
 
   const [deletingPerson, setDeletingPerson] = useState<Person | null>(null)
 
   const { usePeopleList } = useClientQueries()
-  const { useGetAllUsers } = useAuth()
-  const { data, isLoading, error } = usePeopleList(query)
-  const { data: users = [] } = useGetAllUsers()
+  const { data: people, isLoading, error } = usePeopleList(query)
 
   const { deletePerson, isDeletingPerson } = useClients()
 
@@ -120,7 +122,6 @@ export const PeopleTable = () => {
   return (
     <div className="space-y-4">
       <PeopleFilters
-        brokers={users}
         onFilterChange={handleFilterChange}
         onReset={handleResetFilters}
       />
@@ -128,7 +129,11 @@ export const PeopleTable = () => {
       <div className="flex justify-end">
         <Button
           variant={"sky"}
-          onClick={() => openUpSertPersonModal({ person: null, users: users })}
+          onClick={() =>
+            openUpSertPersonModal({
+              person: null,
+            })
+          }
         >
           <Plus className="h-4 w-4" />
           Add Person
@@ -155,7 +160,7 @@ export const PeopleTable = () => {
                   <Loader2 className="h-8 w-8 animate-spin mx-auto" />
                 </TableCell>
               </TableRow>
-            ) : data?.data.length === 0 ? (
+            ) : people?.data.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={7}
@@ -165,7 +170,7 @@ export const PeopleTable = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              data?.data.map((person) => (
+              people?.data.map((person) => (
                 <TableRow key={person.id}>
                   <TableCell className="font-medium">
                     {person.fullName}
@@ -219,7 +224,9 @@ export const PeopleTable = () => {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() =>
-                            openUpSertPersonModal({ person, users })
+                            openUpSertPersonModal({
+                              person,
+                            })
                           }
                         >
                           <Pencil className="h-4 w-4 mr-2" />
@@ -242,29 +249,18 @@ export const PeopleTable = () => {
         </Table>
       </div>
 
-      {data && data.totalCount > 0 && (
+      {people && people.totalCount > 0 && (
         <Pagination
-          currentPage={data.pageNumber}
-          totalPages={data.totalPages}
+          currentPage={people.pageNumber}
+          totalPages={people.totalPages}
           pageSize={query.pageSize || DEFAULT_PAGE_SIZE}
-          totalCount={data.totalCount}
-          hasNextPage={data.hasNextPage}
-          hasPreviousPage={data.hasPreviousPage}
+          totalCount={people.totalCount}
+          hasNextPage={people.hasNextPage}
+          hasPreviousPage={people.hasPreviousPage}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
         />
       )}
-
-      {/* <PeopleFormDialog
-        open={isCreateDialogOpen || !!editingPerson}
-        onOpenChange={(open: any) => {
-          if (!open) {
-            setIsCreateDialogOpen(false)
-            setEditingPerson(null)
-          }
-        }}
-        person={editingPerson}
-      /> */}
 
       <AlertDialog
         open={!!deletingPerson}

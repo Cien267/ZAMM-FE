@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 import { useDebounce } from "@/hooks/useDebounce"
 import type { PersonQuery } from "../../types"
-import type { User } from "@/features/auth/types/auth.types"
 import {
   Select,
   SelectContent,
@@ -12,18 +11,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useAllUsers } from "@/hooks/useSharedData"
 
 interface PeopleFiltersProps {
   onFilterChange: (filters: Partial<PersonQuery>) => void
   onReset: () => void
-  brokers: User[]
 }
 
 export const PeopleFilters = ({
   onFilterChange,
   onReset,
-  brokers,
 }: PeopleFiltersProps) => {
+  const { data: users } = useAllUsers()
+  let brokers = users || []
+
   const [filters, setFilters] = useState<Partial<PersonQuery>>({
     firstName: "",
     lastName: "",

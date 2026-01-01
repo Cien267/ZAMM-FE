@@ -1,18 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { clientService } from "../services/clientService"
 import type { PersonQuery, CompanyQuery } from "../types"
-
-export const clientKeys = {
-  all: ["clients"] as const,
-  people: () => [...clientKeys.all, "people"] as const,
-  peopleList: (query: any) => [...clientKeys.people(), "list", query] as const,
-  personDetail: (id: string) => [...clientKeys.people(), "detail", id] as const,
-  companies: () => [...clientKeys.all, "companies"] as const,
-  companiesList: (query: any) =>
-    [...clientKeys.companies(), "list", query] as const,
-  companyDetail: (id: string) =>
-    [...clientKeys.companies(), "detail", id] as const,
-}
+import { clientKeys } from "../constants"
 
 export const useClientQueries = () => {
   // People queries

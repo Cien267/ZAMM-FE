@@ -17,8 +17,16 @@ export const API_ENDPOINTS = {
     DETAIL: (id: string) => `/people/${id}`,
   },
   COMPANIES: {
-    BASE: "/companies",
-    DETAIL: (id: string) => `/companies/${id}`,
+    BASE: "/company",
+    DETAIL: (id: string) => `/company/${id}`,
+  },
+  ASSET: {
+    BASE: "/asset",
+    DETAIL: (id: string) => `/asset/${id}`,
+  },
+  LIABILITY: {
+    BASE: "/liability",
+    DETAIL: (id: string) => `/liability/${id}`,
   },
   DASHBOARD: {
     UPCOMING_EVENTS: "/dashboard/upcoming-events",

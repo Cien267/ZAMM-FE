@@ -151,3 +151,15 @@ export const COMPANY_ROLE_OPTIONS = [
   "Authorized Signatory",
   "Other",
 ]
+
+export const clientKeys = {
+  all: ["clients"] as const,
+  people: () => [...clientKeys.all, "people"] as const,
+  peopleList: (query: any) => [...clientKeys.people(), "list", query] as const,
+  personDetail: (id: string) => [...clientKeys.people(), "detail", id] as const,
+  companies: () => [...clientKeys.all, "companies"] as const,
+  companiesList: (query: any) =>
+    [...clientKeys.companies(), "list", query] as const,
+  companyDetail: (id: string) =>
+    [...clientKeys.companies(), "detail", id] as const,
+}

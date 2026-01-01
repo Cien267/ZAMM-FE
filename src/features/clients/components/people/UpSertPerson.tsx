@@ -39,11 +39,11 @@ import type { Person, UpdatePersonInput } from "../../types"
 import { Modal } from "@/components/common/modal"
 import { DatePicker } from "@/components/common/DatePicker"
 import { InputNumber } from "@/components/common/InputNumber"
-import type { User } from "@/features/auth/types/auth.types"
+import { openUpSertAssetModal } from "@/features/assets/components/UpSertAsset"
+import { useAllUsers } from "@/hooks/useSharedData"
 
 interface PeopleFormDialogProps {
   person?: Person | null
-  brokers: User[]
   onClose: () => void
   onSubmittingChange?: (isSubmitting: boolean) => void
   onSubmit: (createdPerson: Person | null, action: "exit" | "add-asset") => void
@@ -51,7 +51,6 @@ interface PeopleFormDialogProps {
 
 export const PersonModalContent = ({
   person,
-  brokers,
   onClose,
   onSubmittingChange,
   onSubmit: handleSubmit,
@@ -63,6 +62,9 @@ export const PersonModalContent = ({
     isCreatingPerson,
     isUpdatingPerson,
   } = useClients()
+
+  const { data: users } = useAllUsers()
+  let brokers = users || []
 
   const form = useForm<CreatePersonInput | UpdatePersonInput>({
     resolver: zodResolver(isEditing ? UpdatePersonSchema : CreatePersonSchema),
@@ -76,12 +78,12 @@ export const PersonModalContent = ({
         ? new Date(person.dateOfBirth)
         : undefined,
       notifyOfBirthday: person?.notifyOfBirthday || false,
-      gender: person?.gender || "Male",
-      maritalStatus: person?.maritalStatus || "Single",
+      gender: person?.gender || GENDER_OPTIONS[0],
+      maritalStatus: person?.maritalStatus || MARITAL_STATUS_OPTIONS[0],
       email: person?.email || "",
       phoneWork: person?.phoneWork || "",
       phoneMobile: person?.phoneMobile || "",
-      phonePreference: person?.phonePreference || "Mobile",
+      phonePreference: person?.phonePreference || PHONE_PREFERENCE_OPTIONS[0],
       actingOnTrust: person?.actingOnTrust || false,
       trustName: person?.trustName || "",
       spouseId: person?.spouseId || null,
@@ -445,10 +447,8 @@ export const PersonModalContent = ({
 
 export const openUpSertPersonModal = ({
   person,
-  users,
 }: {
   person: Person | null
-  users: User[]
 }) => {
   const isEditing = !!person
   let isSubmitting = false
@@ -457,9 +457,12 @@ export const openUpSertPersonModal = ({
     createdPerson: Person | null,
     action: "exit" | "add-asset"
   ) => {
-    console.log({ action, createdPerson })
     if (action == "add-asset" && createdPerson?.id) {
-      // openUpSertAssetModal({ person: createdPerson, users })
+      openUpSertAssetModal({
+        asset: null,
+        initialPerson: createdPerson,
+        initialCompany: null,
+      })
     }
   }
 
@@ -472,7 +475,6 @@ export const openUpSertPersonModal = ({
       content: (
         <PersonModalContent
           person={person}
-          brokers={users}
           onClose={() => Modal.close()}
           onSubmittingChange={(submitting) => {
             isSubmitting = submitting
