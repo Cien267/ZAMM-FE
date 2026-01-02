@@ -23,13 +23,6 @@ export default defineConfig([
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-    },
-  },
-  {
-    plugins: {
-      "react-refresh": reactRefresh,
-    },
-    rules: {
       "react-refresh/only-export-components": "off",
     },
   },

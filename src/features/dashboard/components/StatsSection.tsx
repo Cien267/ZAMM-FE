@@ -1,33 +1,19 @@
-import { useState } from "react"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Eye, EyeOff, Users, FileText, DollarSign } from "lucide-react"
-import type { LoanStats } from "../types"
-import { useDashboardData } from "../hooks/useDashboardData"
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Eye, EyeOff, Users, FileText, DollarSign } from "lucide-react";
+import { useDashboardData } from "../hooks/useDashboardData";
+import { formatCurrency } from "@/lib/utils";
 
 export const StatsSection: React.FC = () => {
-  const { loanBookQuery } = useDashboardData()
-  const { data: stats, error, isLoading } = loanBookQuery
+  const { loanBookQuery } = useDashboardData();
+  const { data: stats, error, isLoading } = loanBookQuery;
 
-  const [isRevealed, setIsRevealed] = useState(false)
+  const [isRevealed, setIsRevealed] = useState(false);
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error: {error.message}</div>
-  if (!stats) return <div>No data</div>
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-AU", {
-      style: "currency",
-      currency: "AUD",
-      maximumFractionDigits: 0,
-    }).format(value)
-  }
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!stats) return <div>No data</div>;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -115,5 +101,5 @@ export const StatsSection: React.FC = () => {
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};

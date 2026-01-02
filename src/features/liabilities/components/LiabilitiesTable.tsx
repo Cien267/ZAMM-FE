@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useAssetQueries } from "../hooks/useAssetQueries";
-import { useAssets } from "../hooks/useAssets";
-import { AssetsFilters } from "./AssetsFilters";
+import { useLiabilityQueries } from "../hooks/useLiabilityQueries";
+import { useLiabilities } from "../hooks/useLiabilities";
+import { LiabilitiesFilters } from "./LiabilitiesFilters";
 import { Pagination } from "@/components/common/Pagination";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -38,26 +37,27 @@ import {
   Loader2,
 } from "lucide-react";
 import { DEFAULT_PAGE_SIZE } from "@/constants/pagination";
-import type { AssetQuery, Asset } from "../types";
-import { openUpSertAssetModal } from "./UpSertAsset";
+import type { LiabilityQuery, Liability } from "../types";
 import { formatCurrency } from "@/lib/utils";
 import { ErrorState } from "@/components/common/ErrorState";
 
-export const AssetsTable = () => {
-  const [query, setQuery] = useState<AssetQuery>({
+export const LiabilitiesTable = () => {
+  const [query, setQuery] = useState<LiabilityQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
     sortBy: "Id",
     sortDescending: true,
   });
 
-  const [deletingAssetId, setDeletingAssetId] = useState<string | null>(null);
+  const [deletingLiabilityId, setDeletingLiabilityId] = useState<string | null>(
+    null,
+  );
 
-  const { useAssetsList } = useAssetQueries();
-  const { data, isLoading, error } = useAssetsList(query);
-  const { deleteAsset, isDeletingAsset } = useAssets();
+  const { useLiabilitiesList } = useLiabilityQueries();
+  const { data, isLoading, error } = useLiabilitiesList(query);
+  const { deleteLiability, isDeletingLiability } = useLiabilities();
 
-  const handleFilterChange = (filters: Partial<AssetQuery>) => {
+  const handleFilterChange = (filters: Partial<LiabilityQuery>) => {
     setQuery((prev) => ({
       ...prev,
       ...filters,
@@ -82,52 +82,31 @@ export const AssetsTable = () => {
     setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }));
   };
 
+  const handleEdit = (liability: Liability) => {
+    // TODO: Open edit modal
+    console.log("Edit liability:", liability);
+  };
+
   const handleDelete = (id: string) => {
-    setDeletingAssetId(id);
+    setDeletingLiabilityId(id);
   };
 
   const confirmDelete = () => {
-    if (deletingAssetId) {
-      deleteAsset(deletingAssetId, {
+    if (deletingLiabilityId) {
+      deleteLiability(deletingLiabilityId, {
         onSuccess: () => {
-          setDeletingAssetId(null);
+          setDeletingLiabilityId(null);
         },
       });
     }
   };
 
-  const handleView = (asset: Asset) => {
-    console.log("View asset:", asset);
+  const handleView = (liability: Liability) => {
+    console.log("View liability:", liability);
   };
 
-  const formatAddress = (asset: Asset) => {
-    if (!asset.address) return "-";
-    const parts = [
-      asset.address.unitNumber,
-      asset.address.streetNumber,
-      asset.address.streetName,
-      asset.address.suburb,
-      asset.address.state,
-    ].filter(Boolean);
-    return parts.length > 0 ? parts.join(" ") : "-";
-  };
-
-  const getOwnershipSummary = (asset: Asset) => {
-    const peopleCount = asset.assetPeople?.length || 0;
-    const companiesCount = asset.assetCompanies?.length || 0;
-    const total = peopleCount + companiesCount;
-
-    if (total === 0) return "-";
-
-    const parts = [];
-    if (peopleCount > 0)
-      parts.push(`${peopleCount} ${peopleCount === 1 ? "Person" : "People"}`);
-    if (companiesCount > 0)
-      parts.push(
-        `${companiesCount} ${companiesCount === 1 ? "Company" : "Companies"}`,
-      );
-
-    return parts.join(", ");
+  const handleAddLiability = () => {
+    console.log("Add liability");
   };
 
   if (error) {
@@ -136,23 +115,15 @@ export const AssetsTable = () => {
 
   return (
     <div className="space-y-4">
-      <AssetsFilters
+      <LiabilitiesFilters
         onFilterChange={handleFilterChange}
         onReset={handleResetFilters}
       />
 
       <div className="flex justify-end">
-        <Button
-          onClick={() =>
-            openUpSertAssetModal({
-              asset: null,
-              initialPerson: null, // TODO: handle when in person or in company
-              initialCompany: null, // TODO: handle when in person or in company
-            })
-          }
-        >
+        <Button onClick={handleAddLiability}>
           <Plus className="h-4 w-4 mr-2" />
-          Add Asset
+          Add Liability
         </Button>
       </div>
 
@@ -161,11 +132,9 @@ export const AssetsTable = () => {
           <TableHeader>
             <TableRow className="bg-muted/50">
               <TableHead className="font-semibold">Name</TableHead>
-              <TableHead className="font-semibold">Address</TableHead>
-              <TableHead className="font-semibold">Type</TableHead>
-              <TableHead className="font-semibold">Value</TableHead>
-              <TableHead className="font-semibold">Investment</TableHead>
-              <TableHead className="font-semibold">Ownership</TableHead>
+              <TableHead className="font-semibold">Lender</TableHead>
+              <TableHead className="font-semibold">Loan</TableHead>
+              <TableHead className="font-semibold">Amount</TableHead>
               <TableHead className="text-right font-semibold">
                 Actions
               </TableHead>
@@ -184,41 +153,24 @@ export const AssetsTable = () => {
                   colSpan={7}
                   className="text-center h-64 text-muted-foreground"
                 >
-                  No assets found
+                  No liabilities found
                 </TableCell>
               </TableRow>
             ) : (
-              data?.data.map((asset) => (
-                <TableRow key={asset.id}>
-                  <TableCell className="font-medium">{asset.name}</TableCell>
-                  <TableCell className="max-w-xs truncate">
-                    {formatAddress(asset)}
-                  </TableCell>
-                  <TableCell>
-                    {asset.propertyType ? (
-                      <Badge variant="outline" className="font-normal">
-                        {asset.propertyType}
-                      </Badge>
-                    ) : (
-                      "-"
-                    )}
+              data?.data.map((liability) => (
+                <TableRow key={liability.id}>
+                  <TableCell className="font-medium">
+                    {liability.name}
                   </TableCell>
                   <TableCell className="font-medium">
-                    {formatCurrency(asset.value)}
+                    {liability.lenderName}
                   </TableCell>
-                  <TableCell>
-                    {asset.isInvestment ? (
-                      <Badge variant="default" className="font-normal">
-                        Investment
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary" className="font-normal">
-                        Non-Investment
-                      </Badge>
-                    )}
+                  <TableCell className="font-medium">
+                    {liability.loanName}
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {getOwnershipSummary(asset)}
+
+                  <TableCell className="font-medium">
+                    {formatCurrency(liability.amount)}
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -228,24 +180,16 @@ export const AssetsTable = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleView(asset)}>
+                        <DropdownMenuItem onClick={() => handleView(liability)}>
                           <Eye className="h-4 w-4 mr-2" />
                           View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() =>
-                            openUpSertAssetModal({
-                              asset: asset,
-                              initialPerson: null, // TODO: handle when in person or in company
-                              initialCompany: null, // TODO: handle when in person or in company
-                            })
-                          }
-                        >
+                        <DropdownMenuItem onClick={() => handleEdit(liability)}>
                           <Pencil className="h-4 w-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDelete(asset.id)}
+                          onClick={() => handleDelete(liability.id)}
                           className="text-destructive"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
@@ -275,27 +219,27 @@ export const AssetsTable = () => {
       )}
 
       <AlertDialog
-        open={!!deletingAssetId}
-        onOpenChange={(open) => !open && setDeletingAssetId(null)}
+        open={!!deletingLiabilityId}
+        onOpenChange={(open) => !open && setDeletingLiabilityId(null)}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete this
-              asset and all associated data.
+              liability and all associated data.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeletingAsset}>
+            <AlertDialogCancel disabled={isDeletingLiability}>
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              disabled={isDeletingAsset}
+              disabled={isDeletingLiability}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeletingAsset ? (
+              {isDeletingLiability ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   Deleting...

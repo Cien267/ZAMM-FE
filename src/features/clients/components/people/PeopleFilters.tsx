@@ -1,29 +1,29 @@
-import { useState, useEffect } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
-import { useDebounce } from "@/hooks/useDebounce"
-import type { PersonQuery } from "../../types"
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { useDebounce } from "@/hooks/useDebounce";
+import type { PersonQuery } from "../../types";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useAllUsers } from "@/hooks/useSharedData"
+} from "@/components/ui/select";
+import { useAllUsers } from "@/hooks/useSharedData";
 
 interface PeopleFiltersProps {
-  onFilterChange: (filters: Partial<PersonQuery>) => void
-  onReset: () => void
+  onFilterChange: (filters: Partial<PersonQuery>) => void;
+  onReset: () => void;
 }
 
 export const PeopleFilters = ({
   onFilterChange,
   onReset,
 }: PeopleFiltersProps) => {
-  const { data: users } = useAllUsers()
-  let brokers = users || []
+  const { data: users } = useAllUsers();
+  const brokers = users || [];
 
   const [filters, setFilters] = useState<Partial<PersonQuery>>({
     firstName: "",
@@ -31,17 +31,18 @@ export const PeopleFilters = ({
     email: "",
     phone: "",
     brokerId: "",
-  })
+  });
 
-  const debouncedFilters = useDebounce(filters, 500)
+  const debouncedFilters = useDebounce(filters, 500);
 
   useEffect(() => {
-    onFilterChange(debouncedFilters)
-  }, [debouncedFilters])
+    onFilterChange(debouncedFilters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedFilters]);
 
   const handleChange = (field: keyof PersonQuery, value: string) => {
-    setFilters((prev) => ({ ...prev, [field]: value }))
-  }
+    setFilters((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleReset = () => {
     const emptyFilters = {
@@ -50,12 +51,12 @@ export const PeopleFilters = ({
       email: "",
       phone: "",
       brokerId: "",
-    }
-    setFilters(emptyFilters)
-    onReset()
-  }
+    };
+    setFilters(emptyFilters);
+    onReset();
+  };
 
-  const hasActiveFilters = Object.values(filters).some((value) => value !== "")
+  const hasActiveFilters = Object.values(filters).some((value) => value !== "");
 
   return (
     <div className="space-y-4 pb-10">
@@ -124,5 +125,5 @@ export const PeopleFilters = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};

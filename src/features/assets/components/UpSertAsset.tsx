@@ -1,7 +1,7 @@
-import { useEffect } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useAssets } from "../hooks/useAssets"
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAssets } from "../hooks/useAssets";
 import {
   Form,
   FormControl,
@@ -9,50 +9,51 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-import { MapPin, Loader2 } from "lucide-react"
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { MapPin, Loader2 } from "lucide-react";
 import {
   ZONING_TYPES,
   PROPERTY_TYPES,
   RENTAL_INCOME_FREQUENCIES,
-} from "../constants"
+} from "../constants";
 import {
   CreateAssetSchema,
   UpdateAssetSchema,
   type CreateAssetInput,
   type UpdateAssetInput,
   type Asset,
-} from "../types"
-import { Modal } from "@/components/common/modal"
-import { DatePicker } from "@/components/common/DatePicker"
-import { InputNumber } from "@/components/common/InputNumber"
-import type { Person } from "@/features/clients/types"
-import type { Company } from "@/features/clients/types"
-import { OwnershipFields } from "./OwnershipFields"
-import { LinkedLiabilitiesFields } from "./LinkedLiabilitiesFields"
+} from "../types";
+import { Modal } from "@/components/common/modal";
+import { DatePicker } from "@/components/common/DatePicker";
+import { InputNumber } from "@/components/common/InputNumber";
+import type { Person } from "@/features/clients/types";
+import type { Company } from "@/features/clients/types";
+import { AssetOwnershipFields } from "./AssetOwnershipFields";
+import { LinkedLiabilitiesFields } from "./LinkedLiabilitiesFields";
+import { openUpSertLiabilityModal } from "@/features/liabilities/components/UpsertLiability";
 
 interface AssetFormDialogProps {
-  initialPerson: Person | null
-  initialCompany: Company | null
-  asset?: Asset | null
-  onClose: () => void
-  onSubmittingChange?: (isSubmitting: boolean) => void
+  initialPerson: Person | null;
+  initialCompany: Company | null;
+  asset?: Asset | null;
+  onClose: () => void;
+  onSubmittingChange?: (isSubmitting: boolean) => void;
   onSubmit: (
     createdAsset: Asset | null,
-    action: "exit" | "add-liability"
-  ) => void
+    action: "exit" | "add-liability",
+  ) => void;
 }
 
 export const AssetModalContent = ({
@@ -63,13 +64,13 @@ export const AssetModalContent = ({
   onSubmittingChange,
   onSubmit: handleSubmit,
 }: AssetFormDialogProps) => {
-  const isEditing = !!asset
+  const isEditing = !!asset;
   const {
     createAssetAsync,
     updateAssetAsync,
     isCreatingAsset,
     isUpdatingAsset,
-  } = useAssets()
+  } = useAssets();
 
   const form = useForm<CreateAssetInput | UpdateAssetInput>({
     resolver: zodResolver(isEditing ? UpdateAssetSchema : CreateAssetSchema),
@@ -125,15 +126,15 @@ export const AssetModalContent = ({
       assetLiabilities: asset?.assetLiabilities || [],
       ...(isEditing && asset ? { id: asset.id } : {}),
     },
-  })
+  });
 
-  const isInvestment = form.watch("isInvestment")
-  const addressOffPlan = form.watch("addressOffPlan")
+  const isInvestment = form.watch("isInvestment");
+  const addressOffPlan = form.watch("addressOffPlan");
 
   useEffect(() => {
     if (isInvestment) {
       if (!isEditing) {
-        const currentFrequency = form.getValues("rentalIncomeFrequency")
+        const currentFrequency = form.getValues("rentalIncomeFrequency");
         if (!currentFrequency) {
           setTimeout(() => {
             form.setValue(
@@ -142,46 +143,47 @@ export const AssetModalContent = ({
               {
                 shouldValidate: true,
                 shouldDirty: true,
-              }
-            )
-          }, 0)
+              },
+            );
+          }, 0);
         }
       }
     } else {
-      form.setValue("rentalIncomeValue", null)
-      form.setValue("rentalIncomeFrequency", "")
+      form.setValue("rentalIncomeValue", null);
+      form.setValue("rentalIncomeFrequency", "");
     }
-  }, [isInvestment, isEditing, form])
+  }, [isInvestment, isEditing, form]);
 
   const onSubmit = async (data: CreateAssetInput) => {
     try {
-      let createdAsset = null
+      let createdAsset = null;
       if (isEditing && asset) {
-        await updateAssetAsync({ ...data, id: asset.id })
+        await updateAssetAsync({ ...data, id: asset.id });
       } else {
-        createdAsset = await createAssetAsync(data)
+        createdAsset = await createAssetAsync(data);
       }
-      const action = (window as any).__assetFormAction || "exit"
-      onClose()
-      form.reset()
-      handleSubmit(createdAsset, action)
+      const action = (window as any).__assetFormAction || "exit";
+      onClose();
+      form.reset();
+      handleSubmit(createdAsset, action);
     } catch (error) {
-      console.error("Asset submission error:", error)
+      console.error("Asset submission error:", error);
     }
-  }
+  };
 
-  const isSubmitting = isCreatingAsset || isUpdatingAsset
+  const isSubmitting = isCreatingAsset || isUpdatingAsset;
 
   useEffect(() => {
-    onSubmittingChange?.(isSubmitting)
-  }, [isSubmitting])
+    onSubmittingChange?.(isSubmitting);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitting]);
 
   return (
     <Form {...form} key={asset?.id || "new-asset"}>
       <form
         id="asset-form"
         onSubmit={form.handleSubmit(onSubmit, (errors) =>
-          console.log("Validation Errors:", errors)
+          console.log("Validation Errors:", errors),
         )}
         className="space-y-6"
       >
@@ -236,7 +238,7 @@ export const AssetModalContent = ({
                   <FormLabel>Property Type</FormLabel>
                   <Select
                     onValueChange={(value) => {
-                      field.onChange(value)
+                      field.onChange(value);
                     }}
                     value={field.value || ""}
                   >
@@ -272,9 +274,6 @@ export const AssetModalContent = ({
                     <InputNumber
                       placeholder="Enter value"
                       {...field}
-                      onChange={(val) =>
-                        field.onChange(val === "" ? null : Number(val))
-                      }
                       allowDecimal={true}
                       maxDecimals={2}
                     />
@@ -567,8 +566,7 @@ export const AssetModalContent = ({
                         <InputNumber
                           placeholder="Enter postcode"
                           {...field}
-                          allowDecimal={true}
-                          maxDecimals={2}
+                          allowDecimal={false}
                         />
                       </FormControl>
                       <FormMessage />
@@ -580,37 +578,41 @@ export const AssetModalContent = ({
           </div>
         </div>
         <LinkedLiabilitiesFields control={form.control} />
-        <OwnershipFields
+        <AssetOwnershipFields
           control={form.control}
           type={initialPerson ? "people" : "company"}
           setValue={form.setValue}
         />
       </form>
     </Form>
-  )
-}
+  );
+};
 
 export const openUpSertAssetModal = ({
   asset,
   initialPerson,
   initialCompany,
 }: {
-  asset: Asset | null
-  initialPerson: Person | null
-  initialCompany: Company | null
+  asset: Asset | null;
+  initialPerson: Person | null;
+  initialCompany: Company | null;
 }) => {
-  const isEditing = !!asset
-  let isSubmitting = false
+  const isEditing = !!asset;
+  let isSubmitting = false;
 
   const handleFormSubmit = async (
     createdAsset: Asset | null,
-    action: "exit" | "add-liability"
+    action: "exit" | "add-liability",
   ) => {
-    console.log({ action, createdAsset })
     if (action == "add-liability" && createdAsset?.id) {
-      // openUpSertLiabilityModal({ asset: createdAsset, users })
+      openUpSertLiabilityModal({
+        liability: null,
+        initialCompany: initialCompany,
+        initialPerson: initialPerson,
+        initialAsset: createdAsset,
+      });
     }
-  }
+  };
 
   const updateFooter = () => {
     Modal.open({
@@ -625,8 +627,8 @@ export const openUpSertAssetModal = ({
           initialCompany={initialCompany}
           onClose={() => Modal.close()}
           onSubmittingChange={(submitting) => {
-            isSubmitting = submitting
-            updateFooter()
+            isSubmitting = submitting;
+            updateFooter();
           }}
           onSubmit={handleFormSubmit}
         />
@@ -646,10 +648,10 @@ export const openUpSertAssetModal = ({
             form="asset-form"
             disabled={isSubmitting}
             onClick={() => {
-              ;(window as any).__assetFormAction = "exit"
+              (window as any).__assetFormAction = "exit";
             }}
           >
-            {isSubmitting ? (
+            {isSubmitting && (window as any).__assetFormAction === "exit" ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 {isEditing ? "Updating..." : "Creating..."}
@@ -667,10 +669,11 @@ export const openUpSertAssetModal = ({
               form="asset-form"
               disabled={isSubmitting}
               onClick={() => {
-                ;(window as any).__assetFormAction = "add-liability"
+                (window as any).__assetFormAction = "add-liability";
               }}
             >
-              {isSubmitting ? (
+              {isSubmitting &&
+              (window as any).__assetFormAction === "add-liability" ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   Creating...
@@ -683,8 +686,8 @@ export const openUpSertAssetModal = ({
         </div>
       ),
       className: "max-w-4xl!",
-    })
-  }
+    });
+  };
 
-  updateFooter()
-}
+  updateFooter();
+};

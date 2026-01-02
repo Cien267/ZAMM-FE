@@ -1,7 +1,7 @@
-import api from "@/services/api"
-import { API_ENDPOINTS } from "@/services/endpoints"
-import type { ApiResponse } from "@/types/api.types"
-import type { Event } from "@/features/clients/types"
+// import api from "@/services/api"
+// import { API_ENDPOINTS } from "@/services/endpoints"
+// import type { ApiResponse } from "@/types/api.types"
+// import type { Event } from "@/features/clients/types"
 
 export const dashboardService = {
   async getUpcomingEvents(): Promise<Event[]> {
@@ -28,7 +28,7 @@ export const dashboardService = {
         details: "More details.",
         broker: { id: "b2", name: "Broker Two" },
       },
-    ]
+    ];
     // try {
     //   const response = await api.get<ApiResponse<Event[]>>(
     //     API_ENDPOINTS.DASHBOARD.UPCOMING_EVENTS
@@ -44,7 +44,7 @@ export const dashboardService = {
       totalValue: 100,
       loanCount: 100,
       clientCount: 100,
-    }
+    };
     // try {
     //   const response = await api.get<ApiResponse<any>>(
     //     API_ENDPOINTS.DASHBOARD.LOAN_BOOK
@@ -65,4 +65,4 @@ export const dashboardService = {
     //   throw error
     // }
   },
-}
+};

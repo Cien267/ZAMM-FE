@@ -28,6 +28,14 @@ export const API_ENDPOINTS = {
     BASE: "/liability",
     DETAIL: (id: string) => `/liability/${id}`,
   },
+  LENDER: {
+    BASE: "/lender",
+    DETAIL: (id: string) => `/lender/${id}`,
+  },
+  LOAN: {
+    BASE: "/loan",
+    DETAIL: (id: string) => `/loan/${id}`,
+  },
   DASHBOARD: {
     UPCOMING_EVENTS: "/dashboard/upcoming-events",
     INTEREST_RATES: "/dashboard/interest-rates",
@@ -37,4 +45,4 @@ export const API_ENDPOINTS = {
     LIST: "/reports",
     GENERATE: "/reports/generate",
   },
-} as const
+} as const;

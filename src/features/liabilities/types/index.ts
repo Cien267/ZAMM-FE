@@ -1,68 +1,68 @@
-import type { BaseEntity, PaginationParams } from "@/types"
-import { VALIDATION } from "../constants"
-import { z } from "zod"
+import type { BaseEntity, PaginationParams } from "@/types";
+import { VALIDATION } from "../constants";
+import { z } from "zod";
 
 export interface LiabilityQuery extends PaginationParams {
-  name?: string
-  loanId?: string
-  financePurpose?: string
-  startDateFrom?: string
-  startDateTo?: string
+  name?: string;
+  loanId?: string;
+  financePurpose?: string;
+  startDateFrom?: Date;
+  startDateTo?: Date;
 }
 
 export interface LiabilityPerson {
-  id: string
-  personId: string
-  personName: string
-  percent: number
+  id: string;
+  personId: string;
+  personName: string;
+  percent: number;
 }
 
 export interface LiabilityCompany {
-  id: string
-  companyId: string
-  companyName: string
-  percent: number
+  id: string;
+  companyId: string;
+  companyName: string;
+  percent: number;
 }
 
 export interface LiabilityAsset {
-  id: string
-  assetId: string
-  assetName: string
+  id: string;
+  assetId: string;
+  assetName: string;
 }
 
 export interface FixedRatePeriod {
-  id: string
-  startDate: string
-  term: number
-  customRate?: number
+  id: string;
+  startDate: string;
+  term: string;
+  customRate?: string;
 }
 
 export interface Liability extends BaseEntity {
-  name?: string
-  loanTerm?: number
-  interestOnlyTerm?: number
-  startDate?: string
-  financePurpose?: string
-  amount?: number
-  initialBalance?: number
-  introRateYears?: number
-  introRatePercent?: number
-  repaymentAmount?: number
-  repaymentFrequency?: string
-  discountPercent?: number
-  settlementRate?: number
-  bankAccountName?: string
-  bankAccountBsb?: string
-  bankAccountNumber?: string
-  offsetAccountBsb?: string
-  offsetAccountNumber?: string
-  loanId: string
-  loanName?: string
-  lenderName?: string
-  liabilityPeople?: LiabilityPerson[]
-  liabilityCompanies?: LiabilityCompany[]
-  liabilityAssets?: LiabilityAsset[]
-  fixedRatePeriods?: FixedRatePeriod[]
+  name?: string;
+  loanTerm?: number;
+  interestOnlyTerm?: number;
+  startDate?: string;
+  financePurpose?: string;
+  amount?: string;
+  initialBalance?: string;
+  introRateYears?: number;
+  introRatePercent?: string;
+  repaymentAmount?: string;
+  repaymentFrequency?: string;
+  discountPercent?: string;
+  settlementRate?: string;
+  bankAccountName?: string;
+  bankAccountBsb?: string;
+  bankAccountNumber?: string;
+  offsetAccountBsb?: string;
+  offsetAccountNumber?: string;
+  loanId: string;
+  loanName?: string;
+  lenderName?: string;
+  liabilityPeople?: LiabilityPerson[];
+  liabilityCompanies?: LiabilityCompany[];
+  liabilityAssets?: LiabilityAsset[];
+  fixedRatePeriods?: FixedRatePeriod[];
 }
 
 const LiabilityPersonSchema = z.object({
@@ -71,7 +71,7 @@ const LiabilityPersonSchema = z.object({
     .number()
     .min(0, "Percentage must be at least 0")
     .max(100, "Percentage cannot exceed 100"),
-})
+});
 
 const LiabilityCompanySchema = z.object({
   companyId: z.string().uuid("Please select a company"),
@@ -79,34 +79,17 @@ const LiabilityCompanySchema = z.object({
     .number()
     .min(0, "Percentage must be at least 0")
     .max(100, "Percentage cannot exceed 100"),
-})
+});
 
 const LiabilityAssetSchema = z.object({
   assetId: z.string().uuid("Please select an asset"),
-})
+});
 
 const FixedRatePeriodSchema = z.object({
   startDate: z.string().min(1, "Start date is required"),
-  term: z
-    .number()
-    .min(
-      VALIDATION.FIXED_RATE_PERIOD.TERM_MIN,
-      `Term must be at least ${VALIDATION.FIXED_RATE_PERIOD.TERM_MIN} year`
-    )
-    .max(
-      VALIDATION.FIXED_RATE_PERIOD.TERM_MAX,
-      `Term cannot exceed ${VALIDATION.FIXED_RATE_PERIOD.TERM_MAX} years`
-    ),
-  customRate: z
-    .number()
-    .min(0, "Rate must be positive")
-    .max(
-      VALIDATION.FIXED_RATE_PERIOD.CUSTOM_RATE_MAX,
-      `Rate cannot exceed ${VALIDATION.FIXED_RATE_PERIOD.CUSTOM_RATE_MAX}%`
-    )
-    .optional()
-    .nullable(),
-})
+  term: z.string().min(1, "Term is required"),
+  customRate: z.string().min(1, "Term is required"),
+});
 
 export const CreateLiabilitySchema = z
   .object({
@@ -114,7 +97,7 @@ export const CreateLiabilitySchema = z
       .string()
       .max(
         VALIDATION.LIABILITY.NAME_MAX,
-        `Name must not exceed ${VALIDATION.LIABILITY.NAME_MAX} characters`
+        `Name must not exceed ${VALIDATION.LIABILITY.NAME_MAX} characters`,
       )
       .optional()
       .or(z.literal("")),
@@ -123,11 +106,11 @@ export const CreateLiabilitySchema = z
       .number()
       .min(
         VALIDATION.LIABILITY.LOAN_TERM_MIN,
-        `Loan term must be at least ${VALIDATION.LIABILITY.LOAN_TERM_MIN} month`
+        `Loan term must be at least ${VALIDATION.LIABILITY.LOAN_TERM_MIN} month`,
       )
       .max(
         VALIDATION.LIABILITY.LOAN_TERM_MAX,
-        `Loan term cannot exceed ${VALIDATION.LIABILITY.LOAN_TERM_MAX} months`
+        `Loan term cannot exceed ${VALIDATION.LIABILITY.LOAN_TERM_MAX} months`,
       )
       .optional()
       .nullable(),
@@ -137,12 +120,12 @@ export const CreateLiabilitySchema = z
       .min(0, "Interest only term must be positive")
       .max(
         VALIDATION.LIABILITY.INTEREST_ONLY_TERM_MAX,
-        `Interest only term cannot exceed ${VALIDATION.LIABILITY.INTEREST_ONLY_TERM_MAX} months`
+        `Interest only term cannot exceed ${VALIDATION.LIABILITY.INTEREST_ONLY_TERM_MAX} months`,
       )
       .optional()
       .nullable(),
 
-    startDate: z.string().optional().or(z.literal("")),
+    startDate: z.date().optional(),
 
     financePurpose: z
       .string()
@@ -150,39 +133,23 @@ export const CreateLiabilitySchema = z
       .optional()
       .or(z.literal("")),
 
-    amount: z.number().min(0, "Amount must be positive").optional().nullable(),
+    amount: z.string().optional().nullable(),
 
-    initialBalance: z
-      .number()
-      .min(0, "Initial balance must be positive")
-      .optional()
-      .nullable(),
+    initialBalance: z.string().optional().nullable(),
 
     introRateYears: z
       .number()
       .min(0, "Intro rate years must be positive")
       .max(
         VALIDATION.LIABILITY.INTRO_RATE_YEARS_MAX,
-        `Intro rate years cannot exceed ${VALIDATION.LIABILITY.INTRO_RATE_YEARS_MAX}`
+        `Intro rate years cannot exceed ${VALIDATION.LIABILITY.INTRO_RATE_YEARS_MAX}`,
       )
       .optional()
       .nullable(),
 
-    introRatePercent: z
-      .number()
-      .min(0, "Intro rate must be positive")
-      .max(
-        VALIDATION.LIABILITY.INTRO_RATE_PERCENT_MAX,
-        `Intro rate cannot exceed ${VALIDATION.LIABILITY.INTRO_RATE_PERCENT_MAX}%`
-      )
-      .optional()
-      .nullable(),
+    introRatePercent: z.string().optional().nullable(),
 
-    repaymentAmount: z
-      .number()
-      .min(0, "Repayment amount must be positive")
-      .optional()
-      .nullable(),
+    repaymentAmount: z.string().optional().nullable(),
 
     repaymentFrequency: z
       .string()
@@ -190,31 +157,15 @@ export const CreateLiabilitySchema = z
       .optional()
       .or(z.literal("")),
 
-    discountPercent: z
-      .number()
-      .min(0, "Discount percent must be positive")
-      .max(
-        VALIDATION.LIABILITY.DISCOUNT_PERCENT_MAX,
-        `Discount cannot exceed ${VALIDATION.LIABILITY.DISCOUNT_PERCENT_MAX}%`
-      )
-      .optional()
-      .nullable(),
+    discountPercent: z.string().optional().nullable(),
 
-    settlementRate: z
-      .number()
-      .min(0, "Settlement rate must be positive")
-      .max(
-        VALIDATION.LIABILITY.SETTLEMENT_RATE_MAX,
-        `Settlement rate cannot exceed ${VALIDATION.LIABILITY.SETTLEMENT_RATE_MAX}%`
-      )
-      .optional()
-      .nullable(),
+    settlementRate: z.string().optional().nullable(),
 
     bankAccountName: z
       .string()
       .max(
         VALIDATION.LIABILITY.BANK_ACCOUNT_NAME_MAX,
-        `Bank account name must not exceed ${VALIDATION.LIABILITY.BANK_ACCOUNT_NAME_MAX} characters`
+        `Bank account name must not exceed ${VALIDATION.LIABILITY.BANK_ACCOUNT_NAME_MAX} characters`,
       )
       .optional()
       .or(z.literal("")),
@@ -223,7 +174,7 @@ export const CreateLiabilitySchema = z
       .string()
       .max(
         VALIDATION.LIABILITY.BSB_MAX,
-        `BSB must not exceed ${VALIDATION.LIABILITY.BSB_MAX} characters`
+        `BSB must not exceed ${VALIDATION.LIABILITY.BSB_MAX} characters`,
       )
       .regex(/^\d{0,6}$/, "BSB must be 6 digits or less")
       .optional()
@@ -233,7 +184,7 @@ export const CreateLiabilitySchema = z
       .string()
       .max(
         VALIDATION.LIABILITY.ACCOUNT_NUMBER_MAX,
-        `Account number must not exceed ${VALIDATION.LIABILITY.ACCOUNT_NUMBER_MAX} characters`
+        `Account number must not exceed ${VALIDATION.LIABILITY.ACCOUNT_NUMBER_MAX} characters`,
       )
       .optional()
       .or(z.literal("")),
@@ -242,7 +193,7 @@ export const CreateLiabilitySchema = z
       .string()
       .max(
         VALIDATION.LIABILITY.BSB_MAX,
-        `BSB must not exceed ${VALIDATION.LIABILITY.BSB_MAX} characters`
+        `BSB must not exceed ${VALIDATION.LIABILITY.BSB_MAX} characters`,
       )
       .regex(/^\d{0,6}$/, "BSB must be 6 digits or less")
       .optional()
@@ -252,7 +203,7 @@ export const CreateLiabilitySchema = z
       .string()
       .max(
         VALIDATION.LIABILITY.ACCOUNT_NUMBER_MAX,
-        `Account number must not exceed ${VALIDATION.LIABILITY.ACCOUNT_NUMBER_MAX} characters`
+        `Account number must not exceed ${VALIDATION.LIABILITY.ACCOUNT_NUMBER_MAX} characters`,
       )
       .optional()
       .or(z.literal("")),
@@ -266,26 +217,26 @@ export const CreateLiabilitySchema = z
   })
   .refine(
     (data) => {
-      if (!data.liabilityPeople && !data.liabilityCompanies) return true
+      if (!data.liabilityPeople && !data.liabilityCompanies) return true;
 
       const peoplePercent =
-        data.liabilityPeople?.reduce((sum, p) => sum + p.percent, 0) || 0
+        data.liabilityPeople?.reduce((sum, p) => sum + p.percent, 0) || 0;
       const companiesPercent =
-        data.liabilityCompanies?.reduce((sum, c) => sum + c.percent, 0) || 0
-      const totalPercent = peoplePercent + companiesPercent
+        data.liabilityCompanies?.reduce((sum, c) => sum + c.percent, 0) || 0;
+      const totalPercent = peoplePercent + companiesPercent;
 
-      return totalPercent === 0 || totalPercent === 100
+      return totalPercent === 0 || totalPercent === 100;
     },
     {
       message: "Total ownership percentage must equal 100%",
       path: ["liabilityPeople"],
-    }
-  )
+    },
+  );
 
-export const UpdateLiabilitySchema = CreateLiabilitySchema.extend({
+export const UpdateLiabilitySchema = CreateLiabilitySchema.safeExtend({
   id: z.string().uuid(),
-})
+});
 
-export type CreateLiabilityInput = z.infer<typeof CreateLiabilitySchema>
-export type UpdateLiabilityInput = z.infer<typeof UpdateLiabilitySchema>
-export type FixedRatePeriodInput = z.infer<typeof FixedRatePeriodSchema>
+export type CreateLiabilityInput = z.infer<typeof CreateLiabilitySchema>;
+export type UpdateLiabilityInput = z.infer<typeof UpdateLiabilitySchema>;
+export type FixedRatePeriodInput = z.infer<typeof FixedRatePeriodSchema>;

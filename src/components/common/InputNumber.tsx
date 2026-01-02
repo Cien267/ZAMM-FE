@@ -1,17 +1,16 @@
-import * as React from "react"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
-export interface InputNumberProps
-  extends Omit<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    "onChange" | "value" | "type"
-  > {
-  value?: string | number | null
-  onChange?: (value: string | null) => void
-  allowNegative?: boolean
-  allowDecimal?: boolean
-  maxDecimals?: number
+export interface InputNumberProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "onChange" | "value" | "type"
+> {
+  value?: string | number | null;
+  onChange?: (value: string | null) => void;
+  allowNegative?: boolean;
+  allowDecimal?: boolean;
+  maxDecimals?: number;
 }
 
 const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
@@ -26,40 +25,37 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
       onBlur,
       ...props
     },
-    ref
+    ref,
   ) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      let val = e.target.value
+      let val = e.target.value;
 
       if (val === "") {
-        onChange?.(null)
-        return
+        onChange?.(null);
+        return;
       }
 
       if (!allowNegative && val.startsWith("-")) {
-        return
+        return;
       }
 
       if (!allowDecimal && val.includes(".")) {
-        val = val.replace(".", "")
+        val = val.replace(".", "");
       }
 
       if (allowDecimal && val.includes(".")) {
-        const [integer, decimal] = val.split(".")
+        const [integer, decimal] = val.split(".");
         if (decimal && decimal.length > maxDecimals) {
-          val = `${integer}.${decimal.slice(0, maxDecimals)}`
+          val = `${integer}.${decimal.slice(0, maxDecimals)}`;
         }
       }
 
-      onChange?.(val)
-    }
+      onChange?.(val);
+    };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      onBlur?.(e)
-
-      if (value && allowDecimal && !String(value).includes(".")) {
-      }
-    }
+      onBlur?.(e);
+    };
 
     return (
       <Input
@@ -82,7 +78,7 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
             e.key === "Home" ||
             e.key === "End"
           ) {
-            return
+            return;
           }
 
           if (
@@ -90,23 +86,23 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
             e.key === "-" &&
             e.currentTarget.selectionStart === 0
           ) {
-            return
+            return;
           }
 
           if (allowDecimal && e.key === "." && !String(value).includes(".")) {
-            return
+            return;
           }
 
           if (!/^\d$/.test(e.key)) {
-            e.preventDefault()
+            e.preventDefault();
           }
         }}
         {...props}
       />
-    )
-  }
-)
+    );
+  },
+);
 
-InputNumber.displayName = "InputNumber"
+InputNumber.displayName = "InputNumber";
 
-export { InputNumber }
+export { InputNumber };

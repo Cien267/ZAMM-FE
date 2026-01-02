@@ -1,8 +1,8 @@
-import { useState } from "react"
-import { useClientQueries } from "../../hooks/useClientQueries"
-import { useClients } from "../../hooks/useClients"
-import { PeopleFilters } from "./PeopleFilters"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useClientQueries } from "../../hooks/useClientQueries";
+import { useClients } from "../../hooks/useClients";
+import { PeopleFilters } from "./PeopleFilters";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,13 +10,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,8 +26,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import {
   Plus,
   MoreHorizontal,
@@ -35,15 +35,16 @@ import {
   Pencil,
   Trash2,
   Loader2,
-} from "lucide-react"
-import { DEFAULT_PAGE_SIZE } from "@/constants/pagination"
-import type { PersonQuery, Person } from "../../types"
-import { Pagination } from "@/components/common/Pagination"
+} from "lucide-react";
+import { DEFAULT_PAGE_SIZE } from "@/constants/pagination";
+import type { PersonQuery, Person } from "../../types";
+import { Pagination } from "@/components/common/Pagination";
 import {
   GENDER_VARIANT_MAPPING,
   MARITAL_STATUS_VARIANT_MAPPING,
-} from "../../constants"
-import { openUpSertPersonModal } from "./UpSertPerson"
+} from "../../constants";
+import { openUpSertPersonModal } from "./UpSertPerson";
+import { ErrorState } from "@/components/common/ErrorState";
 
 export const PeopleTable = () => {
   const [query, setQuery] = useState<PersonQuery>({
@@ -56,22 +57,22 @@ export const PeopleTable = () => {
     email: "",
     phone: "",
     brokerId: "",
-  })
+  });
 
-  const [deletingPerson, setDeletingPerson] = useState<Person | null>(null)
+  const [deletingPerson, setDeletingPerson] = useState<Person | null>(null);
 
-  const { usePeopleList } = useClientQueries()
-  const { data: people, isLoading, error } = usePeopleList(query)
+  const { usePeopleList } = useClientQueries();
+  const { data: people, isLoading, error } = usePeopleList(query);
 
-  const { deletePerson, isDeletingPerson } = useClients()
+  const { deletePerson, isDeletingPerson } = useClients();
 
   const handleFilterChange = (filters: Partial<PersonQuery>) => {
     setQuery((prev) => ({
       ...prev,
       ...filters,
       pageNumber: 1,
-    }))
-  }
+    }));
+  };
 
   const handleResetFilters = () => {
     setQuery({
@@ -79,44 +80,38 @@ export const PeopleTable = () => {
       pageSize: DEFAULT_PAGE_SIZE,
       sortBy: "Id",
       sortDescending: true,
-    })
-  }
+    });
+  };
 
   const handlePageChange = (newPage: number) => {
-    setQuery((prev) => ({ ...prev, pageNumber: newPage }))
-  }
+    setQuery((prev) => ({ ...prev, pageNumber: newPage }));
+  };
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }))
-  }
+    setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }));
+  };
 
   const handleDelete = (person: Person) => {
-    setDeletingPerson(person)
-  }
+    setDeletingPerson(person);
+  };
 
   const confirmDelete = () => {
     if (deletingPerson) {
       deletePerson(deletingPerson.id, {
         onSuccess: () => {
-          setDeletingPerson(null)
+          setDeletingPerson(null);
         },
-      })
+      });
     }
-  }
+  };
 
   const handleView = (person: Person) => {
     // TODO: Navigate to detail page or open detail dialog
-    console.log("View person:", person)
-  }
+    console.log("View person:", person);
+  };
 
   if (error) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-destructive">
-          Error loading people: {error.message}
-        </p>
-      </div>
-    )
+    return <ErrorState message={error.message} />;
   }
 
   return (
@@ -297,5 +292,5 @@ export const PeopleTable = () => {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  )
-}
+  );
+};
