@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAssets } from "../hooks/useAssets";
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useAssets } from '../hooks/useAssets'
 import {
   Form,
   FormControl,
@@ -9,51 +9,51 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { MapPin, Loader2 } from "lucide-react";
+} from '@/components/ui/select'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
+import { Loader2 } from 'lucide-react'
 import {
   ZONING_TYPES,
   PROPERTY_TYPES,
   RENTAL_INCOME_FREQUENCIES,
-} from "../constants";
+} from '../constants'
 import {
   CreateAssetSchema,
   UpdateAssetSchema,
   type CreateAssetInput,
   type UpdateAssetInput,
   type Asset,
-} from "../types";
-import { Modal } from "@/components/common/modal";
-import { DatePicker } from "@/components/common/DatePicker";
-import { InputNumber } from "@/components/common/InputNumber";
-import type { Person } from "@/features/clients/types";
-import type { Company } from "@/features/clients/types";
-import { AssetOwnershipFields } from "./AssetOwnershipFields";
-import { LinkedLiabilitiesFields } from "./LinkedLiabilitiesFields";
-import { openUpSertLiabilityModal } from "@/features/liabilities/components/UpsertLiability";
+} from '../types'
+import { Modal } from '@/components/common/modal'
+import { DatePicker } from '@/components/common/DatePicker'
+import { InputNumber } from '@/components/common/InputNumber'
+import type { Person } from '@/features/people/types'
+import type { Company } from '@/features/company/types'
+import { AssetOwnershipFields } from './AssetOwnershipFields'
+import { LinkedLiabilitiesFields } from './LinkedLiabilitiesFields'
+import { openUpSertLiabilityModal } from '@/features/liabilities/components/UpsertLiability'
+import { AddressFields } from '@/features/address/components/AddressFields'
 
 interface AssetFormDialogProps {
-  initialPerson: Person | null;
-  initialCompany: Company | null;
-  asset?: Asset | null;
-  onClose: () => void;
-  onSubmittingChange?: (isSubmitting: boolean) => void;
+  initialPerson: Person | null
+  initialCompany: Company | null
+  asset?: Asset | null
+  onClose: () => void
+  onSubmittingChange?: (isSubmitting: boolean) => void
   onSubmit: (
     createdAsset: Asset | null,
-    action: "exit" | "add-liability",
-  ) => void;
+    action: 'exit' | 'add-liability'
+  ) => void
 }
 
 export const AssetModalContent = ({
@@ -64,18 +64,18 @@ export const AssetModalContent = ({
   onSubmittingChange,
   onSubmit: handleSubmit,
 }: AssetFormDialogProps) => {
-  const isEditing = !!asset;
+  const isEditing = !!asset
   const {
     createAssetAsync,
     updateAssetAsync,
     isCreatingAsset,
     isUpdatingAsset,
-  } = useAssets();
+  } = useAssets()
 
   const form = useForm<CreateAssetInput | UpdateAssetInput>({
     resolver: zodResolver(isEditing ? UpdateAssetSchema : CreateAssetSchema),
     defaultValues: {
-      name: asset?.name || "",
+      name: asset?.name || '',
       propertyType: asset?.propertyType || PROPERTY_TYPES[0],
       zoningType: asset?.zoningType || ZONING_TYPES[0],
       value: asset?.value ?? null,
@@ -88,21 +88,21 @@ export const AssetModalContent = ({
       isUnencumbered: asset?.isUnencumbered ?? false,
       rentalHasAgent: asset?.rentalHasAgent ?? false,
       rentalIncomeValue: asset?.rentalIncomeValue ?? null,
-      rentalIncomeFrequency: asset?.rentalIncomeFrequency || "",
-      rentalAgentContact: asset?.rentalAgentContact || "",
+      rentalIncomeFrequency: asset?.rentalIncomeFrequency || '',
+      rentalAgentContact: asset?.rentalAgentContact || '',
       address: asset?.address || {
-        level: "",
-        building: "",
-        unitNumber: "",
-        streetNumber: "",
-        streetName: "",
-        suburb: "",
-        state: "",
-        postcode: "",
-        country: "",
+        level: '',
+        building: '',
+        unitNumber: '',
+        streetNumber: '',
+        streetName: '',
+        suburb: '',
+        state: '',
+        postcode: '',
+        country: '',
         offPlan: false,
       },
-      addressText: "",
+      addressText: '',
       assetPeople:
         asset?.assetPeople ||
         (initialPerson
@@ -126,64 +126,63 @@ export const AssetModalContent = ({
       assetLiabilities: asset?.assetLiabilities || [],
       ...(isEditing && asset ? { id: asset.id } : {}),
     },
-  });
+  })
 
-  const isInvestment = form.watch("isInvestment");
-  const addressOffPlan = form.watch("addressOffPlan");
+  const isInvestment = form.watch('isInvestment')
 
   useEffect(() => {
     if (isInvestment) {
       if (!isEditing) {
-        const currentFrequency = form.getValues("rentalIncomeFrequency");
+        const currentFrequency = form.getValues('rentalIncomeFrequency')
         if (!currentFrequency) {
           setTimeout(() => {
             form.setValue(
-              "rentalIncomeFrequency",
+              'rentalIncomeFrequency',
               RENTAL_INCOME_FREQUENCIES[0],
               {
                 shouldValidate: true,
                 shouldDirty: true,
-              },
-            );
-          }, 0);
+              }
+            )
+          }, 0)
         }
       }
     } else {
-      form.setValue("rentalIncomeValue", null);
-      form.setValue("rentalIncomeFrequency", "");
+      form.setValue('rentalIncomeValue', null)
+      form.setValue('rentalIncomeFrequency', '')
     }
-  }, [isInvestment, isEditing, form]);
+  }, [isInvestment, isEditing, form])
 
   const onSubmit = async (data: CreateAssetInput) => {
     try {
-      let createdAsset = null;
+      let createdAsset = null
       if (isEditing && asset) {
-        await updateAssetAsync({ ...data, id: asset.id });
+        await updateAssetAsync({ ...data, id: asset.id })
       } else {
-        createdAsset = await createAssetAsync(data);
+        createdAsset = await createAssetAsync(data)
       }
-      const action = (window as any).__assetFormAction || "exit";
-      onClose();
-      form.reset();
-      handleSubmit(createdAsset, action);
+      const action = (window as any).__assetFormAction || 'exit'
+      onClose()
+      form.reset()
+      handleSubmit(createdAsset, action)
     } catch (error) {
-      console.error("Asset submission error:", error);
+      console.error('Asset submission error:', error)
     }
-  };
+  }
 
-  const isSubmitting = isCreatingAsset || isUpdatingAsset;
+  const isSubmitting = isCreatingAsset || isUpdatingAsset
 
   useEffect(() => {
-    onSubmittingChange?.(isSubmitting);
+    onSubmittingChange?.(isSubmitting)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
+  }, [isSubmitting])
 
   return (
-    <Form {...form} key={asset?.id || "new-asset"}>
+    <Form {...form} key={asset?.id || 'new-asset'}>
       <form
         id="asset-form"
         onSubmit={form.handleSubmit(onSubmit, (errors) =>
-          console.log("Validation Errors:", errors),
+          console.log('Validation Errors:', errors)
         )}
         className="space-y-6"
       >
@@ -212,7 +211,7 @@ export const AssetModalContent = ({
                 <FormItem>
                   <FormLabel>Zoning</FormLabel>
                   <RadioGroup
-                    value={field.value || ""}
+                    value={field.value || ''}
                     onValueChange={field.onChange}
                     defaultValue="Residential"
                     className="flex justify-start items-center gap-2"
@@ -238,9 +237,9 @@ export const AssetModalContent = ({
                   <FormLabel>Property Type</FormLabel>
                   <Select
                     onValueChange={(value) => {
-                      field.onChange(value);
+                      field.onChange(value)
                     }}
-                    value={field.value || ""}
+                    value={field.value || ''}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -314,9 +313,9 @@ export const AssetModalContent = ({
                   <FormLabel>Usage</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      value={field.value ? "investment" : "owner-occupier"}
+                      value={field.value ? 'investment' : 'owner-occupier'}
                       onValueChange={(value) =>
-                        field.onChange(value === "investment")
+                        field.onChange(value === 'investment')
                       }
                       className="flex items-center gap-2"
                     >
@@ -379,7 +378,7 @@ export const AssetModalContent = ({
                       <FormLabel>Frequency</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || ""}
+                        value={field.value || ''}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -403,223 +402,50 @@ export const AssetModalContent = ({
           </div>
         </div>
 
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Address Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {addressOffPlan ? (
-              <div className="flex justify-between gap-1">
-                <FormField
-                  control={form.control}
-                  name="address.level"
-                  render={({ field }) => (
-                    <FormItem className="w-1/2">
-                      <FormLabel>Level</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="address.building"
-                  render={({ field }) => (
-                    <FormItem className="w-1/2">
-                      <FormLabel>Building</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            ) : (
-              <FormField
-                control={form.control}
-                name="addressText"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Address</FormLabel>
-                    <FormItem className="relative">
-                      <Input {...field} />
-                      <MapPin className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 opacity-50" />
-                    </FormItem>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
-            <FormField
-              control={form.control}
-              name="addressOffPlan"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center pt-5 space-x-1 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel className="cursor-pointer">
-                      Off-plan address
-                    </FormLabel>
-                  </div>
-                </FormItem>
-              )}
-            />
-
-            {addressOffPlan && (
-              <>
-                <div className="flex justify-between gap-1">
-                  <FormField
-                    control={form.control}
-                    name="address.unitNumber"
-                    render={({ field }) => (
-                      <FormItem className="w-1/2">
-                        <FormLabel>Unit Number</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="address.streetNumber"
-                    render={({ field }) => (
-                      <FormItem className="w-1/2">
-                        <FormLabel>Street Number</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="address.streetName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Street Name</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="address.suburb"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Suburb</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="address.state"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>State</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="address.country"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Country</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="address.postcode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Postcode</FormLabel>
-                      <FormControl>
-                        <InputNumber
-                          placeholder="Enter postcode"
-                          {...field}
-                          allowDecimal={false}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
-          </div>
-        </div>
+        <AddressFields toggleName="addressOffPlan" />
         <LinkedLiabilitiesFields control={form.control} />
         <AssetOwnershipFields
           control={form.control}
-          type={initialPerson ? "people" : "company"}
+          type={initialPerson ? 'people' : 'company'}
           setValue={form.setValue}
         />
       </form>
     </Form>
-  );
-};
+  )
+}
 
 export const openUpSertAssetModal = ({
   asset,
   initialPerson,
   initialCompany,
 }: {
-  asset: Asset | null;
-  initialPerson: Person | null;
-  initialCompany: Company | null;
+  asset: Asset | null
+  initialPerson: Person | null
+  initialCompany: Company | null
 }) => {
-  const isEditing = !!asset;
-  let isSubmitting = false;
+  const isEditing = !!asset
+  let isSubmitting = false
 
   const handleFormSubmit = async (
     createdAsset: Asset | null,
-    action: "exit" | "add-liability",
+    action: 'exit' | 'add-liability'
   ) => {
-    if (action == "add-liability" && createdAsset?.id) {
+    if (action == 'add-liability' && createdAsset?.id) {
       openUpSertLiabilityModal({
         liability: null,
         initialCompany: initialCompany,
         initialPerson: initialPerson,
         initialAsset: createdAsset,
-      });
+      })
     }
-  };
+  }
 
   const updateFooter = () => {
     Modal.open({
-      title: isEditing ? "Edit Asset" : "Add New Asset",
+      title: isEditing ? 'Edit Asset' : 'Add New Asset',
       description: isEditing
-        ? "Update asset information"
-        : "Enter asset details",
+        ? 'Update asset information'
+        : 'Enter asset details',
       content: (
         <AssetModalContent
           asset={asset}
@@ -627,8 +453,8 @@ export const openUpSertAssetModal = ({
           initialCompany={initialCompany}
           onClose={() => Modal.close()}
           onSubmittingChange={(submitting) => {
-            isSubmitting = submitting;
-            updateFooter();
+            isSubmitting = submitting
+            updateFooter()
           }}
           onSubmit={handleFormSubmit}
         />
@@ -648,18 +474,18 @@ export const openUpSertAssetModal = ({
             form="asset-form"
             disabled={isSubmitting}
             onClick={() => {
-              (window as any).__assetFormAction = "exit";
+              ;(window as any).__assetFormAction = 'exit'
             }}
           >
-            {isSubmitting && (window as any).__assetFormAction === "exit" ? (
+            {isSubmitting && (window as any).__assetFormAction === 'exit' ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                {isEditing ? "Updating..." : "Creating..."}
+                {isEditing ? 'Updating...' : 'Creating...'}
               </>
             ) : isEditing ? (
-              "Update"
+              'Update'
             ) : (
-              "Create & Exit"
+              'Create & Exit'
             )}
           </Button>
 
@@ -669,25 +495,25 @@ export const openUpSertAssetModal = ({
               form="asset-form"
               disabled={isSubmitting}
               onClick={() => {
-                (window as any).__assetFormAction = "add-liability";
+                ;(window as any).__assetFormAction = 'add-liability'
               }}
             >
               {isSubmitting &&
-              (window as any).__assetFormAction === "add-liability" ? (
+              (window as any).__assetFormAction === 'add-liability' ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   Creating...
                 </>
               ) : (
-                "Create & Add Liability"
+                'Create & Add Liability'
               )}
             </Button>
           )}
         </div>
       ),
-      className: "max-w-4xl!",
-    });
-  };
+      className: 'max-w-4xl!',
+    })
+  }
 
-  updateFooter();
-};
+  updateFooter()
+}

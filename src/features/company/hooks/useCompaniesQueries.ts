@@ -3,7 +3,7 @@ import { companyService } from '../services/companyService'
 import type { CompanyQuery } from '../types'
 import { companyKeys } from '../constants'
 
-export const useClientQueries = () => {
+export const useCompanyQueries = () => {
   const useCompaniesList = (query: CompanyQuery) => {
     return useQuery({
       queryKey: companyKeys.companiesList(query),

@@ -1,7 +1,7 @@
-import { useEffect, useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useLiabilities } from "../hooks/useLiabilities";
+import { useEffect, useState, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useLiabilities } from '../hooks/useLiabilities'
 import {
   Form,
   FormControl,
@@ -9,44 +9,45 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
-import { FINANCE_PURPOSES, REPAYMENT_FREQUENCIES } from "../constants";
+} from '@/components/ui/select'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
+import { Loader2 } from 'lucide-react'
+import { FINANCE_PURPOSES, REPAYMENT_FREQUENCIES } from '../constants'
 import {
   CreateLiabilitySchema,
   UpdateLiabilitySchema,
   type CreateLiabilityInput,
   type Liability,
   type UpdateLiabilityInput,
-} from "../types";
-import { Modal } from "@/components/common/modal";
-import { DatePicker } from "@/components/common/DatePicker";
-import { InputNumber } from "@/components/common/InputNumber";
-import type { Person, Company } from "@/features/clients/types";
-import { LiabilityOwnershipFields } from "./LiabilityOwnershipFields";
-import { LinkedAssetsFields } from "./LinkedAssetsFields";
-import { FixedRatePeriodsFields } from "./FixedRatePeriodsFields";
-import { useAllLenders, useAllLoans } from "@/hooks/useSharedData";
-import type { Asset } from "@/features/assets/types";
+} from '../types'
+import { Modal } from '@/components/common/modal'
+import { DatePicker } from '@/components/common/DatePicker'
+import { InputNumber } from '@/components/common/InputNumber'
+import type { Person } from '@/features/people/types'
+import type { Company } from '@/features/company/types'
+import { LiabilityOwnershipFields } from './LiabilityOwnershipFields'
+import { LinkedAssetsFields } from './LinkedAssetsFields'
+import { FixedRatePeriodsFields } from './FixedRatePeriodsFields'
+import { useAllLenders, useAllLoans } from '@/hooks/useSharedData'
+import type { Asset } from '@/features/assets/types'
 
 interface LiabilityFormDialogProps {
-  liability?: Liability | null;
-  initialPerson: Person | null;
-  initialCompany: Company | null;
-  initialAsset: Asset | null;
-  onClose: () => void;
-  onSubmittingChange?: (isSubmitting: boolean) => void;
+  liability?: Liability | null
+  initialPerson: Person | null
+  initialCompany: Company | null
+  initialAsset: Asset | null
+  onClose: () => void
+  onSubmittingChange?: (isSubmitting: boolean) => void
 }
 
 export const LiabilityModalContent = ({
@@ -57,51 +58,51 @@ export const LiabilityModalContent = ({
   onClose,
   onSubmittingChange,
 }: LiabilityFormDialogProps) => {
-  const isEditing = !!liability;
+  const isEditing = !!liability
   const {
     createLiabilityAsync,
     updateLiabilityAsync,
     isCreatingLiability,
     isUpdatingLiability,
-  } = useLiabilities();
+  } = useLiabilities()
 
-  const { data: lenderData, isLoading: isLoadingLenders } = useAllLenders();
-  const { data: loanData, isLoading: isLoadingLoans } = useAllLoans();
-  const lenders = useMemo(() => lenderData?.data || [], [lenderData?.data]);
-  const loans = useMemo(() => loanData?.data || [], [loanData?.data]);
+  const { data: lenderData, isLoading: isLoadingLenders } = useAllLenders()
+  const { data: loanData, isLoading: isLoadingLoans } = useAllLoans()
+  const lenders = useMemo(() => lenderData?.data || [], [lenderData?.data])
+  const loans = useMemo(() => loanData?.data || [], [loanData?.data])
 
   const initialLenderId = useMemo(() => {
     if (liability?.loanId && loans.length > 0) {
-      const loan = loans.find((loan) => loan.id === liability.loanId);
-      if (loan?.lenderId) return loan.lenderId;
+      const loan = loans.find((loan) => loan.id === liability.loanId)
+      if (loan?.lenderId) return loan.lenderId
     }
-    return lenders[0]?.id || "";
-  }, [liability?.loanId, loans, lenders]);
+    return lenders[0]?.id || ''
+  }, [liability?.loanId, loans, lenders])
 
-  const [selectedLenderId, setSelectedLenderId] = useState<string>("");
+  const [selectedLenderId, setSelectedLenderId] = useState<string>('')
 
   useEffect(() => {
     if (initialLenderId && !selectedLenderId) {
-      setSelectedLenderId(initialLenderId);
+      setSelectedLenderId(initialLenderId)
     }
-  }, [initialLenderId, selectedLenderId]);
+  }, [initialLenderId, selectedLenderId])
 
   const loansBySelectedLender = useMemo(() => {
-    if (!selectedLenderId) return [];
-    return loans.filter((loan) => loan.lenderId === selectedLenderId);
-  }, [loans, selectedLenderId]);
+    if (!selectedLenderId) return []
+    return loans.filter((loan) => loan.lenderId === selectedLenderId)
+  }, [loans, selectedLenderId])
 
   const initialLoanId = useMemo(() => {
-    if (liability?.loanId) return liability.loanId;
-    return loansBySelectedLender[0]?.id || "";
-  }, [liability?.loanId, loansBySelectedLender]);
+    if (liability?.loanId) return liability.loanId
+    return loansBySelectedLender[0]?.id || ''
+  }, [liability?.loanId, loansBySelectedLender])
 
   const form = useForm<CreateLiabilityInput | UpdateLiabilityInput>({
     resolver: zodResolver(
-      isEditing ? UpdateLiabilitySchema : CreateLiabilitySchema,
+      isEditing ? UpdateLiabilitySchema : CreateLiabilitySchema
     ),
     defaultValues: {
-      name: liability?.name || "",
+      name: liability?.name || '',
       startDate: liability?.startDate
         ? new Date(liability.startDate)
         : undefined,
@@ -114,11 +115,11 @@ export const LiabilityModalContent = ({
       repaymentAmount: liability?.repaymentAmount ?? null,
       repaymentFrequency:
         liability?.repaymentFrequency || REPAYMENT_FREQUENCIES[2],
-      bankAccountName: liability?.bankAccountName || "",
-      bankAccountBsb: liability?.bankAccountBsb || "",
-      bankAccountNumber: liability?.bankAccountNumber || "",
-      offsetAccountBsb: liability?.offsetAccountBsb || "",
-      offsetAccountNumber: liability?.offsetAccountNumber || "",
+      bankAccountName: liability?.bankAccountName || '',
+      bankAccountBsb: liability?.bankAccountBsb || '',
+      bankAccountNumber: liability?.bankAccountNumber || '',
+      offsetAccountBsb: liability?.offsetAccountBsb || '',
+      offsetAccountNumber: liability?.offsetAccountNumber || '',
       discountPercent: liability?.discountPercent ?? null,
       settlementRate: liability?.settlementRate ?? null,
       introRateYears: liability?.introRateYears ?? null,
@@ -155,61 +156,61 @@ export const LiabilityModalContent = ({
       fixedRatePeriods: liability?.fixedRatePeriods || [],
       ...(isEditing && liability ? { id: liability.id } : {}),
     },
-  });
+  })
 
   useEffect(() => {
-    if (initialLoanId && !form.getValues("loanId")) {
-      form.setValue("loanId", initialLoanId);
+    if (initialLoanId && !form.getValues('loanId')) {
+      form.setValue('loanId', initialLoanId)
     }
-  }, [initialLoanId, form]);
+  }, [initialLoanId, form])
 
   const handleLenderChange = (lenderId: string) => {
-    setSelectedLenderId(lenderId);
-    const firstLoan = loans.find((loan) => loan.lenderId === lenderId);
+    setSelectedLenderId(lenderId)
+    const firstLoan = loans.find((loan) => loan.lenderId === lenderId)
     if (firstLoan) {
-      form.setValue("loanId", firstLoan.id);
+      form.setValue('loanId', firstLoan.id)
     } else {
-      form.setValue("loanId", "");
+      form.setValue('loanId', '')
     }
-  };
+  }
 
-  const discountPercent = form.watch("discountPercent");
-  const settlementRate = form.watch("settlementRate");
+  const discountPercent = form.watch('discountPercent')
+  const settlementRate = form.watch('settlementRate')
 
   const effectiveRate =
     settlementRate && discountPercent
       ? Number(settlementRate) - Number(discountPercent)
-      : settlementRate || 0;
+      : settlementRate || 0
 
   const onSubmit = async (
-    data: CreateLiabilityInput | UpdateLiabilityInput,
+    data: CreateLiabilityInput | UpdateLiabilityInput
   ) => {
     try {
       if (isEditing && liability) {
-        await updateLiabilityAsync({ ...data, id: liability.id });
+        await updateLiabilityAsync({ ...data, id: liability.id })
       } else {
-        await createLiabilityAsync(data);
+        await createLiabilityAsync(data)
       }
-      onClose();
-      form.reset();
+      onClose()
+      form.reset()
     } catch (error) {
-      console.error("Liability submission error:", error);
+      console.error('Liability submission error:', error)
     }
-  };
+  }
 
-  const isSubmitting = isCreatingLiability || isUpdatingLiability;
+  const isSubmitting = isCreatingLiability || isUpdatingLiability
 
   useEffect(() => {
-    onSubmittingChange?.(isSubmitting);
+    onSubmittingChange?.(isSubmitting)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
+  }, [isSubmitting])
 
   return (
     <Form {...form}>
       <form
         id="liability-form"
         onSubmit={form.handleSubmit(onSubmit, (errors) =>
-          console.log("Validation Errors:", errors),
+          console.log('Validation Errors:', errors)
         )}
         className="space-y-6"
       >
@@ -260,7 +261,7 @@ export const LiabilityModalContent = ({
                 <FormItem>
                   <FormLabel>Finance Purpose</FormLabel>
                   <RadioGroup
-                    value={field.value || ""}
+                    value={field.value || ''}
                     onValueChange={field.onChange}
                     defaultValue="Residential"
                     className="flex justify-start items-center gap-2"
@@ -301,8 +302,8 @@ export const LiabilityModalContent = ({
                     <SelectValue
                       placeholder={
                         isLoadingLenders
-                          ? "Loading lenders..."
-                          : "Select lender"
+                          ? 'Loading lenders...'
+                          : 'Select lender'
                       }
                     />
                   </SelectTrigger>
@@ -328,7 +329,7 @@ export const LiabilityModalContent = ({
                   </FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    value={field.value || ""}
+                    value={field.value || ''}
                     disabled={
                       isLoadingLoans ||
                       !selectedLenderId ||
@@ -340,12 +341,12 @@ export const LiabilityModalContent = ({
                         <SelectValue
                           placeholder={
                             isLoadingLoans
-                              ? "Loading loans..."
+                              ? 'Loading loans...'
                               : !selectedLenderId
-                                ? "Select a lender first"
+                                ? 'Select a lender first'
                                 : loansBySelectedLender.length === 0
-                                  ? "No loans available"
-                                  : "Select loan product"
+                                  ? 'No loans available'
+                                  : 'Select loan product'
                           }
                         />
                       </SelectTrigger>
@@ -377,7 +378,7 @@ export const LiabilityModalContent = ({
                     <InputNumber
                       placeholder="Years"
                       {...field}
-                      value={field.value?.toString() || ""}
+                      value={field.value?.toString() || ''}
                       onChange={(val) =>
                         field.onChange(val ? parseInt(val) : null)
                       }
@@ -399,7 +400,7 @@ export const LiabilityModalContent = ({
                     <InputNumber
                       placeholder="Years"
                       {...field}
-                      value={field.value?.toString() || ""}
+                      value={field.value?.toString() || ''}
                       onChange={(val) =>
                         field.onChange(val ? parseInt(val) : null)
                       }
@@ -486,7 +487,7 @@ export const LiabilityModalContent = ({
                       <InputNumber
                         placeholder="Years"
                         {...field}
-                        value={field.value?.toString() || ""}
+                        value={field.value?.toString() || ''}
                         onChange={(val) =>
                           field.onChange(val ? parseInt(val) : null)
                         }
@@ -603,7 +604,7 @@ export const LiabilityModalContent = ({
                   <FormLabel>Repayment Frequency</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    value={field.value || ""}
+                    value={field.value || ''}
                   >
                     <FormControl className="w-full">
                       <SelectTrigger>
@@ -706,13 +707,13 @@ export const LiabilityModalContent = ({
         <LinkedAssetsFields control={form.control} />
         <LiabilityOwnershipFields
           control={form.control}
-          type={initialPerson ? "people" : "company"}
+          type={initialPerson ? 'people' : 'company'}
           setValue={form.setValue}
         />
       </form>
     </Form>
-  );
-};
+  )
+}
 
 export const openUpSertLiabilityModal = ({
   liability,
@@ -720,20 +721,20 @@ export const openUpSertLiabilityModal = ({
   initialCompany,
   initialAsset,
 }: {
-  liability: Liability | null;
-  initialPerson: Person | null;
-  initialCompany: Company | null;
-  initialAsset: Asset | null;
+  liability: Liability | null
+  initialPerson: Person | null
+  initialCompany: Company | null
+  initialAsset: Asset | null
 }) => {
-  const isEditing = !!liability;
-  let isSubmitting = false;
+  const isEditing = !!liability
+  let isSubmitting = false
 
   const updateFooter = () => {
     Modal.open({
-      title: isEditing ? "Edit Liability" : "Add a new liability",
+      title: isEditing ? 'Edit Liability' : 'Add a new liability',
       description: isEditing
-        ? "Update liability information"
-        : "Enter liability details",
+        ? 'Update liability information'
+        : 'Enter liability details',
       content: (
         <LiabilityModalContent
           liability={liability}
@@ -742,8 +743,8 @@ export const openUpSertLiabilityModal = ({
           initialAsset={initialAsset}
           onClose={() => Modal.close()}
           onSubmittingChange={(submitting) => {
-            isSubmitting = submitting;
-            updateFooter();
+            isSubmitting = submitting
+            updateFooter()
           }}
         />
       ),
@@ -761,19 +762,19 @@ export const openUpSertLiabilityModal = ({
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                {isEditing ? "Updating..." : "Creating..."}
+                {isEditing ? 'Updating...' : 'Creating...'}
               </>
             ) : isEditing ? (
-              "Update"
+              'Update'
             ) : (
-              "Create"
+              'Create'
             )}
           </Button>
         </div>
       ),
-      className: "max-w-4xl!",
-    });
-  };
+      className: 'max-w-4xl!',
+    })
+  }
 
-  updateFooter();
-};
+  updateFooter()
+}

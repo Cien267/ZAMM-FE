@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useLiabilityQueries } from "../hooks/useLiabilityQueries";
-import { useLiabilities } from "../hooks/useLiabilities";
-import { LiabilitiesFilters } from "./LiabilitiesFilters";
-import { Pagination } from "@/components/common/Pagination";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react'
+import { useLiabilityQueries } from '../hooks/useLiabilityQueries'
+import { useLiabilities } from '../hooks/useLiabilities'
+import { LiabilitiesFilters } from './LiabilitiesFilters'
+import { Pagination } from '@/components/common/Pagination'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -11,13 +11,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +27,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog'
 import {
   Plus,
   MoreHorizontal,
@@ -35,82 +35,82 @@ import {
   Pencil,
   Trash2,
   Loader2,
-} from "lucide-react";
-import { DEFAULT_PAGE_SIZE } from "@/constants/pagination";
-import type { LiabilityQuery, Liability } from "../types";
-import { formatCurrency } from "@/lib/utils";
-import { ErrorState } from "@/components/common/ErrorState";
+} from 'lucide-react'
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
+import type { LiabilityQuery, Liability } from '../types'
+import { formatCurrency } from '@/lib/utils'
+import { ErrorState } from '@/components/common/ErrorState'
 
 export const LiabilitiesTable = () => {
   const [query, setQuery] = useState<LiabilityQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: "Id",
+    sortBy: 'Id',
     sortDescending: true,
-  });
+  })
 
   const [deletingLiabilityId, setDeletingLiabilityId] = useState<string | null>(
-    null,
-  );
+    null
+  )
 
-  const { useLiabilitiesList } = useLiabilityQueries();
-  const { data, isLoading, error } = useLiabilitiesList(query);
-  const { deleteLiability, isDeletingLiability } = useLiabilities();
+  const { useLiabilitiesList } = useLiabilityQueries()
+  const { data, isLoading, error } = useLiabilitiesList(query)
+  const { deleteLiability, isDeletingLiability } = useLiabilities()
 
   const handleFilterChange = (filters: Partial<LiabilityQuery>) => {
     setQuery((prev) => ({
       ...prev,
       ...filters,
       pageNumber: 1,
-    }));
-  };
+    }))
+  }
 
   const handleResetFilters = () => {
     setQuery({
       pageNumber: 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: "Id",
+      sortBy: 'Id',
       sortDescending: true,
-    });
-  };
+    })
+  }
 
   const handlePageChange = (newPage: number) => {
-    setQuery((prev) => ({ ...prev, pageNumber: newPage }));
-  };
+    setQuery((prev) => ({ ...prev, pageNumber: newPage }))
+  }
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }));
-  };
+    setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }))
+  }
 
   const handleEdit = (liability: Liability) => {
     // TODO: Open edit modal
-    console.log("Edit liability:", liability);
-  };
+    console.log('Edit liability:', liability)
+  }
 
   const handleDelete = (id: string) => {
-    setDeletingLiabilityId(id);
-  };
+    setDeletingLiabilityId(id)
+  }
 
   const confirmDelete = () => {
     if (deletingLiabilityId) {
       deleteLiability(deletingLiabilityId, {
         onSuccess: () => {
-          setDeletingLiabilityId(null);
+          setDeletingLiabilityId(null)
         },
-      });
+      })
     }
-  };
+  }
 
   const handleView = (liability: Liability) => {
-    console.log("View liability:", liability);
-  };
+    console.log('View liability:', liability)
+  }
 
   const handleAddLiability = () => {
-    console.log("Add liability");
-  };
+    console.log('Add liability')
+  }
 
   if (error) {
-    return <ErrorState message={error.message} />;
+    return <ErrorState message={error.message} />
   }
 
   return (
@@ -170,7 +170,7 @@ export const LiabilitiesTable = () => {
                   </TableCell>
 
                   <TableCell className="font-medium">
-                    {formatCurrency(liability.amount)}
+                    {formatCurrency(Number(liability.amount || 0))}
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -245,12 +245,12 @@ export const LiabilitiesTable = () => {
                   Deleting...
                 </>
               ) : (
-                "Delete"
+                'Delete'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
-};
+  )
+}

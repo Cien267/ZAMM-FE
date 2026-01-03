@@ -1,13 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner' // or your toast library
+import { toast } from 'sonner'
 import { companyKeys } from '../constants'
 import { companyService } from '../services/companyService'
 import type { CreateCompanyInput, UpdateCompanyInput } from '../types'
 
-export const useClients = () => {
+export const useCompanies = () => {
   const queryClient = useQueryClient()
 
-  // Company mutations
   const createCompanyMutation = useMutation({
     mutationFn: (data: CreateCompanyInput) =>
       companyService.createCompany(data),

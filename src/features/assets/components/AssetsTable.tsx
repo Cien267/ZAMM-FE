@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { useAssetQueries } from "../hooks/useAssetQueries";
-import { useAssets } from "../hooks/useAssets";
-import { AssetsFilters } from "./AssetsFilters";
-import { Pagination } from "@/components/common/Pagination";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { useState } from 'react'
+import { useAssetQueries } from '../hooks/useAssetQueries'
+import { useAssets } from '../hooks/useAssets'
+import { AssetsFilters } from './AssetsFilters'
+import { Pagination } from '@/components/common/Pagination'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import {
   Table,
   TableBody,
@@ -12,13 +12,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,7 +28,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog'
 import {
   Plus,
   MoreHorizontal,
@@ -36,102 +36,102 @@ import {
   Pencil,
   Trash2,
   Loader2,
-} from "lucide-react";
-import { DEFAULT_PAGE_SIZE } from "@/constants/pagination";
-import type { AssetQuery, Asset } from "../types";
-import { openUpSertAssetModal } from "./UpSertAsset";
-import { formatCurrency } from "@/lib/utils";
-import { ErrorState } from "@/components/common/ErrorState";
+} from 'lucide-react'
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
+import type { AssetQuery, Asset } from '../types'
+import { openUpSertAssetModal } from './UpSertAsset'
+import { formatCurrency } from '@/lib/utils'
+import { ErrorState } from '@/components/common/ErrorState'
 
 export const AssetsTable = () => {
   const [query, setQuery] = useState<AssetQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: "Id",
+    sortBy: 'Id',
     sortDescending: true,
-  });
+  })
 
-  const [deletingAssetId, setDeletingAssetId] = useState<string | null>(null);
+  const [deletingAssetId, setDeletingAssetId] = useState<string | null>(null)
 
-  const { useAssetsList } = useAssetQueries();
-  const { data, isLoading, error } = useAssetsList(query);
-  const { deleteAsset, isDeletingAsset } = useAssets();
+  const { useAssetsList } = useAssetQueries()
+  const { data, isLoading, error } = useAssetsList(query)
+  const { deleteAsset, isDeletingAsset } = useAssets()
 
   const handleFilterChange = (filters: Partial<AssetQuery>) => {
     setQuery((prev) => ({
       ...prev,
       ...filters,
       pageNumber: 1,
-    }));
-  };
+    }))
+  }
 
   const handleResetFilters = () => {
     setQuery({
       pageNumber: 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: "Id",
+      sortBy: 'Id',
       sortDescending: true,
-    });
-  };
+    })
+  }
 
   const handlePageChange = (newPage: number) => {
-    setQuery((prev) => ({ ...prev, pageNumber: newPage }));
-  };
+    setQuery((prev) => ({ ...prev, pageNumber: newPage }))
+  }
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }));
-  };
+    setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }))
+  }
 
   const handleDelete = (id: string) => {
-    setDeletingAssetId(id);
-  };
+    setDeletingAssetId(id)
+  }
 
   const confirmDelete = () => {
     if (deletingAssetId) {
       deleteAsset(deletingAssetId, {
         onSuccess: () => {
-          setDeletingAssetId(null);
+          setDeletingAssetId(null)
         },
-      });
+      })
     }
-  };
+  }
 
   const handleView = (asset: Asset) => {
-    console.log("View asset:", asset);
-  };
+    console.log('View asset:', asset)
+  }
 
   const formatAddress = (asset: Asset) => {
-    if (!asset.address) return "-";
+    if (!asset.address) return '-'
     const parts = [
       asset.address.unitNumber,
       asset.address.streetNumber,
       asset.address.streetName,
       asset.address.suburb,
       asset.address.state,
-    ].filter(Boolean);
-    return parts.length > 0 ? parts.join(" ") : "-";
-  };
+    ].filter(Boolean)
+    return parts.length > 0 ? parts.join(' ') : '-'
+  }
 
   const getOwnershipSummary = (asset: Asset) => {
-    const peopleCount = asset.assetPeople?.length || 0;
-    const companiesCount = asset.assetCompanies?.length || 0;
-    const total = peopleCount + companiesCount;
+    const peopleCount = asset.assetPeople?.length || 0
+    const companiesCount = asset.assetCompanies?.length || 0
+    const total = peopleCount + companiesCount
 
-    if (total === 0) return "-";
+    if (total === 0) return '-'
 
-    const parts = [];
+    const parts = []
     if (peopleCount > 0)
-      parts.push(`${peopleCount} ${peopleCount === 1 ? "Person" : "People"}`);
+      parts.push(`${peopleCount} ${peopleCount === 1 ? 'Person' : 'People'}`)
     if (companiesCount > 0)
       parts.push(
-        `${companiesCount} ${companiesCount === 1 ? "Company" : "Companies"}`,
-      );
+        `${companiesCount} ${companiesCount === 1 ? 'Company' : 'Companies'}`
+      )
 
-    return parts.join(", ");
-  };
+    return parts.join(', ')
+  }
 
   if (error) {
-    return <ErrorState message={error.message} />;
+    return <ErrorState message={error.message} />
   }
 
   return (
@@ -200,11 +200,11 @@ export const AssetsTable = () => {
                         {asset.propertyType}
                       </Badge>
                     ) : (
-                      "-"
+                      '-'
                     )}
                   </TableCell>
                   <TableCell className="font-medium">
-                    {formatCurrency(asset.value)}
+                    {formatCurrency(Number(asset.value || 0))}
                   </TableCell>
                   <TableCell>
                     {asset.isInvestment ? (
@@ -301,12 +301,12 @@ export const AssetsTable = () => {
                   Deleting...
                 </>
               ) : (
-                "Delete"
+                'Delete'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
-};
+  )
+}
