@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useClientQueries } from "../../hooks/useClientQueries";
-import { useClients } from "../../hooks/useClients";
-import { PeopleFilters } from "./PeopleFilters";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react'
+import { useClientQueries } from '../hooks/usePeopleQueries'
+import { useClients } from '../hooks/usePeople'
+import { PeopleFilters } from './PeopleFilters'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -10,13 +10,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,8 +26,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
 import {
   Plus,
   MoreHorizontal,
@@ -35,83 +35,85 @@ import {
   Pencil,
   Trash2,
   Loader2,
-} from "lucide-react";
-import { DEFAULT_PAGE_SIZE } from "@/constants/pagination";
-import type { PersonQuery, Person } from "../../types";
-import { Pagination } from "@/components/common/Pagination";
+} from 'lucide-react'
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
+import type { PersonQuery, Person } from '../types'
+import { Pagination } from '@/components/common/Pagination'
 import {
   GENDER_VARIANT_MAPPING,
   MARITAL_STATUS_VARIANT_MAPPING,
-} from "../../constants";
-import { openUpSertPersonModal } from "./UpSertPerson";
-import { ErrorState } from "@/components/common/ErrorState";
+} from '../constants'
+import { openUpSertPersonModal } from './UpSertPerson'
+import { ErrorState } from '@/components/common/ErrorState'
+import { useNavigate } from 'react-router-dom'
 
 export const PeopleTable = () => {
+  const navigate = useNavigate()
+
   const [query, setQuery] = useState<PersonQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: "Id",
+    sortBy: 'Id',
     sortDescending: true,
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    brokerId: "",
-  });
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    brokerId: '',
+  })
 
-  const [deletingPerson, setDeletingPerson] = useState<Person | null>(null);
+  const [deletingPerson, setDeletingPerson] = useState<Person | null>(null)
 
-  const { usePeopleList } = useClientQueries();
-  const { data: people, isLoading, error } = usePeopleList(query);
+  const { usePeopleList } = useClientQueries()
+  const { data: people, isLoading, error } = usePeopleList(query)
 
-  const { deletePerson, isDeletingPerson } = useClients();
+  const { deletePerson, isDeletingPerson } = useClients()
 
   const handleFilterChange = (filters: Partial<PersonQuery>) => {
     setQuery((prev) => ({
       ...prev,
       ...filters,
       pageNumber: 1,
-    }));
-  };
+    }))
+  }
 
   const handleResetFilters = () => {
     setQuery({
       pageNumber: 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: "Id",
+      sortBy: 'Id',
       sortDescending: true,
-    });
-  };
+    })
+  }
 
   const handlePageChange = (newPage: number) => {
-    setQuery((prev) => ({ ...prev, pageNumber: newPage }));
-  };
+    setQuery((prev) => ({ ...prev, pageNumber: newPage }))
+  }
 
   const handlePageSizeChange = (newPageSize: number) => {
-    setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }));
-  };
+    setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }))
+  }
 
   const handleDelete = (person: Person) => {
-    setDeletingPerson(person);
-  };
+    setDeletingPerson(person)
+  }
 
   const confirmDelete = () => {
     if (deletingPerson) {
       deletePerson(deletingPerson.id, {
         onSuccess: () => {
-          setDeletingPerson(null);
+          setDeletingPerson(null)
         },
-      });
+      })
     }
-  };
+  }
 
   const handleView = (person: Person) => {
-    // TODO: Navigate to detail page or open detail dialog
-    console.log("View person:", person);
-  };
+    navigate(`/clients/people/${person.id}`)
+  }
 
   if (error) {
-    return <ErrorState message={error.message} />;
+    return <ErrorState message={error.message} />
   }
 
   return (
@@ -123,7 +125,7 @@ export const PeopleTable = () => {
 
       <div className="flex justify-end">
         <Button
-          variant={"sky"}
+          variant={'sky'}
           onClick={() =>
             openUpSertPersonModal({
               person: null,
@@ -170,22 +172,22 @@ export const PeopleTable = () => {
                   <TableCell className="font-medium">
                     {person.fullName}
                   </TableCell>
-                  <TableCell>{person.email || "-"}</TableCell>
+                  <TableCell>{person.email || '-'}</TableCell>
                   <TableCell>
-                    {person.phoneMobile || person.phoneWork || "-"}
+                    {person.phoneMobile || person.phoneWork || '-'}
                   </TableCell>
                   <TableCell>
                     {person.gender ? (
                       <Badge
                         variant={
-                          GENDER_VARIANT_MAPPING[person.gender] || "default"
+                          GENDER_VARIANT_MAPPING[person.gender] || 'default'
                         }
                         className="font-normal"
                       >
                         {person.gender}
                       </Badge>
                     ) : (
-                      "-"
+                      '-'
                     )}
                   </TableCell>
                   <TableCell>
@@ -194,17 +196,17 @@ export const PeopleTable = () => {
                         variant={
                           MARITAL_STATUS_VARIANT_MAPPING[
                             person.maritalStatus
-                          ] || "default"
+                          ] || 'default'
                         }
                         className="font-normal"
                       >
                         {person.maritalStatus}
                       </Badge>
                     ) : (
-                      "-"
+                      '-'
                     )}
                   </TableCell>
-                  <TableCell>{person.brokerName || "-"}</TableCell>
+                  <TableCell>{person.brokerName || '-'}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -265,7 +267,7 @@ export const PeopleTable = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete{" "}
+              This action cannot be undone. This will permanently delete{' '}
               <strong>{deletingPerson?.fullName}</strong> and all associated
               data.
             </AlertDialogDescription>
@@ -285,12 +287,14 @@ export const PeopleTable = () => {
                   Deleting...
                 </>
               ) : (
-                "Delete"
+                'Delete'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
-};
+  )
+}
+
+export default PeopleTable

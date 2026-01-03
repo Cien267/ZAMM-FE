@@ -1,27 +1,27 @@
-import { useFieldArray, type Control } from "react-hook-form"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { InputNumber } from "@/components/common/InputNumber"
+import { useFieldArray, type Control } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { InputNumber } from '@/components/common/InputNumber'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select'
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Plus, X } from "lucide-react"
-import { GENDER_OPTIONS, RELATIONSHIP_OPTIONS } from "../../constants"
-import type { CreatePersonInput, UpdatePersonInput } from "../../types"
+} from '@/components/ui/form'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Plus, X } from 'lucide-react'
+import { GENDER_OPTIONS, RELATIONSHIP_OPTIONS } from '../constants'
+import type { CreatePersonInput, UpdatePersonInput } from '../types'
 
 interface DependentFieldsProps {
   control: Control<CreatePersonInput | UpdatePersonInput>
@@ -30,17 +30,17 @@ interface DependentFieldsProps {
 export const DependentFields = ({ control }: DependentFieldsProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "dependents",
+    name: 'dependents',
   })
 
   const addDependent = () => {
     append({
-      fullName: "",
+      fullName: '',
       yearOfBirth: new Date().getFullYear(),
-      gender: "Male",
-      relationship: "",
+      gender: 'Male',
+      relationship: '',
       isStudent: false,
-      notes: "",
+      notes: '',
     })
   }
 
@@ -116,14 +116,14 @@ export const DependentFields = ({ control }: DependentFieldsProps) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Year of Birth{" "}
+                        Year of Birth{' '}
                         <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <InputNumber
                           placeholder="YYYY"
                           {...field}
-                          value={field.value?.toString() || ""}
+                          value={field.value?.toString() || ''}
                           onChange={(val) =>
                             field.onChange(val ? parseInt(val) : null)
                           }
@@ -143,7 +143,7 @@ export const DependentFields = ({ control }: DependentFieldsProps) => {
                     <FormItem>
                       <FormLabel>Gender</FormLabel>
                       <RadioGroup
-                        value={field.value || ""}
+                        value={field.value || ''}
                         onValueChange={field.onChange}
                         defaultValue="Male"
                         className="flex justify-start items-center gap-2"
@@ -173,7 +173,7 @@ export const DependentFields = ({ control }: DependentFieldsProps) => {
                       <FormLabel>Relationship</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || ""}
+                        value={field.value || ''}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -206,7 +206,7 @@ export const DependentFields = ({ control }: DependentFieldsProps) => {
                         className="resize-none"
                         rows={3}
                         {...field}
-                        value={field.value || ""}
+                        value={field.value || ''}
                       />
                     </FormControl>
                     <FormMessage />

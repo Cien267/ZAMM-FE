@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useClients } from "../../hooks/useClients";
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useClients } from '../hooks/usePeople'
 import {
   Form,
   FormControl,
@@ -9,47 +9,45 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { MapPin, Loader2 } from "lucide-react";
+} from '@/components/ui/select'
+import { Checkbox } from '@/components/ui/checkbox'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
+import { MapPin, Loader2 } from 'lucide-react'
 import {
   TITLE_OPTIONS,
   GENDER_OPTIONS,
   MARITAL_STATUS_OPTIONS,
   PHONE_PREFERENCE_OPTIONS,
-} from "../../constants";
+} from '../constants'
 import {
   CreatePersonSchema,
   UpdatePersonSchema,
   type CreatePersonInput,
-} from "../../types";
-import { DependentFields } from "./DependentFields";
-import type { Person, UpdatePersonInput } from "../../types";
-import { Modal } from "@/components/common/modal";
-import { DatePicker } from "@/components/common/DatePicker";
-import { InputNumber } from "@/components/common/InputNumber";
-import { openUpSertAssetModal } from "@/features/assets/components/UpSertAsset";
-import { useAllUsers } from "@/hooks/useSharedData";
+  type Person,
+  type UpdatePersonInput,
+} from '../types'
+import { DependentFields } from './DependentFields'
+import { Modal } from '@/components/common/modal'
+import { DatePicker } from '@/components/common/DatePicker'
+import { InputNumber } from '@/components/common/InputNumber'
+import { openUpSertAssetModal } from '@/features/assets/components/UpSertAsset'
+import { useAllUsers } from '@/hooks/useSharedData'
 
 interface PeopleFormDialogProps {
-  person?: Person | null;
-  onClose: () => void;
-  onSubmittingChange?: (isSubmitting: boolean) => void;
-  onSubmit: (
-    createdPerson: Person | null,
-    action: "exit" | "add-asset",
-  ) => void;
+  person?: Person | null
+  onClose: () => void
+  onSubmittingChange?: (isSubmitting: boolean) => void
+  onSubmit: (createdPerson: Person | null, action: 'exit' | 'add-asset') => void
 }
 
 export const PersonModalContent = ({
@@ -58,75 +56,75 @@ export const PersonModalContent = ({
   onSubmittingChange,
   onSubmit: handleSubmit,
 }: PeopleFormDialogProps) => {
-  const isEditing = !!person;
+  const isEditing = !!person
   const {
     createPersonAsync,
     updatePersonAsync,
     isCreatingPerson,
     isUpdatingPerson,
-  } = useClients();
+  } = useClients()
 
-  const { data: users } = useAllUsers();
-  const brokers = users || [];
+  const { data: users } = useAllUsers()
+  const brokers = users || []
 
   const form = useForm<CreatePersonInput | UpdatePersonInput>({
     resolver: zodResolver(isEditing ? UpdatePersonSchema : CreatePersonSchema),
     defaultValues: {
-      title: person?.title || "Mr",
-      firstName: person?.firstName || "",
-      middleName: person?.middleName || "",
-      lastName: person?.lastName || "",
-      preferredName: person?.preferredName || "",
+      title: person?.title || 'Mr',
+      firstName: person?.firstName || '',
+      middleName: person?.middleName || '',
+      lastName: person?.lastName || '',
+      preferredName: person?.preferredName || '',
       dateOfBirth: person?.dateOfBirth
         ? new Date(person.dateOfBirth)
         : undefined,
       notifyOfBirthday: person?.notifyOfBirthday || false,
       gender: person?.gender || GENDER_OPTIONS[0],
       maritalStatus: person?.maritalStatus || MARITAL_STATUS_OPTIONS[0],
-      email: person?.email || "",
-      phoneWork: person?.phoneWork || "",
-      phoneMobile: person?.phoneMobile || "",
+      email: person?.email || '',
+      phoneWork: person?.phoneWork || '',
+      phoneMobile: person?.phoneMobile || '',
       phonePreference: person?.phonePreference || PHONE_PREFERENCE_OPTIONS[0],
       actingOnTrust: person?.actingOnTrust || false,
-      trustName: person?.trustName || "",
+      trustName: person?.trustName || '',
       spouseId: person?.spouseId || null,
       brokerId: person?.brokerId || brokers[0]?.id,
-      address: "",
+      address: '',
       dependents: person?.dependents || [],
       ...(isEditing && person ? { id: person.id } : {}),
     },
-  });
+  })
 
   const onSubmit = async (data: CreatePersonInput) => {
     try {
-      let createdPerson = null;
+      let createdPerson = null
       if (isEditing && person) {
-        await updatePersonAsync({ ...data, id: person.id });
+        await updatePersonAsync({ ...data, id: person.id })
       } else {
-        createdPerson = await createPersonAsync(data);
+        createdPerson = await createPersonAsync(data)
       }
-      const action = (window as any).__personFormAction || "exit";
-      onClose();
-      form.reset();
-      handleSubmit(createdPerson, action);
+      const action = (window as any).__personFormAction || 'exit'
+      onClose()
+      form.reset()
+      handleSubmit(createdPerson, action)
     } catch (error) {
-      console.error("Form submission error:", error);
+      console.error('Form submission error:', error)
     }
-  };
+  }
 
-  const isSubmitting = isCreatingPerson || isUpdatingPerson;
+  const isSubmitting = isCreatingPerson || isUpdatingPerson
 
   useEffect(() => {
-    onSubmittingChange?.(isSubmitting);
+    onSubmittingChange?.(isSubmitting)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
+  }, [isSubmitting])
 
   return (
-    <Form {...form} key={person?.id || "new-person"}>
+    <Form {...form} key={person?.id || 'new-person'}>
       <form
         id="person-form"
         onSubmit={form.handleSubmit(onSubmit, (errors) =>
-          console.log("Validation Errors:", errors),
+          console.log('Validation Errors:', errors)
         )}
         className="space-y-6"
       >
@@ -140,7 +138,7 @@ export const PersonModalContent = ({
                 <FormItem className="col-span-2">
                   <FormLabel>Title</FormLabel>
                   <RadioGroup
-                    value={field.value || ""}
+                    value={field.value || ''}
                     onValueChange={field.onChange}
                     defaultValue="Mr"
                     className="flex justify-start items-center gap-2"
@@ -264,7 +262,7 @@ export const PersonModalContent = ({
                 <FormItem>
                   <FormLabel>Gender</FormLabel>
                   <RadioGroup
-                    value={field.value || ""}
+                    value={field.value || ''}
                     onValueChange={field.onChange}
                     defaultValue="Male"
                     className="flex justify-start items-center gap-2"
@@ -289,7 +287,7 @@ export const PersonModalContent = ({
                 <FormItem>
                   <FormLabel>Marital Status</FormLabel>
                   <RadioGroup
-                    value={field.value || ""}
+                    value={field.value || ''}
                     onValueChange={field.onChange}
                     defaultValue="Single"
                     className="flex justify-start items-center gap-2"
@@ -320,7 +318,7 @@ export const PersonModalContent = ({
                 <FormItem>
                   <FormLabel>Phone Preference</FormLabel>
                   <RadioGroup
-                    value={field.value || ""}
+                    value={field.value || ''}
                     onValueChange={field.onChange}
                     defaultValue="Mobile"
                     className="flex justify-start items-center gap-2"
@@ -417,9 +415,9 @@ export const PersonModalContent = ({
                   <FormLabel>Assigned Broker</FormLabel>
                   <Select
                     onValueChange={(value) => {
-                      field.onChange(value);
+                      field.onChange(value)
                     }}
-                    value={field.value || ""}
+                    value={field.value || ''}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -444,43 +442,43 @@ export const PersonModalContent = ({
         <DependentFields control={form.control} />
       </form>
     </Form>
-  );
-};
+  )
+}
 
 export const openUpSertPersonModal = ({
   person,
 }: {
-  person: Person | null;
+  person: Person | null
 }) => {
-  const isEditing = !!person;
-  let isSubmitting = false;
+  const isEditing = !!person
+  let isSubmitting = false
 
   const handleFormSubmit = async (
     createdPerson: Person | null,
-    action: "exit" | "add-asset",
+    action: 'exit' | 'add-asset'
   ) => {
-    if (action == "add-asset" && createdPerson?.id) {
+    if (action == 'add-asset' && createdPerson?.id) {
       openUpSertAssetModal({
         asset: null,
         initialPerson: createdPerson,
         initialCompany: null,
-      });
+      })
     }
-  };
+  }
 
   const updateFooter = () => {
     Modal.open({
-      title: isEditing ? "Edit Person" : "Add New Person",
+      title: isEditing ? 'Edit Person' : 'Add New Person',
       description: isEditing
-        ? "Update person information"
-        : "Enter person details",
+        ? 'Update person information'
+        : 'Enter person details',
       content: (
         <PersonModalContent
           person={person}
           onClose={() => Modal.close()}
           onSubmittingChange={(submitting) => {
-            isSubmitting = submitting;
-            updateFooter();
+            isSubmitting = submitting
+            updateFooter()
           }}
           onSubmit={handleFormSubmit}
         />
@@ -500,18 +498,18 @@ export const openUpSertPersonModal = ({
             form="person-form"
             disabled={isSubmitting}
             onClick={() => {
-              (window as any).__personFormAction = "exit";
+              ;(window as any).__personFormAction = 'exit'
             }}
           >
-            {isSubmitting && (window as any).__personFormAction === "exit" ? (
+            {isSubmitting && (window as any).__personFormAction === 'exit' ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                {isEditing ? "Updating..." : "Creating..."}
+                {isEditing ? 'Updating...' : 'Creating...'}
               </>
             ) : isEditing ? (
-              "Update"
+              'Update'
             ) : (
-              "Create & Exit"
+              'Create & Exit'
             )}
           </Button>
 
@@ -521,25 +519,25 @@ export const openUpSertPersonModal = ({
               form="person-form"
               disabled={isSubmitting}
               onClick={() => {
-                (window as any).__personFormAction = "add-asset";
+                ;(window as any).__personFormAction = 'add-asset'
               }}
             >
               {isSubmitting &&
-              (window as any).__personFormAction === "add-asset" ? (
+              (window as any).__personFormAction === 'add-asset' ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   Creating...
                 </>
               ) : (
-                "Create & Add Asset"
+                'Create & Add Asset'
               )}
             </Button>
           )}
         </div>
       ),
-      className: "max-w-4xl!",
-    });
-  };
+      className: 'max-w-4xl!',
+    })
+  }
 
-  updateFooter();
-};
+  updateFooter()
+}

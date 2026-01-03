@@ -1,23 +1,30 @@
-import { createBrowserRouter, Navigate } from "react-router-dom"
-import { lazy } from "react"
-import { PrivateRoute } from "./PrivateRoute"
-import { PublicRoute } from "./PublicRoute"
-import { DefaultLayout } from "@/layouts/DefaultLayout"
-import { SuspenseWrapper } from "@/components/common//SuspenseWrapper"
-import ErrorPage from "@/pages/ErrorPage"
+import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { lazy } from 'react'
+import { PrivateRoute } from './PrivateRoute'
+import { PublicRoute } from './PublicRoute'
+import { DefaultLayout } from '@/layouts/DefaultLayout'
+import { SuspenseWrapper } from '@/components/common//SuspenseWrapper'
+import ErrorPage from '@/pages/ErrorPage'
 
-const LoginPage = lazy(() => import("@/features/auth/pages/LoginPage"))
-const RegisterPage = lazy(() => import("@/features/auth/pages/RegisterPage"))
+const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
+const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
 const DashboardPage = lazy(
-  () => import("@/features/dashboard/pages/DashboardPage")
+  () => import('@/features/dashboard/pages/DashboardPage')
 )
-const ClientsPage = lazy(() => import("@/features/clients/pages/ClientsPage"))
-const ClientDetailPage = lazy(
-  () => import("@/features/clients/pages/ClientDetailPage")
+const ClientsPage = lazy(() => import('@/features/clients/pages/ClientsPage'))
+const PersonDetailPage = lazy(
+  () => import('@/features/people/pages/PersonDetailPage')
 )
-const ReportsPage = lazy(() => import("@/features/reports/pages/ReportsPage"))
-const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"))
-const UnauthorizedPage = lazy(() => import("@/pages/UnauthorizedPage"))
+const PeopleTable = lazy(
+  () => import('@/features/people/components/PeopleTable')
+)
+
+const CompanyTable = lazy(
+  () => import('@/features/company/components/CompanyTable')
+)
+const ReportsPage = lazy(() => import('@/features/reports/pages/ReportsPage'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
+const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
 
 export const router = createBrowserRouter([
   {
@@ -27,7 +34,7 @@ export const router = createBrowserRouter([
       {
         children: [
           {
-            path: "/login",
+            path: '/login',
             element: (
               <SuspenseWrapper>
                 <LoginPage />
@@ -35,7 +42,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: "/register",
+            path: '/register',
             element: (
               <SuspenseWrapper>
                 <RegisterPage />
@@ -54,7 +61,7 @@ export const router = createBrowserRouter([
         element: <DefaultLayout />,
         children: [
           {
-            path: "/dashboard",
+            path: '/dashboard',
             element: (
               <SuspenseWrapper>
                 <DashboardPage />
@@ -62,28 +69,33 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: "/clients",
+            path: '/clients',
+            element: (
+              <SuspenseWrapper>
+                <ClientsPage />
+              </SuspenseWrapper>
+            ),
             children: [
               {
                 index: true,
-                element: (
-                  <SuspenseWrapper>
-                    <ClientsPage />
-                  </SuspenseWrapper>
-                ),
+                element: <Navigate to="people" replace />,
               },
               {
-                path: ":id",
-                element: (
-                  <SuspenseWrapper>
-                    <ClientDetailPage />
-                  </SuspenseWrapper>
-                ),
+                path: 'people',
+                element: <PeopleTable />,
+              },
+              {
+                path: 'companies',
+                element: <CompanyTable />,
+              },
+              {
+                path: 'people/:id',
+                element: <PersonDetailPage />,
               },
             ],
           },
           {
-            path: "/reports",
+            path: '/reports',
             element: (
               <SuspenseWrapper>
                 <ReportsPage />
@@ -91,7 +103,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: "/",
+            path: '/',
             element: <Navigate to="/dashboard" replace />,
           },
         ],
@@ -99,7 +111,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/unauthorized",
+    path: '/unauthorized',
     element: (
       <SuspenseWrapper>
         <UnauthorizedPage />
@@ -107,7 +119,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/404",
+    path: '/404',
     element: (
       <SuspenseWrapper>
         <NotFoundPage />
@@ -115,7 +127,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "*",
+    path: '*',
     element: <Navigate to="/404" replace />,
   },
 ])

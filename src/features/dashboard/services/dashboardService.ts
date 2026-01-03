@@ -4,7 +4,7 @@
 // import type { Event } from "@/features/events/types"
 
 export const dashboardService = {
-  async getUpcomingEvents(): Promise<Event[]> {
+  async getUpcomingEvents(): Promise<any[]> {
     return []
     // try {
     //   const response = await api.get<ApiResponse<Event[]>>(
