@@ -123,10 +123,6 @@ export const DependentFields = ({ control }: DependentFieldsProps) => {
                         <InputNumber
                           placeholder="YYYY"
                           {...field}
-                          value={field.value?.toString() || ''}
-                          onChange={(val) =>
-                            field.onChange(val ? parseInt(val) : null)
-                          }
                           allowDecimal={false}
                           allowNegative={false}
                         />

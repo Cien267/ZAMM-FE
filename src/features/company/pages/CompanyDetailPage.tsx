@@ -1,43 +1,43 @@
 import { useParams } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2 } from 'lucide-react'
-import { usePeopleQueries } from '../hooks/usePeopleQueries'
-import { PersonHeader } from '../components/detail/PersonHeader'
-import { PersonStatsCards } from '../components/detail/PersonStatsCards'
-import { PersonOverviewTab } from '../components/detail/PersonOverviewTab'
+import { useCompanyQueries } from '../hooks/useCompaniesQueries'
+import { CompanyHeader } from '../components/detail/CompanyHeader'
+import { PersonStatsCards } from '@/features/people/components/detail/PersonStatsCards'
+import { CompanyOverviewTab } from '../components/detail/CompanyOverviewTab'
 import { AssetsTable } from '@/features/assets/components/AssetsTable'
 import { LiabilitiesTable } from '@/features/liabilities/components/LiabilitiesTable'
 import {
-  useAllAssetsByPersonId,
-  useAllLiabilitiesByPersonId,
+  useAllAssetsByCompanyId,
+  useAllLiabilitiesByCompanyId,
 } from '@/hooks/useSharedData'
 
-export const PersonDetailPage = () => {
+export const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>()
-  const { usePerson } = usePeopleQueries()
+  const { useCompany } = useCompanyQueries()
 
   const {
-    data: person,
-    isLoading: isLoadingPerson,
+    data: company,
+    isLoading: isLoadingCompany,
     error,
-  } = usePerson(id || '', !!id)
+  } = useCompany(id || '', !!id)
 
-  const { data: assetsData } = useAllAssetsByPersonId(id || '')
+  const { data: assetsData } = useAllAssetsByCompanyId(id || '')
 
-  const { data: liabilitiesData } = useAllLiabilitiesByPersonId(id || '')
+  const { data: liabilitiesData } = useAllLiabilitiesByCompanyId(id || '')
 
-  const personAssets = assetsData?.data || []
-  const personLiabilities = liabilitiesData?.data || []
+  const companyAssets = assetsData?.data || []
+  const companyLiabilities = liabilitiesData?.data || []
 
-  const totalAssetValue = personAssets.reduce((sum, asset) => {
-    const ownership = asset.assetPeople?.find((ap) => ap.personId === id)
+  const totalAssetValue = companyAssets.reduce((sum, asset) => {
+    const ownership = asset.assetCompanies?.find((ac) => ac.companyId === id)
     const ownershipPercent = ownership?.percent || 0
     return sum + (Number(asset.value || 0) * ownershipPercent) / 100
   }, 0)
 
-  const totalLiabilityBalance = personLiabilities.reduce((sum, liability) => {
-    const ownership = liability.liabilityPeople?.find(
-      (lp) => lp.personId === id
+  const totalLiabilityBalance = companyLiabilities.reduce((sum, liability) => {
+    const ownership = liability.liabilityCompanies?.find(
+      (lc) => lc.companyId === id
     )
     const ownershipPercent = ownership?.percent || 0
     return (
@@ -45,7 +45,7 @@ export const PersonDetailPage = () => {
     )
   }, 0)
 
-  if (isLoadingPerson) {
+  if (isLoadingCompany) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -53,16 +53,16 @@ export const PersonDetailPage = () => {
     )
   }
 
-  if (error || !person) {
+  if (error || !company) {
     return (
       <div className="container mx-auto py-6">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <p className="text-destructive mb-2">
-              Error loading person details
+              Error loading company details
             </p>
             <p className="text-sm text-muted-foreground">
-              {error?.message || 'Person not found'}
+              {error?.message || 'Company not found'}
             </p>
           </div>
         </div>
@@ -72,11 +72,11 @@ export const PersonDetailPage = () => {
 
   return (
     <div className="mx-auto space-y-6">
-      <PersonHeader person={person} />
+      <CompanyHeader company={company} />
 
       <PersonStatsCards
-        assetsCount={personAssets.length}
-        liabilitiesCount={personLiabilities.length}
+        assetsCount={companyAssets.length}
+        liabilitiesCount={companyLiabilities.length}
         totalAssetValue={totalAssetValue}
         totalLiabilityBalance={totalLiabilityBalance}
       />
@@ -86,36 +86,36 @@ export const PersonDetailPage = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="assets">
             Assets
-            {personAssets.length > 0 && (
+            {companyAssets.length > 0 && (
               <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
-                {personAssets.length}
+                {companyAssets.length}
               </span>
             )}
           </TabsTrigger>
           <TabsTrigger value="liabilities">
             Liabilities
-            {personLiabilities.length > 0 && (
+            {companyLiabilities.length > 0 && (
               <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
-                {personLiabilities.length}
+                {companyLiabilities.length}
               </span>
             )}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
-          <PersonOverviewTab person={person} />
+          <CompanyOverviewTab company={company} />
         </TabsContent>
 
         <TabsContent value="assets">
-          <AssetsTable initialData={person} type="person" />
+          <AssetsTable initialData={company} type="company" />
         </TabsContent>
 
         <TabsContent value="liabilities">
-          <LiabilitiesTable initialData={person} type="person" />
+          <LiabilitiesTable initialData={company} type="company" />
         </TabsContent>
       </Tabs>
     </div>
   )
 }
 
-export default PersonDetailPage
+export default CompanyDetailPage

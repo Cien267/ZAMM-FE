@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useClients } from '../hooks/usePeople'
+import { usePeople } from '../hooks/usePeople'
 import {
   Form,
   FormControl,
@@ -62,7 +62,7 @@ export const PersonModalContent = ({
     updatePersonAsync,
     isCreatingPerson,
     isUpdatingPerson,
-  } = useClients()
+  } = usePeople()
 
   const { data: users } = useAllUsers()
   const brokers = users || []
@@ -367,6 +367,8 @@ export const PersonModalContent = ({
                       placeholder="Enter phone"
                       {...field}
                       allowDecimal={false}
+                      allowNegative={false}
+                      returnString={true}
                     />
                   </FormControl>
                   <FormMessage />
@@ -385,6 +387,8 @@ export const PersonModalContent = ({
                       placeholder="Enter phone"
                       {...field}
                       allowDecimal={false}
+                      allowNegative={false}
+                      returnString={true}
                     />
                   </FormControl>
                   <FormMessage />

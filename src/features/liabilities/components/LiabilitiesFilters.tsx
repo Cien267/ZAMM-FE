@@ -1,23 +1,23 @@
-import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from 'react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { X } from "lucide-react";
-import { useDebounce } from "@/hooks/useDebounce";
-import { FINANCE_PURPOSES } from "../constants";
-import type { LiabilityQuery } from "../types";
-import { DatePicker } from "@/components/common/DatePicker";
+} from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
+import { X } from 'lucide-react'
+import { useDebounce } from '@/hooks/useDebounce'
+import { FINANCE_PURPOSES } from '../constants'
+import type { LiabilityQuery } from '../types'
+import { DatePicker } from '@/components/common/DatePicker'
 
 interface LiabilitiesFiltersProps {
-  onFilterChange: (filters: Partial<LiabilityQuery>) => void;
-  onReset: () => void;
+  onFilterChange: (filters: Partial<LiabilityQuery>) => void
+  onReset: () => void
 }
 
 export const LiabilitiesFilters = ({
@@ -25,42 +25,42 @@ export const LiabilitiesFilters = ({
   onReset,
 }: LiabilitiesFiltersProps) => {
   const [filters, setFilters] = useState<Partial<LiabilityQuery>>({
-    name: "",
-    loanId: "",
-    financePurpose: "",
+    name: '',
+    loanId: '',
+    financePurpose: '',
     startDateFrom: undefined,
     startDateTo: undefined,
-  });
+  })
 
-  const debouncedFilters = useDebounce(filters, 500);
+  const debouncedFilters = useDebounce(filters, 500)
 
   useEffect(() => {
-    onFilterChange(debouncedFilters);
+    onFilterChange(debouncedFilters)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedFilters]);
+  }, [debouncedFilters])
 
   const handleChange = (field: keyof LiabilityQuery, value: any) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
-  };
+    setFilters((prev) => ({ ...prev, [field]: value }))
+  }
 
   const handleReset = () => {
     const emptyFilters = {
-      name: "",
-      loanId: "",
-      financePurpose: "",
+      name: '',
+      loanId: '',
+      financePurpose: '',
       startDateFrom: undefined,
       startDateTo: undefined,
-    };
-    setFilters(emptyFilters);
-    onReset();
-  };
+    }
+    setFilters(emptyFilters)
+    onReset()
+  }
 
   const hasActiveFilters =
-    filters.name !== "" ||
-    filters.loanId !== "" ||
-    filters.financePurpose !== "" ||
+    filters.name !== '' ||
+    filters.loanId !== '' ||
+    filters.financePurpose !== '' ||
     filters.startDateFrom !== undefined ||
-    filters.startDateTo !== undefined;
+    filters.startDateTo !== undefined
 
   return (
     <div className="space-y-4 pb-10">
@@ -70,23 +70,22 @@ export const LiabilitiesFilters = ({
           <Input
             placeholder="Search by name..."
             value={filters.name}
-            onChange={(e) => handleChange("name", e.target.value)}
+            onChange={(e) => handleChange('name', e.target.value)}
           />
         </div>
 
         <div className="space-y-2">
           <Label>Finance Purpose</Label>
           <Select
-            value={filters.financePurpose || ""}
+            value={filters.financePurpose || ''}
             onValueChange={(value) =>
-              handleChange("financePurpose", value || "")
+              handleChange('financePurpose', value || '')
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="All purposes" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All purposes</SelectItem>
               {FINANCE_PURPOSES.map((purpose) => (
                 <SelectItem key={purpose} value={purpose}>
                   {purpose}
@@ -100,7 +99,7 @@ export const LiabilitiesFilters = ({
           <Label>From Commencement Date</Label>
           <DatePicker
             value={filters.startDateFrom}
-            onChange={(value) => handleChange("startDateFrom", value)}
+            onChange={(value) => handleChange('startDateFrom', value)}
             placeholder="Pick a date"
             disableFutureDates
           />
@@ -110,7 +109,7 @@ export const LiabilitiesFilters = ({
           <Label>To Commencement Date</Label>
           <DatePicker
             value={filters.startDateTo}
-            onChange={(value) => handleChange("startDateTo", value)}
+            onChange={(value) => handleChange('startDateTo', value)}
             placeholder="Pick a date"
             disableFutureDates
           />
@@ -126,5 +125,5 @@ export const LiabilitiesFilters = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

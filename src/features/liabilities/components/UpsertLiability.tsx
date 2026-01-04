@@ -159,17 +159,17 @@ export const LiabilityModalContent = ({
   })
 
   useEffect(() => {
-    if (initialLoanId && !form.getValues('loanId')) {
+    if (!isLoadingLoans && initialLoanId && !form.getValues('loanId')) {
       form.setValue('loanId', initialLoanId)
     }
-  }, [initialLoanId, form])
+  }, [initialLoanId, form, isLoadingLoans])
 
   const handleLenderChange = (lenderId: string) => {
     setSelectedLenderId(lenderId)
     const firstLoan = loans.find((loan) => loan.lenderId === lenderId)
     if (firstLoan) {
       form.setValue('loanId', firstLoan.id)
-    } else {
+    } else if (!isEditing) {
       form.setValue('loanId', '')
     }
   }
@@ -378,10 +378,7 @@ export const LiabilityModalContent = ({
                     <InputNumber
                       placeholder="Years"
                       {...field}
-                      value={field.value?.toString() || ''}
-                      onChange={(val) =>
-                        field.onChange(val ? parseInt(val) : null)
-                      }
+                      allowNegative={false}
                       allowDecimal={false}
                     />
                   </FormControl>
@@ -400,10 +397,7 @@ export const LiabilityModalContent = ({
                     <InputNumber
                       placeholder="Years"
                       {...field}
-                      value={field.value?.toString() || ''}
-                      onChange={(val) =>
-                        field.onChange(val ? parseInt(val) : null)
-                      }
+                      allowNegative={false}
                       allowDecimal={false}
                     />
                   </FormControl>
@@ -487,10 +481,7 @@ export const LiabilityModalContent = ({
                       <InputNumber
                         placeholder="Years"
                         {...field}
-                        value={field.value?.toString() || ''}
-                        onChange={(val) =>
-                          field.onChange(val ? parseInt(val) : null)
-                        }
+                        allowNegative={false}
                         allowDecimal={false}
                       />
                     </FormControl>

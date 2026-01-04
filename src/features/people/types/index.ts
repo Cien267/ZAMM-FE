@@ -83,6 +83,7 @@ export interface PersonQuery extends PaginationParams {
   email?: string
   phone?: string
   brokerId?: string
+  companyId?: string
 }
 
 export const CreatePersonSchema = z.object({

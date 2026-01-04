@@ -3,7 +3,7 @@ import { peopleService } from '../services/peopleService'
 import type { PersonQuery } from '../types'
 import { peopleKeys } from '../constants'
 
-export const useClientQueries = () => {
+export const usePeopleQueries = () => {
   // People queries
   const usePeopleList = (query: PersonQuery) => {
     return useQuery({

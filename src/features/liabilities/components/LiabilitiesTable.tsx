@@ -40,13 +40,35 @@ import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import type { LiabilityQuery, Liability } from '../types'
 import { formatCurrency } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
+import type { Person } from '@/features/people/types'
+import type { Company } from '@/features/company/types'
+import { openUpSertLiabilityModal } from './UpsertLiability'
 
-export const LiabilitiesTable = () => {
+interface LiabilitiesTableProps {
+  initialData: Person | Company | null
+  type: 'person' | 'company' | null
+}
+
+export const LiabilitiesTable = ({
+  initialData,
+  type,
+}: LiabilitiesTableProps) => {
   const [query, setQuery] = useState<LiabilityQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
     sortBy: 'Id',
     sortDescending: true,
+    personId:
+      type === 'person' && initialData ? (initialData as Person).id : undefined,
+    companyId:
+      type === 'company' && initialData
+        ? (initialData as Company).id
+        : undefined,
+    name: '',
+    loanId: '',
+    financePurpose: '',
+    startDateFrom: undefined,
+    startDateTo: undefined,
   })
 
   const [deletingLiabilityId, setDeletingLiabilityId] = useState<string | null>(
@@ -82,11 +104,6 @@ export const LiabilitiesTable = () => {
     setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }))
   }
 
-  const handleEdit = (liability: Liability) => {
-    // TODO: Open edit modal
-    console.log('Edit liability:', liability)
-  }
-
   const handleDelete = (id: string) => {
     setDeletingLiabilityId(id)
   }
@@ -105,10 +122,6 @@ export const LiabilitiesTable = () => {
     console.log('View liability:', liability)
   }
 
-  const handleAddLiability = () => {
-    console.log('Add liability')
-  }
-
   if (error) {
     return <ErrorState message={error.message} />
   }
@@ -121,7 +134,17 @@ export const LiabilitiesTable = () => {
       />
 
       <div className="flex justify-end">
-        <Button onClick={handleAddLiability}>
+        <Button
+          onClick={() =>
+            openUpSertLiabilityModal({
+              liability: null,
+              initialAsset: null,
+              initialPerson: type === 'person' ? (initialData as Person) : null,
+              initialCompany:
+                type === 'company' ? (initialData as Company) : null,
+            })
+          }
+        >
           <Plus className="h-4 w-4 mr-2" />
           Add Liability
         </Button>
@@ -184,7 +207,22 @@ export const LiabilitiesTable = () => {
                           <Eye className="h-4 w-4 mr-2" />
                           View Details
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEdit(liability)}>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            openUpSertLiabilityModal({
+                              liability: liability,
+                              initialAsset: null,
+                              initialPerson:
+                                type === 'person'
+                                  ? (initialData as Person)
+                                  : null,
+                              initialCompany:
+                                type === 'company'
+                                  ? (initialData as Company)
+                                  : null,
+                            })
+                          }
+                        >
                           <Pencil className="h-4 w-4 mr-2" />
                           Edit
                         </DropdownMenuItem>

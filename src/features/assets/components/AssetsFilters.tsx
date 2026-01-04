@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from 'react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { X } from "lucide-react"
-import { useDebounce } from "@/hooks/useDebounce"
-import { ZONING_TYPES, PROPERTY_TYPES } from "../constants"
-import type { AssetQuery } from "../types"
+} from '@/components/ui/select'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
+import { X } from 'lucide-react'
+import { useDebounce } from '@/hooks/useDebounce'
+import { ZONING_TYPES, PROPERTY_TYPES } from '../constants'
+import type { AssetQuery } from '../types'
 
 interface AssetsFiltersProps {
   onFilterChange: (filters: Partial<AssetQuery>) => void
@@ -25,10 +25,10 @@ export const AssetsFilters = ({
   onReset,
 }: AssetsFiltersProps) => {
   const [filters, setFilters] = useState<Partial<AssetQuery>>({
-    name: "",
+    name: '',
     isInvestment: undefined,
-    zoningType: "",
-    propertyType: "",
+    zoningType: '',
+    propertyType: '',
   })
 
   const debouncedFilters = useDebounce(filters, 500)
@@ -44,20 +44,20 @@ export const AssetsFilters = ({
 
   const handleReset = () => {
     const emptyFilters = {
-      name: "",
+      name: '',
       isInvestment: undefined,
-      zoningType: "",
-      propertyType: "",
+      zoningType: '',
+      propertyType: '',
     }
     setFilters(emptyFilters)
     onReset()
   }
 
   const hasActiveFilters =
-    filters.name !== "" ||
+    filters.name !== '' ||
     filters.isInvestment !== undefined ||
-    filters.zoningType !== "" ||
-    filters.propertyType !== ""
+    filters.zoningType !== '' ||
+    filters.propertyType !== ''
 
   return (
     <div className="space-y-4 pb-10">
@@ -67,21 +67,20 @@ export const AssetsFilters = ({
           <Input
             placeholder="Search by name..."
             value={filters.name}
-            onChange={(e) => handleChange("name", e.target.value)}
+            onChange={(e) => handleChange('name', e.target.value)}
           />
         </div>
 
         <div className="space-y-2">
           <Label>Zoning Type</Label>
           <Select
-            value={filters.zoningType || ""}
-            onValueChange={(value) => handleChange("zoningType", value || "")}
+            value={filters.zoningType || ''}
+            onValueChange={(value) => handleChange('zoningType', value || '')}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="All zoning types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All zoning types</SelectItem>
               {ZONING_TYPES.map((type) => (
                 <SelectItem key={type} value={type}>
                   {type}
@@ -94,14 +93,13 @@ export const AssetsFilters = ({
         <div className="space-y-2">
           <Label>Property Type</Label>
           <Select
-            value={filters.propertyType || ""}
-            onValueChange={(value) => handleChange("propertyType", value || "")}
+            value={filters.propertyType || ''}
+            onValueChange={(value) => handleChange('propertyType', value || '')}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="All property types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All property types</SelectItem>
               {PROPERTY_TYPES.map((type) => (
                 <SelectItem key={type} value={type}>
                   {type}
@@ -118,7 +116,7 @@ export const AssetsFilters = ({
               id="isInvestment"
               checked={filters.isInvestment === true}
               onCheckedChange={(checked) =>
-                handleChange("isInvestment", checked ? true : undefined)
+                handleChange('isInvestment', checked ? true : undefined)
               }
             />
             <Label

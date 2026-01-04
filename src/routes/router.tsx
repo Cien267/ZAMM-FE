@@ -22,6 +22,9 @@ const PeopleTable = lazy(
 const CompanyTable = lazy(
   () => import('@/features/company/components/CompanyTable')
 )
+const CompanyDetailPage = lazy(
+  () => import('@/features/company/pages/CompanyDetailPage')
+)
 const ReportsPage = lazy(() => import('@/features/reports/pages/ReportsPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
@@ -85,12 +88,16 @@ export const router = createBrowserRouter([
                 element: <PeopleTable />,
               },
               {
+                path: 'people/:id',
+                element: <PersonDetailPage />,
+              },
+              {
                 path: 'companies',
                 element: <CompanyTable />,
               },
               {
-                path: 'people/:id',
-                element: <PersonDetailPage />,
+                path: 'companies/:id',
+                element: <CompanyDetailPage />,
               },
             ],
           },

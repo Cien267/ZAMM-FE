@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
-import { liabilityKeys } from "../constants"
-import { liabilityService } from "../services/liabilityService"
-import type { CreateLiabilityInput, UpdateLiabilityInput } from "../types"
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { liabilityKeys } from '../constants'
+import { sharedKeys } from '@/hooks/useSharedData'
+import { liabilityService } from '../services/liabilityService'
+import type { CreateLiabilityInput, UpdateLiabilityInput } from '../types'
 
 export const useLiabilities = () => {
   const queryClient = useQueryClient()
@@ -12,11 +13,18 @@ export const useLiabilities = () => {
       liabilityService.createLiability(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
-      toast.success("Liability created successfully!")
+      queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.liabilitiesByPersonId,
+      })
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.liabilitiesByCompanyId,
+      })
+      toast.success('Liability created successfully!')
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to create liability")
-      console.error("Create liability error:", error)
+      toast.error(error.message || 'Failed to create liability')
+      console.error('Create liability error:', error)
     },
   })
 
@@ -25,14 +33,21 @@ export const useLiabilities = () => {
       liabilityService.updateLiability(data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.liabilitiesByPersonId,
+      })
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.liabilitiesByCompanyId,
+      })
       queryClient.invalidateQueries({
         queryKey: liabilityKeys.detail(variables.id),
       })
-      toast.success("Liability updated successfully!")
+      toast.success('Liability updated successfully!')
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to update liability")
-      console.error("Update liability error:", error)
+      toast.error(error.message || 'Failed to update liability')
+      console.error('Update liability error:', error)
     },
   })
 
@@ -40,11 +55,11 @@ export const useLiabilities = () => {
     mutationFn: (id: string) => liabilityService.deleteLiability(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
-      toast.success("Liability deleted successfully!")
+      toast.success('Liability deleted successfully!')
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to delete liability")
-      console.error("Delete liability error:", error)
+      toast.error(error.message || 'Failed to delete liability')
+      console.error('Delete liability error:', error)
     },
   })
 

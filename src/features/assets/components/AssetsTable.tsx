@@ -42,13 +42,30 @@ import type { AssetQuery, Asset } from '../types'
 import { openUpSertAssetModal } from './UpSertAsset'
 import { formatCurrency } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
+import type { Person } from '@/features/people/types'
+import type { Company } from '@/features/company/types'
 
-export const AssetsTable = () => {
+interface AssetsTableProps {
+  initialData: Person | Company | null
+  type: 'person' | 'company' | null
+}
+
+export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
   const [query, setQuery] = useState<AssetQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
     sortBy: 'Id',
     sortDescending: true,
+    personId:
+      type === 'person' && initialData ? (initialData as Person).id : undefined,
+    companyId:
+      type === 'company' && initialData
+        ? (initialData as Company).id
+        : undefined,
+    name: '',
+    isInvestment: undefined,
+    zoningType: '',
+    propertyType: '',
   })
 
   const [deletingAssetId, setDeletingAssetId] = useState<string | null>(null)
@@ -146,8 +163,14 @@ export const AssetsTable = () => {
           onClick={() =>
             openUpSertAssetModal({
               asset: null,
-              initialPerson: null, // TODO: handle when in person or in company
-              initialCompany: null, // TODO: handle when in person or in company
+              initialPerson:
+                type === 'person' && initialData
+                  ? (initialData as Person)
+                  : null,
+              initialCompany:
+                type === 'company' && initialData
+                  ? (initialData as Company)
+                  : null,
             })
           }
         >
@@ -236,8 +259,14 @@ export const AssetsTable = () => {
                           onClick={() =>
                             openUpSertAssetModal({
                               asset: asset,
-                              initialPerson: null, // TODO: handle when in person or in company
-                              initialCompany: null, // TODO: handle when in person or in company
+                              initialPerson:
+                                type === 'person' && initialData
+                                  ? (initialData as Person)
+                                  : null,
+                              initialCompany:
+                                type === 'company' && initialData
+                                  ? (initialData as Company)
+                                  : null,
                             })
                           }
                         >

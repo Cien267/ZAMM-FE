@@ -273,8 +273,8 @@ export const AssetModalContent = ({
                     <InputNumber
                       placeholder="Enter value"
                       {...field}
-                      allowDecimal={true}
-                      maxDecimals={2}
+                      allowDecimal={false}
+                      allowNegative={false}
                     />
                   </FormControl>
                   <FormMessage />
@@ -359,10 +359,10 @@ export const AssetModalContent = ({
                       <FormLabel>Rental Income</FormLabel>
                       <FormControl>
                         <InputNumber
-                          placeholder="0.00"
+                          placeholder="Enter amount"
                           {...field}
-                          allowDecimal={true}
-                          maxDecimals={2}
+                          allowDecimal={false}
+                          allowNegative={false}
                         />
                       </FormControl>
                       <FormMessage />

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useClientQueries } from '../hooks/usePeopleQueries'
-import { useClients } from '../hooks/usePeople'
+import { usePeopleQueries } from '../hooks/usePeopleQueries'
+import { usePeople } from '../hooks/usePeople'
 import { PeopleFilters } from './PeopleFilters'
 import { Button } from '@/components/ui/button'
 import {
@@ -64,10 +64,10 @@ export const PeopleTable = () => {
 
   const [deletingPerson, setDeletingPerson] = useState<Person | null>(null)
 
-  const { usePeopleList } = useClientQueries()
+  const { usePeopleList } = usePeopleQueries()
   const { data: people, isLoading, error } = usePeopleList(query)
 
-  const { deletePerson, isDeletingPerson } = useClients()
+  const { deletePerson, isDeletingPerson } = usePeople()
 
   const handleFilterChange = (filters: Partial<PersonQuery>) => {
     setQuery((prev) => ({

@@ -102,7 +102,13 @@ export function AddressFields({ toggleName }: AddressFieldsProps) {
                 <FormItem>
                   <FormLabel>Postcode</FormLabel>
                   <FormControl>
-                    <InputNumber placeholder="Enter postcode" {...field} />
+                    <InputNumber
+                      placeholder="Enter postcode"
+                      {...field}
+                      allowDecimal={false}
+                      allowNegative={false}
+                      returnString={true}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

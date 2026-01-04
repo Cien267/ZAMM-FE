@@ -248,6 +248,8 @@ export const CompanyModalContent = ({
                       placeholder="11 digits"
                       maxLength={11}
                       allowDecimal={false}
+                      allowNegative={false}
+                      returnString={true}
                     />
                   </FormControl>
                   <FormMessage />
@@ -267,6 +269,8 @@ export const CompanyModalContent = ({
                       placeholder="9 digits"
                       maxLength={9}
                       allowDecimal={false}
+                      allowNegative={false}
+                      returnString={true}
                     />
                   </FormControl>
                   <FormMessage />
@@ -327,6 +331,8 @@ export const CompanyModalContent = ({
                       {...field}
                       placeholder="Enter phone"
                       allowDecimal={false}
+                      allowNegative={false}
+                      returnString={true}
                     />
                   </FormControl>
                   <FormMessage />
@@ -495,6 +501,8 @@ export const CompanyModalContent = ({
                         {...field}
                         placeholder="Enter phone"
                         allowDecimal={false}
+                        allowNegative={false}
+                        returnString={true}
                       />
                     </FormControl>
                     <FormMessage />

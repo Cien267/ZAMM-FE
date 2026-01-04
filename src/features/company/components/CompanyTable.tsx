@@ -40,8 +40,11 @@ import {
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import type { CompanyQuery, Company } from '../types'
 import { openUpSertCompanyModal } from './UpsertCompany'
+import { useNavigate } from 'react-router-dom'
 
 export const CompanyTable = () => {
+  const navigate = useNavigate()
+
   const [query, setQuery] = useState<CompanyQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -97,8 +100,7 @@ export const CompanyTable = () => {
   }
 
   const handleView = (company: Company) => {
-    // TODO: Navigate to detail page or open detail dialog
-    console.log('View company:', company)
+    navigate(`/clients/companies/${company.id}`)
   }
 
   const formatABN = (abn?: string) => {

@@ -1,18 +1,18 @@
-import { useFieldArray, type Control } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { InputNumber } from "@/components/common/InputNumber";
+import { useFieldArray, type Control } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
+import { InputNumber } from '@/components/common/InputNumber'
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form";
-import { DatePicker } from "@/components/common/DatePicker";
-import { Plus, X } from "lucide-react";
-import type { CreateLiabilityInput, UpdateLiabilityInput } from "../types";
+} from '@/components/ui/form'
+import { DatePicker } from '@/components/common/DatePicker'
+import { Plus, X } from 'lucide-react'
+import type { CreateLiabilityInput, UpdateLiabilityInput } from '../types'
 
 interface FixedRatePeriodsFieldsProps {
-  control: Control<CreateLiabilityInput | UpdateLiabilityInput>;
+  control: Control<CreateLiabilityInput | UpdateLiabilityInput>
 }
 
 export const FixedRatePeriodsFields = ({
@@ -20,20 +20,20 @@ export const FixedRatePeriodsFields = ({
 }: FixedRatePeriodsFieldsProps) => {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "fixedRatePeriods",
-  });
+    name: 'fixedRatePeriods',
+  })
 
   const addPeriod = () => {
     append({
-      startDate: "",
-      term: "",
-      customRate: "",
-    });
-  };
+      startDate: '',
+      term: 1,
+      customRate: null,
+    })
+  }
 
   const removePeriod = (index: number) => {
-    remove(index);
-  };
+    remove(index)
+  }
 
   return (
     <div className="space-y-4">
@@ -107,7 +107,7 @@ export const FixedRatePeriodsFields = ({
                     <FormControl>
                       <div className="relative">
                         <InputNumber
-                          placeholder="Fixed rate"
+                          placeholder="0.00"
                           className="pr-8"
                           {...field}
                           allowDecimal={true}
@@ -137,5 +137,5 @@ export const FixedRatePeriodsFields = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

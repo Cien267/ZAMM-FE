@@ -1,29 +1,29 @@
-import { useFieldArray, type Control } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { InputNumber } from "@/components/common/InputNumber";
+import { useFieldArray, type Control } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
+import { InputNumber } from '@/components/common/InputNumber'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from '@/components/ui/form'
 
-import { Plus, X } from "lucide-react";
-import type { CreateAssetInput, UpdateAssetInput } from "../types";
-import { useAllPeople, useAllCompanies } from "@/hooks/useSharedData";
+import { Plus, X } from 'lucide-react'
+import type { CreateAssetInput, UpdateAssetInput } from '../types'
+import { useAllPeople, useAllCompanies } from '@/hooks/useSharedData'
 
 interface AssetOwnershipFieldsProps {
-  control: Control<CreateAssetInput | UpdateAssetInput>;
-  setValue: any;
-  type: "people" | "company";
+  control: Control<CreateAssetInput | UpdateAssetInput>
+  setValue: any
+  type: 'people' | 'company'
 }
 
 export const AssetOwnershipFields = ({
@@ -31,49 +31,49 @@ export const AssetOwnershipFields = ({
   setValue,
   type,
 }: AssetOwnershipFieldsProps) => {
-  const isAssetPeople = type === "people";
-  const fieldName = isAssetPeople ? "assetPeople" : "assetCompanies";
+  const isAssetPeople = type === 'people'
+  const fieldName = isAssetPeople ? 'assetPeople' : 'assetCompanies'
 
-  const { data: peopleData } = useAllPeople();
-  const { data: companiesData } = useAllCompanies();
+  const { data: peopleData } = useAllPeople()
+  const { data: companiesData } = useAllCompanies()
 
   const options = isAssetPeople
     ? peopleData?.data || []
-    : companiesData?.data || [];
+    : companiesData?.data || []
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: fieldName as "assetPeople" | "assetCompanies",
-  });
+    name: fieldName as 'assetPeople' | 'assetCompanies',
+  })
 
   const redistribute = (count: number) => {
-    const share = Math.floor(100 / count);
-    const remainder = 100 % count;
+    const share = Math.floor(100 / count)
+    const remainder = 100 % count
 
     for (let i = 0; i < count; i++) {
-      const finalPercent = i === 0 ? share + remainder : share;
-      setValue(`${fieldName}.${i}.percent` as any, finalPercent);
+      const finalPercent = i === 0 ? share + remainder : share
+      setValue(`${fieldName}.${i}.percent` as any, finalPercent)
     }
-  };
+  }
 
   const addOwner = () => {
-    const nextCount = fields.length + 1;
+    const nextCount = fields.length + 1
 
     if (isAssetPeople) {
-      append({ personId: "", percent: 0 });
+      append({ personId: '', percent: 0 })
     } else {
-      append({ companyId: "", percent: 0 });
+      append({ companyId: '', percent: 0 })
     }
 
-    redistribute(nextCount);
-  };
+    redistribute(nextCount)
+  }
 
   const removeOwner = (index: number) => {
-    if (fields.length <= 1) return;
+    if (fields.length <= 1) return
 
-    remove(index);
-    redistribute(fields.length - 1);
-  };
+    remove(index)
+    redistribute(fields.length - 1)
+  }
 
   return (
     <div className="space-y-4">
@@ -130,11 +130,11 @@ export const AssetOwnershipFields = ({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {isAssetPeople ? "Person" : "Company"}
+                        {isAssetPeople ? 'Person' : 'Company'}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || ""}
+                        value={field.value || ''}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -144,7 +144,7 @@ export const AssetOwnershipFields = ({
                         <SelectContent>
                           {options.map((opt) => (
                             <SelectItem key={opt.id} value={opt.id}>
-                              {"fullName" in opt ? opt.fullName : opt.name}
+                              {'fullName' in opt ? opt.fullName : opt.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -166,11 +166,8 @@ export const AssetOwnershipFields = ({
                             placeholder="100"
                             className="pr-8"
                             {...field}
-                            value={field.value?.toString() || ""}
-                            onChange={(val) =>
-                              field.onChange(val ? parseFloat(val) : 0)
-                            }
-                            allowDecimal={false}
+                            allowDecimal={true}
+                            maxDecimals={2}
                             allowNegative={false}
                           />
                           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -188,5 +185,5 @@ export const AssetOwnershipFields = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
