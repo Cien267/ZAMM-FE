@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Users, Shield } from 'lucide-react'
 import type { Person } from '../../types'
-import { format } from 'date-fns'
+import { formatDate } from '@/lib/utils'
 import {
   GENDER_VARIANT_MAPPING,
   MARITAL_STATUS_VARIANT_MAPPING,
@@ -13,11 +13,6 @@ interface PersonInfoCardProps {
 }
 
 export const PersonInfoCard = ({ person }: PersonInfoCardProps) => {
-  const formatDate = (date?: Date) => {
-    if (!date) return '-'
-    return format(new Date(date), 'PPP')
-  }
-
   return (
     <Card>
       <CardHeader>

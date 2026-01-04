@@ -2,18 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Building2, Calendar, Shield, FileText } from 'lucide-react'
 import type { Company } from '../../types'
-import { format } from 'date-fns'
+import { formatDate } from '@/lib/utils'
 
 interface CompanyInfoCardProps {
   company: Company
 }
 
 export const CompanyInfoCard = ({ company }: CompanyInfoCardProps) => {
-  const formatDate = (date?: Date) => {
-    if (!date) return '-'
-    return format(new Date(date), 'PPP')
-  }
-
   const formatABN = (abn?: string) => {
     if (!abn) return '-'
     return abn.replace(/(\d{2})(\d{3})(\d{3})(\d{3})/, '$1 $2 $3 $4')

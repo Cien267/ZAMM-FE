@@ -1,3 +1,8 @@
+import type { Person } from '@/features/people/types'
+import type { Company } from '@/features/company/types'
+import type { Asset } from '@/features/assets/types'
+import type { Liability } from '@/features/liabilities/types'
+
 export interface BaseEntity {
   id: string
   createdAt: string
@@ -20,4 +25,29 @@ export interface PaginatedResponse<T> {
   totalPages: number
   hasPreviousPage: boolean
   hasNextPage: boolean
+}
+
+export interface ExportSettings {
+  format: 'excel' | 'csv' | 'pdf'
+  entities: {
+    people: boolean
+    companies: boolean
+    assets: boolean
+    liabilities: boolean
+  }
+  columns: {
+    people: string[]
+    companies: string[]
+    assets: string[]
+    liabilities: string[]
+  }
+  includeHeaders: boolean
+  fileName: string
+}
+
+export interface ExportData {
+  people: Person[]
+  companies: Company[]
+  assets: Asset[]
+  liabilities: Liability[]
 }

@@ -2,12 +2,16 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { lazy } from 'react'
 import { PrivateRoute } from './PrivateRoute'
 import { PublicRoute } from './PublicRoute'
+import { BrokerageGuard } from './BrokerageGuard'
 import { DefaultLayout } from '@/layouts/DefaultLayout'
 import { SuspenseWrapper } from '@/components/common//SuspenseWrapper'
 import ErrorPage from '@/pages/ErrorPage'
 
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
+const CreateBrokeragePage = lazy(
+  () => import('@/features/brokerage/pages/CreateBrokeragePage')
+)
 const DashboardPage = lazy(
   () => import('@/features/dashboard/pages/DashboardPage')
 )
@@ -61,57 +65,70 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        element: <DefaultLayout />,
+        path: '/create-brokerage',
+        element: (
+          <SuspenseWrapper>
+            <CreateBrokeragePage />
+          </SuspenseWrapper>
+        ),
+      },
+      {
+        element: <BrokerageGuard />,
         children: [
           {
-            path: '/dashboard',
-            element: (
-              <SuspenseWrapper>
-                <DashboardPage />
-              </SuspenseWrapper>
-            ),
-          },
-          {
-            path: '/clients',
-            element: (
-              <SuspenseWrapper>
-                <ClientsPage />
-              </SuspenseWrapper>
-            ),
+            element: <DefaultLayout />,
             children: [
               {
-                index: true,
-                element: <Navigate to="people" replace />,
+                path: '/dashboard',
+                element: (
+                  <SuspenseWrapper>
+                    <DashboardPage />
+                  </SuspenseWrapper>
+                ),
               },
               {
-                path: 'people',
-                element: <PeopleTable />,
+                path: '/clients',
+                element: (
+                  <SuspenseWrapper>
+                    <ClientsPage />
+                  </SuspenseWrapper>
+                ),
+                children: [
+                  {
+                    index: true,
+                    element: <Navigate to="people" replace />,
+                  },
+                  {
+                    path: 'people',
+                    element: <PeopleTable />,
+                  },
+                  {
+                    path: 'people/:id',
+                    element: <PersonDetailPage />,
+                  },
+                  {
+                    path: 'companies',
+                    element: <CompanyTable />,
+                  },
+                  {
+                    path: 'companies/:id',
+                    element: <CompanyDetailPage />,
+                  },
+                ],
               },
               {
-                path: 'people/:id',
-                element: <PersonDetailPage />,
+                path: '/reports',
+                element: (
+                  <SuspenseWrapper>
+                    <ReportsPage />
+                  </SuspenseWrapper>
+                ),
               },
               {
-                path: 'companies',
-                element: <CompanyTable />,
-              },
-              {
-                path: 'companies/:id',
-                element: <CompanyDetailPage />,
+                path: '/',
+                element: <Navigate to="/dashboard" replace />,
               },
             ],
-          },
-          {
-            path: '/reports',
-            element: (
-              <SuspenseWrapper>
-                <ReportsPage />
-              </SuspenseWrapper>
-            ),
-          },
-          {
-            path: '/',
-            element: <Navigate to="/dashboard" replace />,
           },
         ],
       },
