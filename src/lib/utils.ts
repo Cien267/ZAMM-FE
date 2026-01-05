@@ -32,3 +32,15 @@ export const formatDate = (date?: Date) => {
   if (!date) return '-'
   return format(new Date(date), 'PPP')
 }
+
+export const formatAddress = (address: any) => {
+  if (!address) return '-'
+  const parts = [
+    address.unitNumber,
+    address.streetNumber,
+    address.streetName,
+    address.suburb,
+    address.state,
+  ].filter(Boolean)
+  return parts.length > 0 ? parts.join(' ') : '-'
+}

@@ -40,7 +40,7 @@ import {
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import type { AssetQuery, Asset } from '../types'
 import { openUpSertAssetModal } from './UpSertAsset'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, formatAddress } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import type { Person } from '@/features/people/types'
 import type { Company } from '@/features/company/types'
@@ -115,18 +115,6 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
 
   const handleView = (asset: Asset) => {
     console.log('View asset:', asset)
-  }
-
-  const formatAddress = (asset: Asset) => {
-    if (!asset.address) return '-'
-    const parts = [
-      asset.address.unitNumber,
-      asset.address.streetNumber,
-      asset.address.streetName,
-      asset.address.suburb,
-      asset.address.state,
-    ].filter(Boolean)
-    return parts.length > 0 ? parts.join(' ') : '-'
   }
 
   const getOwnershipSummary = (asset: Asset) => {
@@ -215,7 +203,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
                 <TableRow key={asset.id}>
                   <TableCell className="font-medium">{asset.name}</TableCell>
                   <TableCell className="max-w-xs truncate">
-                    {formatAddress(asset)}
+                    {formatAddress(asset.address)}
                   </TableCell>
                   <TableCell>
                     {asset.propertyType ? (

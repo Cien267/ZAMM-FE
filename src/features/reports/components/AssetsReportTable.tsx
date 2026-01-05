@@ -15,7 +15,7 @@ import { TrendingUp, MapPin } from 'lucide-react'
 import { useReports } from '../hooks/useReports'
 import type { AssetReportQuery } from '../types'
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency, formatDate, formatAddress } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import { Pagination } from '@/components/common/Pagination'
 
@@ -41,13 +41,6 @@ export const AssetsReportTable = () => {
 
   const handlePageSizeChange = (newPageSize: number) => {
     setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }))
-  }
-
-  const formatAddress = (address: any) => {
-    if (!address) return null
-    return [address.street, address.city, address.state, address.postcode]
-      .filter(Boolean)
-      .join(', ')
   }
 
   const formatOwners = (asset: any) => {
@@ -165,15 +158,15 @@ export const AssetsReportTable = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm text-muted-foreground max-w-[200px] truncate">
+                      <div className="text-sm text-muted-foreground max-w-50] truncate">
                         {formatOwners(asset) || '-'}
                       </div>
                     </TableCell>
                     <TableCell>
                       {asset.address ? (
                         <div className="flex items-start gap-1 text-sm text-muted-foreground">
-                          <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                          <span className="truncate max-w-[180px]">
+                          <MapPin className="h-3 w-3 mt-0.5 shrink-0" />
+                          <span className="truncate max-w-45">
                             {formatAddress(asset.address)}
                           </span>
                         </div>

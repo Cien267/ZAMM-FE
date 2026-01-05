@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { TrendingUp, MapPin } from 'lucide-react'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, formatAddress } from '@/lib/utils'
 import type { Asset } from '@/features/assets/types'
 
 interface TopAssetsProps {
@@ -15,13 +15,6 @@ interface TopAssetsProps {
 }
 
 export const TopAssets = ({ assets }: TopAssetsProps) => {
-  const formatAddress = (address: any) => {
-    if (!address) return null
-    return [address.street, address.city, address.state]
-      .filter(Boolean)
-      .join(', ')
-  }
-
   const formatOwners = (asset: Asset) => {
     const owners = []
     if (asset.assetPeople) {
