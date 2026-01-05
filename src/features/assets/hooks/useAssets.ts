@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { assetKeys } from '../constants'
 import { sharedKeys } from '@/hooks/useSharedData'
+import { reportKeys } from '@/features/reports/constants'
 import { assetService } from '../services/assetService'
 import type { CreateAssetInput, UpdateAssetInput } from '../types'
 
@@ -15,6 +16,7 @@ export const useAssets = () => {
       queryClient.invalidateQueries({ queryKey: sharedKeys.assets })
       queryClient.invalidateQueries({ queryKey: sharedKeys.assetsByPersonId })
       queryClient.invalidateQueries({ queryKey: sharedKeys.assetsByCompanyId })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Asset created successfully!')
     },
     onError: (error: any) => {
@@ -30,6 +32,7 @@ export const useAssets = () => {
       queryClient.invalidateQueries({ queryKey: sharedKeys.assets })
       queryClient.invalidateQueries({ queryKey: sharedKeys.assetsByPersonId })
       queryClient.invalidateQueries({ queryKey: sharedKeys.assetsByCompanyId })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       queryClient.invalidateQueries({
         queryKey: assetKeys.detail(variables.id),
       })

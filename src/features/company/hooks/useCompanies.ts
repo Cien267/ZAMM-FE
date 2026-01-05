@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { companyKeys } from '../constants'
+import { sharedKeys } from '@/hooks/useSharedData'
+import { reportKeys } from '@/features/reports/constants'
 import { companyService } from '../services/companyService'
 import type { CreateCompanyInput, UpdateCompanyInput } from '../types'
 
@@ -12,6 +14,8 @@ export const useCompanies = () => {
       companyService.createCompany(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: companyKeys.companies() })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.companies })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Company created successfully!')
     },
     onError: (error: any) => {
@@ -28,6 +32,7 @@ export const useCompanies = () => {
       queryClient.invalidateQueries({
         queryKey: companyKeys.companyDetail(variables.id),
       })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Company updated successfully!')
     },
     onError: (error: any) => {
@@ -40,6 +45,7 @@ export const useCompanies = () => {
     mutationFn: (id: string) => companyService.deleteCompany(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: companyKeys.companies() })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.companies })
       toast.success('Company deleted successfully!')
     },
     onError: (error: any) => {

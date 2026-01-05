@@ -46,7 +46,10 @@ export const API_ENDPOINTS = {
     LOAN_BOOK: '/dashboard/loan-book',
   },
   REPORTS: {
-    LIST: '/reports',
-    GENERATE: '/reports/generate',
+    SUMMARY: '/report/summary',
+    PEOPLE: '/report/people',
+    COMPANIES: '/report/companies',
+    ASSETS: '/report/assets',
+    LIABILITIES: '/report/liabilities',
   },
 } as const

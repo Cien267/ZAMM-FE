@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { peopleKeys } from '../constants'
 import { sharedKeys } from '@/hooks/useSharedData'
+import { reportKeys } from '@/features/reports/constants'
 import { peopleService } from '../services/peopleService'
 import type { CreatePersonInput, UpdatePersonInput } from '../types'
 
@@ -14,6 +15,7 @@ export const usePeople = () => {
       queryClient.invalidateQueries({ queryKey: peopleKeys.people() })
       queryClient.invalidateQueries({ queryKey: sharedKeys.people })
       queryClient.invalidateQueries({ queryKey: sharedKeys.peopleByCompanyId })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Person created successfully!')
     },
     onError: (error: any) => {
@@ -31,6 +33,7 @@ export const usePeople = () => {
       queryClient.invalidateQueries({
         queryKey: peopleKeys.personDetail(variables.id),
       })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Person updated successfully!')
     },
     onError: (error: any) => {

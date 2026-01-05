@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { liabilityKeys } from '../constants'
 import { sharedKeys } from '@/hooks/useSharedData'
+import { reportKeys } from '@/features/reports/constants'
 import { liabilityService } from '../services/liabilityService'
 import type { CreateLiabilityInput, UpdateLiabilityInput } from '../types'
 
@@ -14,6 +15,7 @@ export const useLiabilities = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
       queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       queryClient.invalidateQueries({
         queryKey: sharedKeys.liabilitiesByPersonId,
       })
@@ -34,6 +36,7 @@ export const useLiabilities = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
       queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       queryClient.invalidateQueries({
         queryKey: sharedKeys.liabilitiesByPersonId,
       })
