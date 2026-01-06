@@ -17,16 +17,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import {
   Plus,
@@ -46,10 +36,11 @@ import {
 import { openUpSertPersonModal } from './UpSertPerson'
 import { ErrorState } from '@/components/common/ErrorState'
 import { useNavigate } from 'react-router-dom'
+import { useAlert } from '@/contexts/AlertContext'
 
 export const PeopleTable = () => {
   const navigate = useNavigate()
-
+  const { openAlert } = useAlert()
   const [query, setQuery] = useState<PersonQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -62,12 +53,10 @@ export const PeopleTable = () => {
     brokerId: '',
   })
 
-  const [deletingPerson, setDeletingPerson] = useState<Person | null>(null)
-
   const { usePeopleList } = usePeopleQueries()
   const { data: people, isLoading, error } = usePeopleList(query)
 
-  const { deletePerson, isDeletingPerson } = usePeople()
+  const { deletePerson } = usePeople()
 
   const handleFilterChange = (filters: Partial<PersonQuery>) => {
     setQuery((prev) => ({
@@ -95,21 +84,21 @@ export const PeopleTable = () => {
   }
 
   const handleDelete = (person: Person) => {
-    setDeletingPerson(person)
-  }
-
-  const confirmDelete = () => {
-    if (deletingPerson) {
-      deletePerson(deletingPerson.id, {
-        onSuccess: () => {
-          setDeletingPerson(null)
-        },
-      })
-    }
+    openAlert({
+      title: 'Are you sure?',
+      description: `This action cannot be undone. This will permanently delete ${person.fullName} and all associated
+              data.`,
+      confirmText: 'Delete',
+      onConfirm: () => {
+        deletePerson(person.id)
+      },
+    })
   }
 
   const handleView = (person: Person) => {
-    navigate(`/clients/people/${person.id}`)
+    navigate(`/clients/people/${person.id}`, {
+      state: { label: person.fullName },
+    })
   }
 
   if (error) {
@@ -258,41 +247,6 @@ export const PeopleTable = () => {
           onPageSizeChange={handlePageSizeChange}
         />
       )}
-
-      <AlertDialog
-        open={!!deletingPerson}
-        onOpenChange={(open: any) => !open && setDeletingPerson(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete{' '}
-              <strong>{deletingPerson?.fullName}</strong> and all associated
-              data.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeletingPerson}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              disabled={isDeletingPerson}
-              className="bg-destructive text-destructive-foreground! hover:bg-destructive/90"
-            >
-              {isDeletingPerson ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Deleting...
-                </>
-              ) : (
-                'Delete'
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   )
 }

@@ -32,6 +32,12 @@ const CompanyDetailPage = lazy(
 const ReportsPage = lazy(() => import('@/features/reports/pages/ReportsPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
+const AssetDetailPage = lazy(
+  () => import('@/features/assets/pages/AssetDetailPage')
+)
+const LiabilityDetailPage = lazy(
+  () => import('@/features/liabilities/pages/LiabilityDetailPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -113,6 +119,32 @@ export const router = createBrowserRouter([
                   {
                     path: 'companies/:id',
                     element: <CompanyDetailPage />,
+                  },
+                  {
+                    path: 'assets',
+                    children: [
+                      {
+                        index: true,
+                        element: <Navigate to="/clients/people" replace />,
+                      },
+                      {
+                        path: ':assetId',
+                        element: <AssetDetailPage />,
+                      },
+                    ],
+                  },
+                  {
+                    path: 'liabilities',
+                    children: [
+                      {
+                        index: true,
+                        element: <Navigate to="/clients/people" replace />,
+                      },
+                      {
+                        path: ':liabilityId',
+                        element: <LiabilityDetailPage />,
+                      },
+                    ],
                   },
                 ],
               },

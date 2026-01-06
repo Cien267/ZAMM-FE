@@ -1,9 +1,9 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Link } from "react-router-dom"
-import { Loader2, UserPlus, AlertCircle } from "lucide-react"
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Link } from 'react-router-dom'
+import { Loader2, UserPlus, AlertCircle } from 'lucide-react'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -11,30 +11,33 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { useAuth } from "../hooks/useAuth"
-import { RegisterSchema, type RegisterRequest } from "../types/auth.types"
-import logo from "@/assets/images/logo.png"
+} from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useAuth } from '../hooks/useAuth'
+import { RegisterSchema, type RegisterRequest } from '../types/auth.types'
+import logo from '@/assets/images/logo.png'
+import { usePageTitle } from '@/hooks/usePageTitle'
+
 export const RegisterPage = () => {
+  usePageTitle('Register')
   const { register, isRegistering, registerError } = useAuth()
 
   const form = useForm<RegisterRequest>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
-      userName: "",
-      fullName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      userName: '',
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
   })
 
@@ -157,11 +160,11 @@ export const RegisterPage = () => {
                 {isRegistering && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                {isRegistering ? "Creating account..." : "Register"}
+                {isRegistering ? 'Creating account...' : 'Register'}
               </Button>
 
               <div className="text-center text-sm text-gray-900">
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <Link
                   to="/login"
                   className="text-primary font-semibold hover:underline"

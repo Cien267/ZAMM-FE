@@ -1,5 +1,5 @@
-import { useLocation, Link } from "react-router-dom"
-import { ChevronRight, Home } from "lucide-react"
+import { useLocation, Link } from 'react-router-dom'
+import { ChevronRight, Home } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,11 +7,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from '@/components/ui/breadcrumb'
+import { useBreadcrumbStore } from '@/store/breadcrumbStore'
+
+const NON_CLICKABLE_ROUTES = ['assets', 'liabilities', 'clients']
 
 export const HeaderBreadcrumb: React.FC = () => {
   const location = useLocation()
-  const pathnames = location.pathname.split("/").filter((x) => x)
+  const labels = useBreadcrumbStore((state) => state.labels)
+  const pathnames = location.pathname.split('/').filter((x) => x)
 
   return (
     <Breadcrumb>
@@ -23,9 +27,15 @@ export const HeaderBreadcrumb: React.FC = () => {
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
+
         {pathnames.map((name, index) => {
-          const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`
+          const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`
           const isLast = index === pathnames.length - 1
+          const isUnclickable = NON_CLICKABLE_ROUTES.includes(
+            name.toLowerCase()
+          )
+
+          const displayLabel = labels[name] || name
 
           return (
             <span key={name} className="flex items-center">
@@ -33,12 +43,14 @@ export const HeaderBreadcrumb: React.FC = () => {
                 <ChevronRight className="h-4 w-4 mr-2" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-                {isLast ? (
-                  <BreadcrumbPage className="capitalize">{name}</BreadcrumbPage>
+                {isLast || isUnclickable ? (
+                  <BreadcrumbPage className="capitalize">
+                    {displayLabel.replace(/-/g, ' ')}
+                  </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
                     <Link to={routeTo} className="capitalize">
-                      {name}
+                      {displayLabel.replace(/-/g, ' ')}
                     </Link>
                   </BreadcrumbLink>
                 )}
@@ -50,5 +62,3 @@ export const HeaderBreadcrumb: React.FC = () => {
     </Breadcrumb>
   )
 }
-
-export default HeaderBreadcrumb

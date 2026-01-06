@@ -1,20 +1,10 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { ArrowLeft, Pencil, Trash2, Loader2, Building2 } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, Building2 } from 'lucide-react'
 import { useCompanies } from '../../hooks/useCompanies'
 import { openUpSertCompanyModal } from '../UpsertCompany'
 import type { Company } from '../../types'
+import { useAlert } from '@/contexts/AlertContext'
 
 interface CompanyHeaderProps {
   company: Company
@@ -22,21 +12,25 @@ interface CompanyHeaderProps {
 
 export const CompanyHeader = ({ company }: CompanyHeaderProps) => {
   const navigate = useNavigate()
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const { deleteCompany, isDeletingCompany } = useCompanies()
+  const { openAlert } = useAlert()
+  const { deleteCompany } = useCompanies()
 
   const handleEdit = () => {
     openUpSertCompanyModal({ company })
   }
 
   const handleDelete = () => {
-    setShowDeleteDialog(true)
-  }
-
-  const confirmDelete = () => {
-    deleteCompany(company.id, {
-      onSuccess: () => {
-        navigate('/clients/companies')
+    openAlert({
+      title: 'Are you sure?',
+      description: `This action cannot be undone. This will permanently delete ${company.name} and all associated
+              data.`,
+      confirmText: 'Delete',
+      onConfirm: () => {
+        deleteCompany(company.id, {
+          onSuccess: () => {
+            navigate('/clients/companies')
+          },
+        })
       },
     })
   }
@@ -53,13 +47,9 @@ export const CompanyHeader = ({ company }: CompanyHeaderProps) => {
     <>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/clients/companies')}
-          >
+          <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Companies
+            Back
           </Button>
         </div>
 
@@ -127,37 +117,6 @@ export const CompanyHeader = ({ company }: CompanyHeaderProps) => {
           </div>
         </div>
       </div>
-
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete{' '}
-              {company.name} and all associated data.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeletingCompany}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              disabled={isDeletingCompany}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isDeletingCompany ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Deleting...
-                </>
-              ) : (
-                'Delete'
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   )
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Table,
   TableBody,
@@ -103,7 +104,12 @@ export const PeopleReportTable = () => {
                 peopleReport?.data.map((person) => (
                   <TableRow key={person.id}>
                     <TableCell className="font-medium">
-                      {person.fullName}
+                      <Link
+                        to={`/clients/people/${person.id}`}
+                        className="hover:underline hover:text-blue-400 text-blue-500 cursor-pointer"
+                      >
+                        {person.fullName}
+                      </Link>
                     </TableCell>
                     <TableCell>{person.email || '-'}</TableCell>
                     <TableCell>

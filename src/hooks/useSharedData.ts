@@ -9,14 +9,16 @@ import { loanService } from '@/features/lenders/services/loanService'
 
 export const sharedKeys = {
   people: ['shared', 'people'] as const,
-  peopleByCompanyId: ['shared', 'people-company'] as const,
+  peopleByCompanyId: (id: string) => ['shared', 'people-company', id] as const,
   companies: ['shared', 'companies'] as const,
   assets: ['shared', 'assets'] as const,
-  assetsByPersonId: ['shared', 'assets-person'] as const,
-  assetsByCompanyId: ['shared', 'assets-company'] as const,
+  assetsByPersonId: (id: string) => ['shared', 'assets-person', id] as const,
+  assetsByCompanyId: (id: string) => ['shared', 'assets-company', id] as const,
   liabilities: ['shared', 'liabilities'] as const,
-  liabilitiesByPersonId: ['shared', 'liabilities-person'] as const,
-  liabilitiesByCompanyId: ['shared', 'liabilities-company'] as const,
+  liabilitiesByPersonId: (id: string) =>
+    ['shared', 'liabilities-person', id] as const,
+  liabilitiesByCompanyId: (id: string) =>
+    ['shared', 'liabilities-company', id] as const,
   users: ['shared', 'users'] as const,
   lenders: ['shared', 'lenders'] as const,
   loans: ['shared', 'loans'] as const,
@@ -30,11 +32,12 @@ export const useAllPeople = () => {
   })
 }
 
-export const useAllPeopleByCompanyId = (id: string) => {
+export const useAllPeopleByCompanyId = (id: string, enabled = true) => {
   return useQuery({
-    queryKey: sharedKeys.peopleByCompanyId,
+    queryKey: sharedKeys.peopleByCompanyId(id),
     queryFn: () => peopleService.getPeople({ pageSize: 1000, companyId: id }),
     staleTime: 5 * 60 * 1000,
+    enabled: enabled && !!id,
   })
 }
 
@@ -54,19 +57,21 @@ export const useAllAssets = () => {
   })
 }
 
-export const useAllAssetsByPersonId = (id: string) => {
+export const useAllAssetsByPersonId = (id: string, enabled = true) => {
   return useQuery({
-    queryKey: sharedKeys.assetsByPersonId,
+    queryKey: sharedKeys.assetsByPersonId(id),
     queryFn: () => assetService.getAssets({ pageSize: 1000, personId: id }),
     staleTime: 5 * 60 * 1000,
+    enabled: enabled && !!id,
   })
 }
 
-export const useAllAssetsByCompanyId = (id: string) => {
+export const useAllAssetsByCompanyId = (id: string, enabled = true) => {
   return useQuery({
-    queryKey: sharedKeys.assetsByCompanyId,
+    queryKey: sharedKeys.assetsByCompanyId(id),
     queryFn: () => assetService.getAssets({ pageSize: 1000, companyId: id }),
     staleTime: 5 * 60 * 1000,
+    enabled: enabled && !!id,
   })
 }
 
@@ -78,21 +83,23 @@ export const useAllLiabilities = () => {
   })
 }
 
-export const useAllLiabilitiesByPersonId = (id: string) => {
+export const useAllLiabilitiesByPersonId = (id: string, enabled = true) => {
   return useQuery({
-    queryKey: sharedKeys.liabilitiesByPersonId,
+    queryKey: sharedKeys.liabilitiesByPersonId(id),
     queryFn: () =>
       liabilityService.getLiabilities({ pageSize: 1000, personId: id }),
     staleTime: 5 * 60 * 1000,
+    enabled: enabled && !!id,
   })
 }
 
-export const useAllLiabilitiesByCompanyId = (id: string) => {
+export const useAllLiabilitiesByCompanyId = (id: string, enabled = true) => {
   return useQuery({
-    queryKey: sharedKeys.liabilitiesByCompanyId,
+    queryKey: sharedKeys.liabilitiesByCompanyId(id),
     queryFn: () =>
       liabilityService.getLiabilities({ pageSize: 1000, companyId: id }),
     staleTime: 5 * 60 * 1000,
+    enabled: enabled && !!id,
   })
 }
 

@@ -1,28 +1,28 @@
-import { useFieldArray, type Control } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { InputNumber } from "@/components/common/InputNumber";
+import { useFieldArray, type Control } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
+import { InputNumber } from '@/components/common/InputNumber'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Plus, X } from "lucide-react";
-import type { CreateLiabilityInput, UpdateLiabilityInput } from "../types";
-import { useAllPeople, useAllCompanies } from "@/hooks/useSharedData";
+} from '@/components/ui/form'
+import { Plus, X } from 'lucide-react'
+import type { CreateLiabilityInput, UpdateLiabilityInput } from '../types'
+import { useAllPeople, useAllCompanies } from '@/hooks/useSharedData'
 
 interface LiabilityOwnershipFieldsProps {
-  control: Control<CreateLiabilityInput | UpdateLiabilityInput>;
-  setValue: any;
-  type: "people" | "company";
+  control: Control<CreateLiabilityInput | UpdateLiabilityInput>
+  setValue: any
+  type: 'person' | 'company'
 }
 
 export const LiabilityOwnershipFields = ({
@@ -30,51 +30,49 @@ export const LiabilityOwnershipFields = ({
   setValue,
   type,
 }: LiabilityOwnershipFieldsProps) => {
-  const isLiabilityPeople = type === "people";
-  const fieldName = isLiabilityPeople
-    ? "liabilityPeople"
-    : "liabilityCompanies";
+  const isLiabilityPeople = type === 'person'
+  const fieldName = isLiabilityPeople ? 'liabilityPeople' : 'liabilityCompanies'
 
-  const { data: peopleData } = useAllPeople();
-  const { data: companiesData } = useAllCompanies();
+  const { data: peopleData } = useAllPeople()
+  const { data: companiesData } = useAllCompanies()
 
   const options = isLiabilityPeople
     ? peopleData?.data || []
-    : companiesData?.data || [];
+    : companiesData?.data || []
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: fieldName as "liabilityPeople" | "liabilityCompanies",
-  });
+    name: fieldName as 'liabilityPeople' | 'liabilityCompanies',
+  })
 
   const redistribute = (count: number) => {
-    const share = Math.floor(100 / count);
-    const remainder = 100 % count;
+    const share = Math.floor(100 / count)
+    const remainder = 100 % count
 
     for (let i = 0; i < count; i++) {
-      const finalPercent = i === 0 ? share + remainder : share;
-      setValue(`${fieldName}.${i}.percent` as any, finalPercent);
+      const finalPercent = i === 0 ? share + remainder : share
+      setValue(`${fieldName}.${i}.percent` as any, finalPercent)
     }
-  };
+  }
 
   const addApplicant = () => {
-    const nextCount = fields.length + 1;
+    const nextCount = fields.length + 1
 
     if (isLiabilityPeople) {
-      append({ personId: "", percent: 0 });
+      append({ personId: '', percent: 0 })
     } else {
-      append({ companyId: "", percent: 0 });
+      append({ companyId: '', percent: 0 })
     }
 
-    redistribute(nextCount);
-  };
+    redistribute(nextCount)
+  }
 
   const removeApplicant = (index: number) => {
-    if (fields.length <= 1) return;
+    if (fields.length <= 1) return
 
-    remove(index);
-    redistribute(fields.length - 1);
-  };
+    remove(index)
+    redistribute(fields.length - 1)
+  }
 
   return (
     <div className="space-y-4">
@@ -87,7 +85,7 @@ export const LiabilityOwnershipFields = ({
           onClick={addApplicant}
         >
           <Plus className="h-4 w-4 mr-1" />
-          Add {isLiabilityPeople ? "Person" : "Company"}
+          Add {isLiabilityPeople ? 'Person' : 'Company'}
         </Button>
       </div>
 
@@ -133,17 +131,17 @@ export const LiabilityOwnershipFields = ({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        {isLiabilityPeople ? "Person" : "Company"}
+                        {isLiabilityPeople ? 'Person' : 'Company'}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || ""}
+                        value={field.value || ''}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
                             <SelectValue
                               placeholder={`Select ${
-                                isLiabilityPeople ? "person" : "company"
+                                isLiabilityPeople ? 'person' : 'company'
                               }`}
                             />
                           </SelectTrigger>
@@ -151,7 +149,7 @@ export const LiabilityOwnershipFields = ({
                         <SelectContent>
                           {options.map((opt) => (
                             <SelectItem key={opt.id} value={opt.id}>
-                              {"fullName" in opt ? opt.fullName : opt.name}
+                              {'fullName' in opt ? opt.fullName : opt.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -191,5 +189,5 @@ export const LiabilityOwnershipFields = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

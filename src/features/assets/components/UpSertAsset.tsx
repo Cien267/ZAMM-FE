@@ -48,6 +48,7 @@ interface AssetFormDialogProps {
   initialPerson: Person | null
   initialCompany: Company | null
   asset?: Asset | null
+  type: 'person' | 'company'
   onClose: () => void
   onSubmittingChange?: (isSubmitting: boolean) => void
   onSubmit: (
@@ -60,6 +61,7 @@ export const AssetModalContent = ({
   initialPerson,
   initialCompany,
   asset,
+  type,
   onClose,
   onSubmittingChange,
   onSubmit: handleSubmit,
@@ -406,7 +408,7 @@ export const AssetModalContent = ({
         <LinkedLiabilitiesFields control={form.control} />
         <AssetOwnershipFields
           control={form.control}
-          type={initialPerson ? 'people' : 'company'}
+          type={type}
           setValue={form.setValue}
         />
       </form>
@@ -416,10 +418,12 @@ export const AssetModalContent = ({
 
 export const openUpSertAssetModal = ({
   asset,
+  type,
   initialPerson,
   initialCompany,
 }: {
   asset: Asset | null
+  type: 'person' | 'company'
   initialPerson: Person | null
   initialCompany: Company | null
 }) => {
@@ -433,6 +437,7 @@ export const openUpSertAssetModal = ({
     if (action == 'add-liability' && createdAsset?.id) {
       openUpSertLiabilityModal({
         liability: null,
+        type: type,
         initialCompany: initialCompany,
         initialPerson: initialPerson,
         initialAsset: createdAsset,
@@ -449,6 +454,7 @@ export const openUpSertAssetModal = ({
       content: (
         <AssetModalContent
           asset={asset}
+          type={type}
           initialPerson={initialPerson}
           initialCompany={initialCompany}
           onClose={() => Modal.close()}

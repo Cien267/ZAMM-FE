@@ -20,16 +20,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import {
   Plus,
   MoreHorizontal,
   Eye,
@@ -44,13 +34,16 @@ import { formatCurrency, formatAddress } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import type { Person } from '@/features/people/types'
 import type { Company } from '@/features/company/types'
+import { useNavigate } from 'react-router-dom'
+import { useAlert } from '@/contexts/AlertContext'
 
 interface AssetsTableProps {
   initialData: Person | Company | null
-  type: 'person' | 'company' | null
+  type: 'person' | 'company'
 }
 
 export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
+  const { openAlert } = useAlert()
   const [query, setQuery] = useState<AssetQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -68,11 +61,10 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
     propertyType: '',
   })
 
-  const [deletingAssetId, setDeletingAssetId] = useState<string | null>(null)
-
   const { useAssetsList } = useAssetQueries()
   const { data, isLoading, error } = useAssetsList(query)
-  const { deleteAsset, isDeletingAsset } = useAssets()
+  const { deleteAsset } = useAssets()
+  const navigate = useNavigate()
 
   const handleFilterChange = (filters: Partial<AssetQuery>) => {
     setQuery((prev) => ({
@@ -99,22 +91,20 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
     setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }))
   }
 
-  const handleDelete = (id: string) => {
-    setDeletingAssetId(id)
-  }
-
-  const confirmDelete = () => {
-    if (deletingAssetId) {
-      deleteAsset(deletingAssetId, {
-        onSuccess: () => {
-          setDeletingAssetId(null)
-        },
-      })
-    }
+  const handleDelete = (asset: Asset) => {
+    openAlert({
+      title: 'Are you sure?',
+      description: `This action cannot be undone. This will permanently delete ${asset.name} and all associated
+              data.`,
+      confirmText: 'Delete',
+      onConfirm: () => {
+        deleteAsset(asset.id)
+      },
+    })
   }
 
   const handleView = (asset: Asset) => {
-    console.log('View asset:', asset)
+    navigate(`/clients/assets/${asset.id}`)
   }
 
   const getOwnershipSummary = (asset: Asset) => {
@@ -151,6 +141,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
           onClick={() =>
             openUpSertAssetModal({
               asset: null,
+              type: type,
               initialPerson:
                 type === 'person' && initialData
                   ? (initialData as Person)
@@ -247,6 +238,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
                           onClick={() =>
                             openUpSertAssetModal({
                               asset: asset,
+                              type: type,
                               initialPerson:
                                 type === 'person' && initialData
                                   ? (initialData as Person)
@@ -262,7 +254,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDelete(asset.id)}
+                          onClick={() => handleDelete(asset)}
                           className="text-destructive"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
@@ -290,40 +282,6 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
           onPageSizeChange={handlePageSizeChange}
         />
       )}
-
-      <AlertDialog
-        open={!!deletingAssetId}
-        onOpenChange={(open) => !open && setDeletingAssetId(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete this
-              asset and all associated data.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeletingAsset}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              disabled={isDeletingAsset}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isDeletingAsset ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Deleting...
-                </>
-              ) : (
-                'Delete'
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   )
 }

@@ -46,6 +46,7 @@ export const useCompanies = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: companyKeys.companies() })
       queryClient.invalidateQueries({ queryKey: sharedKeys.companies })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Company deleted successfully!')
     },
     onError: (error: any) => {

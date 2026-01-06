@@ -1,9 +1,11 @@
-import { WelcomeHeader } from "../components/WelcomeHeader";
-import { StatsSection } from "../components/StatsSection";
-import { UpcomingEvents } from "../components/UpcomingEvents";
+import { WelcomeHeader } from '../components/WelcomeHeader'
+import { StatsSection } from '../components/StatsSection'
+import { UpcomingEvents } from '../components/UpcomingEvents'
+import { usePageTitle } from '@/hooks/usePageTitle'
 // import { InterestRateChart } from "../components/InterestRateChart"
 
 export const DashboardPage = () => {
+  usePageTitle('Dashboard')
   return (
     <div className="flex-1 space-y-6 p-8 pt-6">
       <WelcomeHeader />
@@ -16,7 +18,7 @@ export const DashboardPage = () => {
         <InterestRateChart />
       </div>  */}
     </div>
-  );
-};
+  )
+}
 
-export default DashboardPage;
+export default DashboardPage

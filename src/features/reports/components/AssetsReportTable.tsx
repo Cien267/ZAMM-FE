@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
+import { Link } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TrendingUp, MapPin } from 'lucide-react'
@@ -114,7 +114,12 @@ export const AssetsReportTable = () => {
                 assetsReport?.data.map((asset) => (
                   <TableRow key={asset.id}>
                     <TableCell>
-                      <span className="font-medium">{asset.name}</span>
+                      <Link
+                        to={`/clients/assets/${asset.id}`}
+                        className="hover:underline hover:text-blue-400 text-blue-500 cursor-pointer font-medium"
+                      >
+                        {asset.name}
+                      </Link>
                     </TableCell>
                     <TableCell>
                       {asset.propertyType ? (

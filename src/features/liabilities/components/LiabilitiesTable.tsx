@@ -19,16 +19,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import {
   Plus,
   MoreHorizontal,
   Eye,
@@ -43,16 +33,19 @@ import { ErrorState } from '@/components/common/ErrorState'
 import type { Person } from '@/features/people/types'
 import type { Company } from '@/features/company/types'
 import { openUpSertLiabilityModal } from './UpsertLiability'
+import { useNavigate } from 'react-router-dom'
+import { useAlert } from '@/contexts/AlertContext'
 
 interface LiabilitiesTableProps {
   initialData: Person | Company | null
-  type: 'person' | 'company' | null
+  type: 'person' | 'company'
 }
 
 export const LiabilitiesTable = ({
   initialData,
   type,
 }: LiabilitiesTableProps) => {
+  const { openAlert } = useAlert()
   const [query, setQuery] = useState<LiabilityQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -71,13 +64,10 @@ export const LiabilitiesTable = ({
     startDateTo: undefined,
   })
 
-  const [deletingLiabilityId, setDeletingLiabilityId] = useState<string | null>(
-    null
-  )
-
   const { useLiabilitiesList } = useLiabilityQueries()
   const { data, isLoading, error } = useLiabilitiesList(query)
-  const { deleteLiability, isDeletingLiability } = useLiabilities()
+  const { deleteLiability } = useLiabilities()
+  const navigate = useNavigate()
 
   const handleFilterChange = (filters: Partial<LiabilityQuery>) => {
     setQuery((prev) => ({
@@ -104,22 +94,20 @@ export const LiabilitiesTable = ({
     setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }))
   }
 
-  const handleDelete = (id: string) => {
-    setDeletingLiabilityId(id)
-  }
-
-  const confirmDelete = () => {
-    if (deletingLiabilityId) {
-      deleteLiability(deletingLiabilityId, {
-        onSuccess: () => {
-          setDeletingLiabilityId(null)
-        },
-      })
-    }
+  const handleDelete = (liability: Liability) => {
+    openAlert({
+      title: 'Are you sure?',
+      description: `This action cannot be undone. This will permanently delete ${liability.name} and all associated
+              data.`,
+      confirmText: 'Delete',
+      onConfirm: () => {
+        deleteLiability(liability.id)
+      },
+    })
   }
 
   const handleView = (liability: Liability) => {
-    console.log('View liability:', liability)
+    navigate(`/clients/liabilities/${liability.id}`)
   }
 
   if (error) {
@@ -138,6 +126,7 @@ export const LiabilitiesTable = ({
           onClick={() =>
             openUpSertLiabilityModal({
               liability: null,
+              type: type,
               initialAsset: null,
               initialPerson: type === 'person' ? (initialData as Person) : null,
               initialCompany:
@@ -211,6 +200,7 @@ export const LiabilitiesTable = ({
                           onClick={() =>
                             openUpSertLiabilityModal({
                               liability: liability,
+                              type: type,
                               initialAsset: null,
                               initialPerson:
                                 type === 'person'
@@ -227,7 +217,7 @@ export const LiabilitiesTable = ({
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDelete(liability.id)}
+                          onClick={() => handleDelete(liability)}
                           className="text-destructive"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
@@ -255,40 +245,6 @@ export const LiabilitiesTable = ({
           onPageSizeChange={handlePageSizeChange}
         />
       )}
-
-      <AlertDialog
-        open={!!deletingLiabilityId}
-        onOpenChange={(open) => !open && setDeletingLiabilityId(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete this
-              liability and all associated data.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeletingLiability}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              disabled={isDeletingLiability}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isDeletingLiability ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Deleting...
-                </>
-              ) : (
-                'Delete'
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   )
 }

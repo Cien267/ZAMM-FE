@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-
+import { Link } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TrendingDown } from 'lucide-react'
@@ -124,9 +124,12 @@ export const LiabilitiesReportTable = () => {
                 liabilitiesReport?.data.map((liability) => (
                   <TableRow key={liability.id}>
                     <TableCell>
-                      <span className="font-medium">
-                        {liability.name || '-'}
-                      </span>
+                      <Link
+                        to={`/clients/liabilities/${liability.id}`}
+                        className="hover:underline hover:text-blue-400 text-blue-500 cursor-pointer font-medium"
+                      >
+                        {liability.name}
+                      </Link>
                     </TableCell>
                     <TableCell>
                       {liability.lenderName || (

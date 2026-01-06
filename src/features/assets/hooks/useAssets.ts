@@ -14,8 +14,8 @@ export const useAssets = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: assetKeys.lists() })
       queryClient.invalidateQueries({ queryKey: sharedKeys.assets })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.assetsByPersonId })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.assetsByCompanyId })
+      queryClient.invalidateQueries({ queryKey: ['shared', 'assets-person'] })
+      queryClient.invalidateQueries({ queryKey: ['shared', 'assets-company'] })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Asset created successfully!')
     },
@@ -30,8 +30,8 @@ export const useAssets = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: assetKeys.lists() })
       queryClient.invalidateQueries({ queryKey: sharedKeys.assets })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.assetsByPersonId })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.assetsByCompanyId })
+      queryClient.invalidateQueries({ queryKey: ['shared', 'assets-person'] })
+      queryClient.invalidateQueries({ queryKey: ['shared', 'assets-company'] })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       queryClient.invalidateQueries({
         queryKey: assetKeys.detail(variables.id),
@@ -48,6 +48,10 @@ export const useAssets = () => {
     mutationFn: (id: string) => assetService.deleteAsset(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: assetKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.assets })
+      queryClient.invalidateQueries({ queryKey: ['shared', 'assets-person'] })
+      queryClient.invalidateQueries({ queryKey: ['shared', 'assets-company'] })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Asset deleted successfully!')
     },
     onError: (error: any) => {

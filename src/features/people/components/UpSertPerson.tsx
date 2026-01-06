@@ -41,7 +41,7 @@ import { Modal } from '@/components/common/modal'
 import { DatePicker } from '@/components/common/DatePicker'
 import { InputNumber } from '@/components/common/InputNumber'
 import { openUpSertAssetModal } from '@/features/assets/components/UpSertAsset'
-import { useAllUsers } from '@/hooks/useSharedData'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 interface PeopleFormDialogProps {
   person?: Person | null
@@ -64,8 +64,8 @@ export const PersonModalContent = ({
     isUpdatingPerson,
   } = usePeople()
 
-  const { data: users } = useAllUsers()
-  const brokers = users || []
+  const { user } = useAuth()
+  const brokers = user ? [user] : []
 
   const form = useForm<CreatePersonInput | UpdatePersonInput>({
     resolver: zodResolver(isEditing ? UpdatePersonSchema : CreatePersonSchema),
@@ -464,6 +464,7 @@ export const openUpSertPersonModal = ({
     if (action == 'add-asset' && createdPerson?.id) {
       openUpSertAssetModal({
         asset: null,
+        type: 'person',
         initialPerson: createdPerson,
         initialCompany: null,
       })

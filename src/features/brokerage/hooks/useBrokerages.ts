@@ -43,6 +43,7 @@ export const useBrokerage = () => {
     mutationFn: (id: string) => brokerageService.deleteBrokerage(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: brokeragesKeys.brokerages() })
+      queryClient.invalidateQueries({ queryKey: authKeys.me() })
       toast.success('Brokerage deleted successfully!')
     },
     onError: (error: any) => {

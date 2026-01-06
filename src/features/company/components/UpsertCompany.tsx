@@ -35,8 +35,9 @@ import { Modal } from '@/components/common/modal'
 import { DatePicker } from '@/components/common/DatePicker'
 import { InputNumber } from '@/components/common/InputNumber'
 import { openUpSertAssetModal } from '@/features/assets/components/UpSertAsset'
-import { useAllUsers, useAllPeople } from '@/hooks/useSharedData'
+import { useAllPeople } from '@/hooks/useSharedData'
 import { AddressFields } from '@/features/address/components/AddressFields'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 interface CompanyFormDialogProps {
   company?: Company | null
@@ -62,9 +63,10 @@ export const CompanyModalContent = ({
     isUpdatingCompany,
   } = useCompanies()
 
-  const { data: users } = useAllUsers()
+  const { user } = useAuth()
+  const brokers = user ? [user] : []
+
   const { data: peopleData } = useAllPeople()
-  const brokers = users || []
   const people = peopleData?.data || []
 
   const form = useForm<CreateCompanyInput>({
@@ -608,6 +610,7 @@ export const openUpSertCompanyModal = ({
     if (action === 'add-asset' && createdCompany?.id) {
       openUpSertAssetModal({
         asset: null,
+        type: 'company',
         initialPerson: null,
         initialCompany: createdCompany,
       })

@@ -17,6 +17,7 @@ import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import { formatDate } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import { Pagination } from '@/components/common/Pagination'
+import { Link } from 'react-router-dom'
 
 export const CompaniesReportTable = () => {
   const [query, setQuery] = useState<CompanyReportQuery>({
@@ -103,7 +104,12 @@ export const CompaniesReportTable = () => {
                   <TableRow key={company.id}>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-medium">{company.name}</span>
+                        <Link
+                          to={`/clients/companies/${company.id}`}
+                          className="hover:underline hover:text-blue-400 text-blue-500 cursor-pointer font-medium"
+                        >
+                          {company.name}
+                        </Link>
                         {company.tradingName && (
                           <span className="text-xs text-muted-foreground">
                             T/A {company.tradingName}

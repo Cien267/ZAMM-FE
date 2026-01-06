@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Download } from 'lucide-react'
 import { ReportSummaryCards } from '../components/ReportSummaryCards'
 import { PeopleReportTable } from '../components/PeopleReportTable'
@@ -13,14 +14,43 @@ import { useReportExport } from '../hooks/useReportExport'
 import { ErrorState } from '@/components/common/ErrorState'
 import { TopAssets } from '../components/TopAssets'
 import { TopLiabilities } from '../components/TopLiabilities'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 export const ReportsPage = () => {
+  usePageTitle('Reports')
   const [exportModalOpen, setExportModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('overview')
 
   const { useReportSummary } = useReports()
   const { data: summary, isLoading, error } = useReportSummary()
   const { handleExport } = useReportExport()
+
+  if (isLoading) {
+    return (
+      <>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+            Reports
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Comprehensive overview of people, companies, assets, and liabilities
+          </p>
+        </div>
+        <div className="mx-auto space-y-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
+            <Skeleton className="h-34" />
+            <Skeleton className="h-34" />
+            <Skeleton className="h-34" />
+            <Skeleton className="h-34" />
+          </div>
+          <div className="space-y-4 mt-6 grid grid-cols-2 gap-6">
+            <Skeleton className="h-80" />
+            <Skeleton className="h-80" />
+          </div>
+        </div>
+      </>
+    )
+  }
 
   if (error) {
     return <ErrorState message={error.message} />

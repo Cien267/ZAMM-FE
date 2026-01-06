@@ -1,8 +1,10 @@
 import { CLIENT_TYPES } from '../constants'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 export const ClientsPage = () => {
+  usePageTitle('Clients')
   const navigate = useNavigate()
   const { pathname } = useLocation()
 

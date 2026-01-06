@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom'
+import { useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2 } from 'lucide-react'
 import { useCompanyQueries } from '../hooks/useCompaniesQueries'
@@ -11,10 +12,12 @@ import {
   useAllAssetsByCompanyId,
   useAllLiabilitiesByCompanyId,
 } from '@/hooks/useSharedData'
+import { useBreadcrumbStore } from '@/store/breadcrumbStore'
 
 export const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const { useCompany } = useCompanyQueries()
+  const setLabel = useBreadcrumbStore((state) => state.setLabel)
 
   const {
     data: company,
@@ -25,6 +28,12 @@ export const CompanyDetailPage = () => {
   const { data: assetsData } = useAllAssetsByCompanyId(id || '')
 
   const { data: liabilitiesData } = useAllLiabilitiesByCompanyId(id || '')
+
+  useEffect(() => {
+    if (company?.name && id) {
+      setLabel(id, company.name)
+    }
+  }, [company, id, setLabel])
 
   const companyAssets = assetsData?.data || []
   const companyLiabilities = liabilitiesData?.data || []

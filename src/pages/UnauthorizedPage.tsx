@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom"
-import { ShieldAlert, Home } from "lucide-react"
-import { useAuth } from "@/features/auth/hooks/useAuth"
+import { Link } from 'react-router-dom'
+import { ShieldAlert, Home } from 'lucide-react'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 export const UnauthorizedPage = () => {
+  usePageTitle('Unauthorized Access')
   const { user } = useAuth()
 
   return (
@@ -20,7 +22,8 @@ export const UnauthorizedPage = () => {
           You don't have permission to access this page.
           {user && (
             <span className="block mt-2 text-sm">
-              Current role: <span className="font-semibold">{user.role}</span>
+              Current role:{' '}
+              <span className="font-semibold">{user.roles[0]}</span>
             </span>
           )}
         </p>

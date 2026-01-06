@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2 } from 'lucide-react'
@@ -11,10 +12,12 @@ import {
   useAllAssetsByPersonId,
   useAllLiabilitiesByPersonId,
 } from '@/hooks/useSharedData'
+import { useBreadcrumbStore } from '@/store/breadcrumbStore'
 
 export const PersonDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const { usePerson } = usePeopleQueries()
+  const setLabel = useBreadcrumbStore((state) => state.setLabel)
 
   const {
     data: person,
@@ -22,9 +25,15 @@ export const PersonDetailPage = () => {
     error,
   } = usePerson(id || '', !!id)
 
-  const { data: assetsData } = useAllAssetsByPersonId(id || '')
+  const { data: assetsData } = useAllAssetsByPersonId(id || '', !!id)
 
-  const { data: liabilitiesData } = useAllLiabilitiesByPersonId(id || '')
+  const { data: liabilitiesData } = useAllLiabilitiesByPersonId(id || '', !!id)
+
+  useEffect(() => {
+    if (person?.fullName && id) {
+      setLabel(id, person.fullName)
+    }
+  }, [person, id, setLabel])
 
   const personAssets = assetsData?.data || []
   const personLiabilities = liabilitiesData?.data || []

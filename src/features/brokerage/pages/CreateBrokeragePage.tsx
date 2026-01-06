@@ -8,8 +8,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { UpSertBrokerageForm } from '../components/UpSertBrokerageForm'
+import { usePageTitle } from '@/hooks/usePageTitle'
 
 export const CreateBrokeragePage = () => {
+  usePageTitle('Create Brokerage')
   const navigate = useNavigate()
 
   const handleOnSubmit = () => {

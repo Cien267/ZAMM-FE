@@ -20,16 +20,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import {
   Plus,
   MoreHorizontal,
   Eye,
@@ -41,10 +31,11 @@ import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import type { CompanyQuery, Company } from '../types'
 import { openUpSertCompanyModal } from './UpsertCompany'
 import { useNavigate } from 'react-router-dom'
+import { useAlert } from '@/contexts/AlertContext'
 
 export const CompanyTable = () => {
   const navigate = useNavigate()
-
+  const { openAlert } = useAlert()
   const [query, setQuery] = useState<CompanyQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -52,13 +43,9 @@ export const CompanyTable = () => {
     sortDescending: true,
   })
 
-  const [deletingCompanyId, setDeletingCompanyId] = useState<string | null>(
-    null
-  )
-
   const { useCompaniesList } = useCompanyQueries()
   const { data, isLoading, error } = useCompaniesList(query)
-  const { deleteCompany, isDeletingCompany } = useCompanies()
+  const { deleteCompany } = useCompanies()
 
   const handleFilterChange = (filters: Partial<CompanyQuery>) => {
     setQuery((prev) => ({
@@ -85,18 +72,16 @@ export const CompanyTable = () => {
     setQuery((prev) => ({ ...prev, pageSize: newPageSize, pageNumber: 1 }))
   }
 
-  const handleDelete = (id: string) => {
-    setDeletingCompanyId(id)
-  }
-
-  const confirmDelete = () => {
-    if (deletingCompanyId) {
-      deleteCompany(deletingCompanyId, {
-        onSuccess: () => {
-          setDeletingCompanyId(null)
-        },
-      })
-    }
+  const handleDelete = (company: Company) => {
+    openAlert({
+      title: 'Are you sure?',
+      description: `This action cannot be undone. This will permanently delete ${company.name} and all associated
+              data.`,
+      confirmText: 'Delete',
+      onConfirm: () => {
+        deleteCompany(company.id)
+      },
+    })
   }
 
   const handleView = (company: Company) => {
@@ -243,7 +228,7 @@ export const CompanyTable = () => {
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDelete(company.id)}
+                          onClick={() => handleDelete(company)}
                           className="text-destructive"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
@@ -271,40 +256,6 @@ export const CompanyTable = () => {
           onPageSizeChange={handlePageSizeChange}
         />
       )}
-
-      <AlertDialog
-        open={!!deletingCompanyId}
-        onOpenChange={(open) => !open && setDeletingCompanyId(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete this
-              company and all associated data.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeletingCompany}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              disabled={isDeletingCompany}
-              className="bg-destructive text-destructive-foreground! hover:bg-destructive/90"
-            >
-              {isDeletingCompany ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Deleting...
-                </>
-              ) : (
-                'Delete'
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   )
 }

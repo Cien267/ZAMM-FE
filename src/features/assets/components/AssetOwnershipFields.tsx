@@ -23,7 +23,7 @@ import { useAllPeople, useAllCompanies } from '@/hooks/useSharedData'
 interface AssetOwnershipFieldsProps {
   control: Control<CreateAssetInput | UpdateAssetInput>
   setValue: any
-  type: 'people' | 'company'
+  type: 'person' | 'company'
 }
 
 export const AssetOwnershipFields = ({
@@ -31,7 +31,7 @@ export const AssetOwnershipFields = ({
   setValue,
   type,
 }: AssetOwnershipFieldsProps) => {
-  const isAssetPeople = type === 'people'
+  const isAssetPeople = type === 'person'
   const fieldName = isAssetPeople ? 'assetPeople' : 'assetCompanies'
 
   const { data: peopleData } = useAllPeople()

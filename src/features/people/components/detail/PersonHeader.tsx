@@ -1,20 +1,10 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { ArrowLeft, Pencil, Trash2, Loader2 } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { usePeople } from '../../hooks/usePeople'
 import { openUpSertPersonModal } from '../UpSertPerson'
 import type { Person } from '../../types'
+import { useAlert } from '@/contexts/AlertContext'
 
 interface PersonHeaderProps {
   person: Person
@@ -22,21 +12,25 @@ interface PersonHeaderProps {
 
 export const PersonHeader = ({ person }: PersonHeaderProps) => {
   const navigate = useNavigate()
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const { deletePerson, isDeletingPerson } = usePeople()
+  const { openAlert } = useAlert()
+  const { deletePerson } = usePeople()
 
   const handleEdit = () => {
     openUpSertPersonModal({ person })
   }
 
   const handleDelete = () => {
-    setShowDeleteDialog(true)
-  }
-
-  const confirmDelete = () => {
-    deletePerson(person.id, {
-      onSuccess: () => {
-        navigate('/clients/people')
+    openAlert({
+      title: 'Are you sure?',
+      description: `This action cannot be undone. This will permanently delete ${person.fullName} and all associated
+              data.`,
+      confirmText: 'Delete',
+      onConfirm: () => {
+        deletePerson(person.id, {
+          onSuccess: () => {
+            navigate('/clients/people')
+          },
+        })
       },
     })
   }
@@ -49,13 +43,9 @@ export const PersonHeader = ({ person }: PersonHeaderProps) => {
     <>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/clients/people')}
-          >
+          <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to People
+            Back
           </Button>
         </div>
 
@@ -105,37 +95,6 @@ export const PersonHeader = ({ person }: PersonHeaderProps) => {
           </div>
         </div>
       </div>
-
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete{' '}
-              {person.fullName} and all associated data.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeletingPerson}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              disabled={isDeletingPerson}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isDeletingPerson ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Deleting...
-                </>
-              ) : (
-                'Delete'
-              )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   )
 }

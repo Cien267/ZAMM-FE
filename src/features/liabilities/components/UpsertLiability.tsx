@@ -43,6 +43,7 @@ import type { Asset } from '@/features/assets/types'
 
 interface LiabilityFormDialogProps {
   liability?: Liability | null
+  type: 'person' | 'company'
   initialPerson: Person | null
   initialCompany: Company | null
   initialAsset: Asset | null
@@ -52,6 +53,7 @@ interface LiabilityFormDialogProps {
 
 export const LiabilityModalContent = ({
   liability,
+  type,
   initialPerson,
   initialCompany,
   initialAsset,
@@ -698,7 +700,7 @@ export const LiabilityModalContent = ({
         <LinkedAssetsFields control={form.control} />
         <LiabilityOwnershipFields
           control={form.control}
-          type={initialPerson ? 'people' : 'company'}
+          type={type}
           setValue={form.setValue}
         />
       </form>
@@ -708,11 +710,13 @@ export const LiabilityModalContent = ({
 
 export const openUpSertLiabilityModal = ({
   liability,
+  type,
   initialPerson,
   initialCompany,
   initialAsset,
 }: {
   liability: Liability | null
+  type: 'person' | 'company'
   initialPerson: Person | null
   initialCompany: Company | null
   initialAsset: Asset | null
@@ -729,6 +733,7 @@ export const openUpSertLiabilityModal = ({
       content: (
         <LiabilityModalContent
           liability={liability}
+          type={type}
           initialPerson={initialPerson}
           initialCompany={initialCompany}
           initialAsset={initialAsset}

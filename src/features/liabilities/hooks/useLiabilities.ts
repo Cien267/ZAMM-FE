@@ -17,10 +17,10 @@ export const useLiabilities = () => {
       queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       queryClient.invalidateQueries({
-        queryKey: sharedKeys.liabilitiesByPersonId,
+        queryKey: ['shared', 'liabilities-person'],
       })
       queryClient.invalidateQueries({
-        queryKey: sharedKeys.liabilitiesByCompanyId,
+        queryKey: ['shared', 'liabilities-company'],
       })
       toast.success('Liability created successfully!')
     },
@@ -38,10 +38,10 @@ export const useLiabilities = () => {
       queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       queryClient.invalidateQueries({
-        queryKey: sharedKeys.liabilitiesByPersonId,
+        queryKey: ['shared', 'liabilities-person'],
       })
       queryClient.invalidateQueries({
-        queryKey: sharedKeys.liabilitiesByCompanyId,
+        queryKey: ['shared', 'liabilities-company'],
       })
       queryClient.invalidateQueries({
         queryKey: liabilityKeys.detail(variables.id),
@@ -58,6 +58,14 @@ export const useLiabilities = () => {
     mutationFn: (id: string) => liabilityService.deleteLiability(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
+      queryClient.invalidateQueries({ queryKey: reportKeys.report() })
+      queryClient.invalidateQueries({
+        queryKey: ['shared', 'liabilities-person'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['shared', 'liabilities-company'],
+      })
       toast.success('Liability deleted successfully!')
     },
     onError: (error: any) => {

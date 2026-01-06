@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
 import type { PersonQuery } from '../types'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { useAllUsers } from '@/hooks/useSharedData'
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from '@/components/ui/select'
+// import { useAllUsers } from '@/hooks/useSharedData'
 
 interface PeopleFiltersProps {
   onFilterChange: (filters: Partial<PersonQuery>) => void
@@ -22,8 +22,8 @@ export const PeopleFilters = ({
   onFilterChange,
   onReset,
 }: PeopleFiltersProps) => {
-  const { data: users } = useAllUsers()
-  const brokers = users || []
+  // const { data: users } = useAllUsers()
+  // const brokers = users || []
 
   const [filters, setFilters] = useState<Partial<PersonQuery>>({
     firstName: '',
@@ -96,7 +96,7 @@ export const PeopleFilters = ({
             onChange={(e) => handleChange('phone', e.target.value)}
           />
         </div>
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <label className="text-sm font-medium">Broker</label>
           <Select
             onValueChange={(e) => handleChange('brokerId', e)}
@@ -113,7 +113,7 @@ export const PeopleFilters = ({
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
       </div>
 
       {hasActiveFilters && (
