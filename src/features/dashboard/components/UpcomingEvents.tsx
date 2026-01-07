@@ -1,10 +1,9 @@
-import React, { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Calendar } from "lucide-react"
-import { useDashboardData } from "../hooks/useDashboardData"
-import { EVENT_STATUS } from "../../events/constants"
+import React, { useState } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Calendar } from 'lucide-react'
+import { useDashboardData } from '../hooks/useDashboardData'
 
 export const UpcomingEvents: React.FC = () => {
   const { upcomingEventQuery } = useDashboardData()
@@ -17,7 +16,7 @@ export const UpcomingEvents: React.FC = () => {
   if (!events) return <div>No data</div>
 
   const filteredEvents = events.filter((event) => {
-    if (!showDismissed && event.status === EVENT_STATUS.DISMISSED) return false
+    if (!showDismissed && event.status === '') return false
     return true
   })
 
@@ -37,8 +36,8 @@ export const UpcomingEvents: React.FC = () => {
                 onClick={() => setFilterDays(days as any)}
                 className={`text-xs px-3 py-1 rounded-sm transition-all ${
                   filterDays === days
-                    ? "bg-background shadow text-foreground font-medium"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? 'bg-background shadow text-foreground font-medium'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {days} Days
@@ -47,12 +46,12 @@ export const UpcomingEvents: React.FC = () => {
           </div>
 
           <Button
-            variant={showDismissed ? "secondary" : "outline"}
+            variant={showDismissed ? 'secondary' : 'outline'}
             size="sm"
             onClick={() => setShowDismissed(!showDismissed)}
             className="h-8 text-xs"
           >
-            {showDismissed ? "Hide Dismissed" : "Show Dismissed"}
+            {showDismissed ? 'Hide Dismissed' : 'Show Dismissed'}
           </Button>
         </div>
       </CardHeader>
@@ -101,7 +100,7 @@ export const UpcomingEvents: React.FC = () => {
                       {event.broker.name}
                     </td>
                     <td className="p-4 align-middle text-right">
-                      {event.status === EVENT_STATUS.DISMISSED ? (
+                      {event.status === '' ? (
                         <Badge variant="secondary" className="text-xs">
                           Dismissed
                         </Badge>

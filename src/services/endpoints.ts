@@ -40,6 +40,11 @@ export const API_ENDPOINTS = {
     BASE: '/brokerage',
     DETAIL: (id: string) => `/brokerage/${id}`,
   },
+  EVENT: {
+    BASE: '/event',
+    DETAIL: (id: string) => `/event/${id}`,
+    DISMISS: (id: string) => `/event/${id}/dismiss`,
+  },
   DASHBOARD: {
     UPCOMING_EVENTS: '/dashboard/upcoming-events',
     INTEREST_RATES: '/dashboard/interest-rates',

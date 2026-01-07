@@ -32,6 +32,7 @@ import type { CompanyQuery, Company } from '../types'
 import { openUpSertCompanyModal } from './UpsertCompany'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '@/contexts/AlertContext'
+import { ErrorState } from '@/components/common/ErrorState'
 
 export const CompanyTable = () => {
   const navigate = useNavigate()
@@ -109,13 +110,7 @@ export const CompanyTable = () => {
   }
 
   if (error) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-destructive">
-          Error loading companies: {error.message}
-        </p>
-      </div>
-    )
+    return <ErrorState message={error.message} />
   }
 
   return (

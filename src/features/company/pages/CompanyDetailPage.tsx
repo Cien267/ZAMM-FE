@@ -13,6 +13,7 @@ import {
   useAllLiabilitiesByCompanyId,
 } from '@/hooks/useSharedData'
 import { useBreadcrumbStore } from '@/store/breadcrumbStore'
+import { ErrorState } from '@/components/common/ErrorState'
 
 export const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -63,20 +64,7 @@ export const CompanyDetailPage = () => {
   }
 
   if (error || !company) {
-    return (
-      <div className="container mx-auto py-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <p className="text-destructive mb-2">
-              Error loading company details
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {error?.message || 'Company not found'}
-            </p>
-          </div>
-        </div>
-      </div>
-    )
+    return <ErrorState message={error?.message} />
   }
 
   return (
