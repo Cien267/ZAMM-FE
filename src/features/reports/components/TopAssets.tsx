@@ -9,12 +9,15 @@ import { Badge } from '@/components/ui/badge'
 import { TrendingUp, MapPin } from 'lucide-react'
 import { formatCurrency, formatAddress } from '@/lib/utils'
 import type { Asset } from '@/features/assets/types'
+import { useNavigate } from 'react-router-dom'
 
 interface TopAssetsProps {
   assets: Asset[]
 }
 
 export const TopAssets = ({ assets }: TopAssetsProps) => {
+  const navigate = useNavigate()
+
   const formatOwners = (asset: Asset) => {
     const owners = []
     if (asset.assetPeople) {
@@ -59,7 +62,8 @@ export const TopAssets = ({ assets }: TopAssetsProps) => {
           {assets.map((asset, index) => (
             <div
               key={asset.id}
-              className="flex items-start gap-4 p-3 rounded-lg border hover:bg-accent/50 transition-colors"
+              className="flex items-start gap-4 p-3 rounded-lg border hover:bg-accent/50 transition-colors cursor-pointer"
+              onClick={() => navigate(`/clients/assets/${asset.id}`)}
             >
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold shrink-0">
                 {index + 1}
@@ -85,7 +89,6 @@ export const TopAssets = ({ assets }: TopAssetsProps) => {
                   </div>
                 </div>
 
-                {/* Additional Info */}
                 <div className="flex items-center gap-2 mt-2 flex-wrap">
                   {asset.propertyType && (
                     <Badge variant="outline" className="text-xs">
@@ -104,7 +107,6 @@ export const TopAssets = ({ assets }: TopAssetsProps) => {
                   )}
                 </div>
 
-                {/* Owners */}
                 {asset.assetPeople?.length || asset.assetCompanies?.length ? (
                   <p className="text-xs text-muted-foreground mt-2">
                     Owners: {formatOwners(asset)}

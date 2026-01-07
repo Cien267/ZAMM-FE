@@ -9,12 +9,14 @@ import { Badge } from '@/components/ui/badge'
 import { TrendingDown, Building2 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import type { Liability } from '@/features/liabilities/types'
+import { useNavigate } from 'react-router-dom'
 
 interface TopLiabilitiesProps {
   liabilities: Liability[]
 }
 
 export const TopLiabilities = ({ liabilities }: TopLiabilitiesProps) => {
+  const navigate = useNavigate()
   const formatBorrowers = (liability: Liability) => {
     const borrowers = []
     if (liability.liabilityPeople) {
@@ -71,7 +73,8 @@ export const TopLiabilities = ({ liabilities }: TopLiabilitiesProps) => {
           {liabilities.map((liability, index) => (
             <div
               key={liability.id}
-              className="flex items-start gap-4 p-3 rounded-lg border hover:bg-accent/50 transition-colors"
+              className="flex items-start gap-4 p-3 rounded-lg border hover:bg-accent/50 transition-colors cursor-pointer"
+              onClick={() => navigate(`/clients/liabilities/${liability.id}`)}
             >
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-destructive/10 text-destructive font-bold shrink-0">
                 {index + 1}
