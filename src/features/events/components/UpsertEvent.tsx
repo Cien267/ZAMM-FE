@@ -47,7 +47,9 @@ import { useAuth } from '@/features/auth/hooks/useAuth'
 interface EventFormDialogProps {
   event?: Event | null
   type: 'person' | 'company' | 'liability'
-  parentId?: string
+  personId: string | null
+  companyId: string | null
+  liabilityId: string | null
   onClose: () => void
   onSubmittingChange?: (isSubmitting: boolean) => void
   onSubmit: (createdEvent: Event | null) => void
@@ -56,7 +58,9 @@ interface EventFormDialogProps {
 export const EventModalContent = ({
   event,
   type,
-  parentId,
+  personId,
+  companyId,
+  liabilityId,
   onClose,
   onSubmittingChange,
   onSubmit: handleSubmit,
@@ -71,12 +75,12 @@ export const EventModalContent = ({
   } = useEvents()
 
   const { data: liabilitiesDataByPersonId } = useAllLiabilitiesByPersonId(
-    parentId || '',
-    !!parentId
+    personId || '',
+    !!personId
   )
   const { data: liabilitiesDataByCompanyId } = useAllLiabilitiesByCompanyId(
-    parentId || '',
-    !!parentId
+    companyId || '',
+    !!companyId
   )
   const liabilities: Liability[] =
     type === 'person'
@@ -104,10 +108,9 @@ export const EventModalContent = ({
         ? new Date(event.repeatingDateDismissed)
         : undefined,
       addedByUserId: event?.addedByUserId || user?.id || '',
-      liabilityId: event?.liabilityId || undefined,
-      personId: event?.personId || (type === 'person' ? parentId : undefined),
-      companyId:
-        event?.companyId || (type === 'company' ? parentId : undefined),
+      liabilityId: event?.liabilityId || liabilityId || '',
+      personId: event?.personId || personId || '',
+      companyId: event?.companyId || companyId || '',
       files: event?.files || [],
       ...(isEditing && event ? { id: event.id } : {}),
     },
@@ -181,6 +184,7 @@ export const EventModalContent = ({
                   <FormItem>
                     <FormLabel>Liability</FormLabel>
                     <Select
+                      disabled={event?.isSystem || false}
                       onValueChange={field.onChange}
                       value={field.value || ''}
                     >
@@ -220,6 +224,7 @@ export const EventModalContent = ({
                     <DatePicker
                       value={field.value}
                       onChange={field.onChange}
+                      disabled={event?.isSystem || false}
                       placeholder="Pick a date"
                     />
                   </FormControl>
@@ -281,6 +286,7 @@ export const EventModalContent = ({
                         <FormItem className="w-1/3">
                           <FormLabel>Repeat Unit</FormLabel>
                           <Select
+                            disabled={event?.isSystem || false}
                             onValueChange={field.onChange}
                             value={field.value || ''}
                           >
@@ -308,29 +314,28 @@ export const EventModalContent = ({
           </div>
         </div>
 
-        {event?.type !== LIABILITY_MODIFIED_EVENT && (
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Add description..."
-                      className="resize-none"
-                      rows={5}
-                      {...field}
-                      value={field.value || ''}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        )}
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="description"
+            disabled={event?.type === LIABILITY_MODIFIED_EVENT}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Add description..."
+                    className="resize-none"
+                    rows={5}
+                    {...field}
+                    value={field.value || ''}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <EventFieldFields
           control={form.control}
@@ -345,11 +350,15 @@ export const EventModalContent = ({
 export const openUpSertEventModal = ({
   event,
   type,
-  parentId,
+  personId,
+  companyId,
+  liabilityId,
 }: {
   event: Event | null
   type: 'person' | 'company' | 'liability'
-  parentId?: string
+  personId: string | null
+  companyId: string | null
+  liabilityId: string | null
 }) => {
   const isEditing = !!event
   let isSubmitting = false
@@ -368,7 +377,9 @@ export const openUpSertEventModal = ({
         <EventModalContent
           event={event}
           type={type}
-          parentId={parentId}
+          personId={personId}
+          companyId={companyId}
+          liabilityId={liabilityId}
           onClose={() => Modal.close()}
           onSubmittingChange={(submitting) => {
             isSubmitting = submitting

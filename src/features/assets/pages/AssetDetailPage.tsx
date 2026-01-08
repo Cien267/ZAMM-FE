@@ -29,6 +29,7 @@ import { formatCurrency, formatDate, formatAddress } from '@/lib/utils'
 import { openUpSertAssetModal } from '../components/UpSertAsset'
 import { useBreadcrumbStore } from '@/store/breadcrumbStore'
 import { useAlert } from '@/contexts/AlertContext'
+import type { AssetLiability } from '../types'
 
 export const AssetDetailPage = () => {
   const { assetId } = useParams<{ assetId: string }>()
@@ -86,6 +87,18 @@ export const AssetDetailPage = () => {
         })
       },
     })
+  }
+
+  const handleNavigateLiability = (assetLiability: AssetLiability) => {
+    const params = new URLSearchParams()
+    if (asset?.assetPeople && asset.assetPeople.length > 0)
+      params.append('personId', asset?.assetPeople[0].personId)
+    if (asset?.assetCompanies && asset?.assetCompanies.length > 0)
+      params.append('companyId', asset?.assetCompanies[0].companyId)
+
+    navigate(
+      `/clients/liabilities/${assetLiability.liabilityId}?${params.toString()}`
+    )
   }
 
   const totalOwnership =
@@ -374,9 +387,7 @@ export const AssetDetailPage = () => {
                 <div
                   key={liability.id}
                   className="flex items-center justify-between p-3 rounded-lg border hover:bg-accent/50 transition-colors cursor-pointer"
-                  onClick={() =>
-                    navigate(`/clients/liabilities/${liability.liabilityId}`)
-                  }
+                  onClick={() => handleNavigateLiability(liability)}
                 >
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">

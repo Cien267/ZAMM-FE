@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Table,
   TableBody,
@@ -8,7 +9,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Link } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TrendingDown } from 'lucide-react'
@@ -18,8 +18,10 @@ import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import { Pagination } from '@/components/common/Pagination'
+import type { Liability } from '@/features/liabilities/types'
 
 export const LiabilitiesReportTable = () => {
+  const navigate = useNavigate()
   const [query, setQuery] = useState<LiabilityReportQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -85,6 +87,19 @@ export const LiabilitiesReportTable = () => {
     return <ErrorState message={error.message} />
   }
 
+  const handleNavigateLiability = (liability: Liability) => {
+    const params = new URLSearchParams()
+    if (liability?.liabilityPeople && liability.liabilityPeople.length > 0)
+      params.append('personId', liability?.liabilityPeople[0].personId)
+    if (
+      liability?.liabilityCompanies &&
+      liability?.liabilityCompanies.length > 0
+    )
+      params.append('companyId', liability?.liabilityCompanies[0].companyId)
+
+    navigate(`/clients/liabilities/${liability.id}?${params.toString()}`)
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -123,13 +138,11 @@ export const LiabilitiesReportTable = () => {
               ) : (
                 liabilitiesReport?.data.map((liability) => (
                   <TableRow key={liability.id}>
-                    <TableCell>
-                      <Link
-                        to={`/clients/liabilities/${liability.id}`}
-                        className="hover:underline hover:text-blue-400 text-blue-500 cursor-pointer font-medium"
-                      >
-                        {liability.name}
-                      </Link>
+                    <TableCell
+                      onClick={() => handleNavigateLiability(liability)}
+                      className="hover:underline hover:text-blue-400 text-blue-500 cursor-pointer font-medium"
+                    >
+                      {liability.name}
                     </TableCell>
                     <TableCell>
                       {liability.lenderName || (

@@ -1,14 +1,14 @@
-import { useState } from "react"
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { useState } from 'react'
+import { format } from 'date-fns'
+import { CalendarIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/popover'
 
 interface DatePickerProps {
   value?: Date
@@ -23,7 +23,7 @@ interface DatePickerProps {
 export const DatePicker = ({
   value,
   onChange,
-  placeholder = "Pick a date",
+  placeholder = 'Pick a date',
   disabled = false,
   disableFutureDates = false,
   disablePastDates = false,
@@ -62,13 +62,13 @@ export const DatePicker = ({
           variant="outline"
           disabled={disabled}
           className={cn(
-            "w-full justify-start text-left font-normal",
-            !value && "text-muted-foreground",
+            'w-full justify-start text-left font-normal',
+            !value && 'text-muted-foreground',
             className
           )}
         >
           {value && !isNaN(value.getTime()) ? (
-            format(value, "PPP")
+            format(value, 'PPP')
           ) : (
             <span>{placeholder}</span>
           )}
@@ -85,7 +85,7 @@ export const DatePicker = ({
           onSelect={handleSelect}
           disabled={getDisabledDates}
           fromYear={1900}
-          toYear={new Date().getFullYear() + (disablePastDates ? 100 : 0)}
+          toYear={3000}
         />
       </PopoverContent>
     </Popover>

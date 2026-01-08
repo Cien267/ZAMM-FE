@@ -67,7 +67,7 @@ export function AddressFields({ toggleName }: AddressFieldsProps) {
           />
         ) : (
           <>
-            <div className="flex justify-between gap-1">
+            <div className="flex justify-between gap-4">
               <AddressInputField
                 name="address.level"
                 label="Level"
@@ -79,7 +79,7 @@ export function AddressFields({ toggleName }: AddressFieldsProps) {
                 className="w-1/2"
               />
             </div>
-            <div className="flex justify-between gap-1">
+            <div className="flex justify-between gap-4">
               <AddressInputField
                 name="address.unitNumber"
                 label="Unit Number"

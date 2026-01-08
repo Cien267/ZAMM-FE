@@ -23,11 +23,11 @@ import { useEvents } from '../hooks/useEvents'
 import { useEventQueries } from '../hooks/useEventsQueries'
 import { openUpSertEventModal } from '../components/UpsertEvent'
 import { useAlert } from '@/contexts/AlertContext'
-import { useMemo } from 'react'
 import { ErrorState } from '@/components/common/ErrorState'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { openDetailEventModal } from './DetailEvent'
+import { LIABILITY_MODIFIED_EVENT } from '../constants'
 
 const TimelineSkeleton = () => {
   return (
@@ -53,33 +53,31 @@ const TimelineSkeleton = () => {
 }
 
 interface EventTimelineProps {
-  parentId: string
+  personId: string | null
+  companyId: string | null
+  liabilityId: string | null
   type: 'person' | 'company' | 'liability'
 }
 
-export const EventTimeline = ({ parentId, type }: EventTimelineProps) => {
+export const EventTimeline = ({
+  personId,
+  companyId,
+  liabilityId,
+  type,
+}: EventTimelineProps) => {
   const { openAlert } = useAlert()
   const { deleteEvent, toggleDismissEvent } = useEvents()
   const { useEventsList } = useEventQueries()
 
-  const query = useMemo(() => {
-    const baseQuery: EventQuery = {
-      pageNumber: 1,
-      pageSize: 1000,
-      sortBy: 'Id',
-      sortDescending: true,
-    }
-
-    if (type === 'person') {
-      baseQuery.personId = parentId
-    } else if (type === 'company') {
-      baseQuery.companyId = parentId
-    } else if (type === 'liability') {
-      baseQuery.liabilityId = parentId
-    }
-
-    return baseQuery
-  }, [parentId, type])
+  const query: EventQuery = {
+    pageNumber: 1,
+    pageSize: 1000,
+    sortBy: 'Id',
+    sortDescending: true,
+    personId: personId || undefined,
+    companyId: companyId || undefined,
+    liabilityId: liabilityId || undefined,
+  }
 
   const { data: eventsData, isLoading, error } = useEventsList(query)
 
@@ -126,7 +124,9 @@ export const EventTimeline = ({ parentId, type }: EventTimelineProps) => {
               openUpSertEventModal({
                 event: null,
                 type: type,
-                parentId: parentId,
+                personId: personId,
+                companyId: companyId,
+                liabilityId: liabilityId,
               })
             }
             className="gap-2"
@@ -139,14 +139,16 @@ export const EventTimeline = ({ parentId, type }: EventTimelineProps) => {
 
       {sortedEvents.length > 0 && (
         <>
-          <div className="w-full flex justify-between items-center mb-6 absolute -top-14">
+          <div className="w-full flex justify-between items-center mb-6 pb-6 border-b">
             <h3 className="font-semibold">Event Timeline</h3>
             <Button
               onClick={() =>
                 openUpSertEventModal({
                   event: null,
                   type: type,
-                  parentId: parentId,
+                  personId: personId,
+                  companyId: companyId,
+                  liabilityId: liabilityId,
                 })
               }
               className="gap-2"
@@ -155,7 +157,7 @@ export const EventTimeline = ({ parentId, type }: EventTimelineProps) => {
               Add Event
             </Button>
           </div>
-          <ScrollArea className="h-150 pr-4">
+          <ScrollArea className="h-150 flex-1 pr-4">
             <div className="relative space-y-0 ml-4 border-l-2 border-accent-foreground/20 min-h-150">
               {sortedEvents.map((event) => (
                 <div key={event.id} className="relative pl-8 pb-8 last:pb-0">
@@ -177,11 +179,11 @@ export const EventTimeline = ({ parentId, type }: EventTimelineProps) => {
                             {event.addedByUserName}
                           </span>
                         </div>
-                        {event.liabilityId && event.liabilityName && (
-                          <Badge variant="info">
-                            {event.liabilityName} event
-                          </Badge>
-                        )}
+                        {type !== 'liability' &&
+                          event.liabilityId &&
+                          event.liabilityName && (
+                            <Badge variant="info">{event.liabilityName}</Badge>
+                          )}
                       </div>
 
                       <DropdownMenu>
@@ -196,7 +198,9 @@ export const EventTimeline = ({ parentId, type }: EventTimelineProps) => {
                               openDetailEventModal({
                                 event,
                                 type: type,
-                                parentId: parentId,
+                                personId: personId,
+                                companyId: companyId,
+                                liabilityId: liabilityId,
                               })
                             }
                           >
@@ -207,7 +211,9 @@ export const EventTimeline = ({ parentId, type }: EventTimelineProps) => {
                               openUpSertEventModal({
                                 event,
                                 type: type,
-                                parentId: parentId,
+                                personId: personId,
+                                companyId: companyId,
+                                liabilityId: liabilityId,
                               })
                             }
                           >
@@ -219,12 +225,14 @@ export const EventTimeline = ({ parentId, type }: EventTimelineProps) => {
                             <XSquare className="mr-2 h-4 w-4" />{' '}
                             {event.isDismissed ? 'Un-dismiss' : 'Dismiss'}
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="text-destructive"
-                            onClick={() => onDeleteConfirm(event)}
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
-                          </DropdownMenuItem>
+                          {event.type !== LIABILITY_MODIFIED_EVENT && (
+                            <DropdownMenuItem
+                              className="text-destructive"
+                              onClick={() => onDeleteConfirm(event)}
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" /> Delete
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>

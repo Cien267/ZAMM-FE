@@ -22,7 +22,12 @@ export const PersonOverviewTab = ({ person }: PersonOverviewTabProps) => {
 
         <PersonDependentsCard person={person} />
       </div>
-      <EventTimeline type="person" parentId={person.id} />
+      <EventTimeline
+        type="person"
+        personId={person.id}
+        companyId={null}
+        liabilityId={null}
+      />
     </div>
   )
 }

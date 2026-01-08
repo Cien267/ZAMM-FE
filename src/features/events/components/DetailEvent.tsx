@@ -25,14 +25,18 @@ import { ErrorState } from '@/components/common/ErrorState'
 interface EventFormDialogProps {
   id: string
   type: 'person' | 'company' | 'liability'
-  parentId?: string
+  personId: string | null
+  companyId: string | null
+  liabilityId: string | null
   onClose: () => void
 }
 
 export const DetailEventModalContent = ({
   id,
   type,
-  parentId,
+  personId,
+  companyId,
+  liabilityId,
   onClose,
 }: EventFormDialogProps) => {
   const { openAlert } = useAlert()
@@ -233,19 +237,23 @@ export const DetailEventModalContent = ({
             openUpSertEventModal({
               event,
               type: type,
-              parentId: parentId,
+              personId: personId,
+              companyId: companyId,
+              liabilityId: liabilityId,
             })
           }}
         >
           Edit
         </Button>
-        <Button
-          type="button"
-          variant="destructive"
-          onClick={() => onDeleteConfirm(event)}
-        >
-          Delete
-        </Button>
+        {!isLiabilityModified && (
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={() => onDeleteConfirm(event)}
+          >
+            Delete
+          </Button>
+        )}
       </div>
     </>
   )
@@ -254,11 +262,15 @@ export const DetailEventModalContent = ({
 export const openDetailEventModal = ({
   event,
   type,
-  parentId,
+  personId,
+  companyId,
+  liabilityId,
 }: {
   event: Event
   type: 'person' | 'company' | 'liability'
-  parentId?: string
+  personId: string | null
+  companyId: string | null
+  liabilityId: string | null
 }) => {
   const updateFooter = () => {
     Modal.open({
@@ -267,7 +279,9 @@ export const openDetailEventModal = ({
         <DetailEventModalContent
           id={event.id}
           type={type}
-          parentId={parentId}
+          personId={personId}
+          companyId={companyId}
+          liabilityId={liabilityId}
           onClose={() => Modal.close()}
         />
       ),

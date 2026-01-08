@@ -59,6 +59,19 @@ export const TopLiabilities = ({ liabilities }: TopLiabilitiesProps) => {
     )
   }
 
+  const handleNavigateLiability = (liability: Liability) => {
+    const params = new URLSearchParams()
+    if (liability?.liabilityPeople && liability.liabilityPeople.length > 0)
+      params.append('personId', liability?.liabilityPeople[0].personId)
+    if (
+      liability?.liabilityCompanies &&
+      liability?.liabilityCompanies.length > 0
+    )
+      params.append('companyId', liability?.liabilityCompanies[0].companyId)
+
+    navigate(`/clients/liabilities/${liability.id}?${params.toString()}`)
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -74,7 +87,7 @@ export const TopLiabilities = ({ liabilities }: TopLiabilitiesProps) => {
             <div
               key={liability.id}
               className="flex items-start gap-4 p-3 rounded-lg border hover:bg-accent/50 transition-colors cursor-pointer"
-              onClick={() => navigate(`/clients/liabilities/${liability.id}`)}
+              onClick={() => handleNavigateLiability(liability)}
             >
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-destructive/10 text-destructive font-bold shrink-0">
                 {index + 1}

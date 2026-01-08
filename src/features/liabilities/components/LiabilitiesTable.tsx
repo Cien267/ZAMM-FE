@@ -46,17 +46,17 @@ export const LiabilitiesTable = ({
   type,
 }: LiabilitiesTableProps) => {
   const { openAlert } = useAlert()
+  const personId =
+    type === 'person' && initialData ? (initialData as Person).id : undefined
+  const companyId =
+    type === 'company' && initialData ? (initialData as Person).id : undefined
   const [query, setQuery] = useState<LiabilityQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
     sortBy: 'Id',
     sortDescending: true,
-    personId:
-      type === 'person' && initialData ? (initialData as Person).id : undefined,
-    companyId:
-      type === 'company' && initialData
-        ? (initialData as Company).id
-        : undefined,
+    personId: personId,
+    companyId: companyId,
     name: '',
     loanId: '',
     financePurpose: '',
@@ -107,7 +107,10 @@ export const LiabilitiesTable = ({
   }
 
   const handleView = (liability: Liability) => {
-    navigate(`/clients/liabilities/${liability.id}`)
+    const params = new URLSearchParams()
+    if (personId) params.append('personId', personId)
+    if (companyId) params.append('companyId', companyId)
+    navigate(`/clients/liabilities/${liability.id}?${params.toString()}`)
   }
 
   if (error) {
