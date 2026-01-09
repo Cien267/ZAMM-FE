@@ -107,10 +107,10 @@ export const EventModalContent = ({
       repeatingDateDismissed: event?.repeatingDateDismissed
         ? new Date(event.repeatingDateDismissed)
         : undefined,
-      addedByUserId: event?.addedByUserId || user?.id || '',
-      liabilityId: event?.liabilityId || liabilityId || '',
-      personId: event?.personId || personId || '',
-      companyId: event?.companyId || companyId || '',
+      addedByUserId: event?.addedByUserId || user?.id || undefined,
+      liabilityId: event?.liabilityId || liabilityId || undefined,
+      personId: event?.personId || personId || undefined,
+      companyId: event?.companyId || companyId || undefined,
       files: event?.files || [],
       ...(isEditing && event ? { id: event.id } : {}),
     },

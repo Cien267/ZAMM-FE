@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { liabilityKeys } from '../constants'
 import { sharedKeys } from '@/hooks/useSharedData'
 import { reportKeys } from '@/features/reports/constants'
+import { eventKeys } from '@/features/events/constants'
 import { liabilityService } from '../services/liabilityService'
 import type { CreateLiabilityInput, UpdateLiabilityInput } from '../types'
 
@@ -16,6 +17,7 @@ export const useLiabilities = () => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
       queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
+      queryClient.invalidateQueries({ queryKey: eventKeys.events() })
       queryClient.invalidateQueries({
         queryKey: ['shared', 'liabilities-person'],
       })
@@ -37,6 +39,7 @@ export const useLiabilities = () => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
       queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
+      queryClient.invalidateQueries({ queryKey: eventKeys.events() })
       queryClient.invalidateQueries({
         queryKey: ['shared', 'liabilities-person'],
       })

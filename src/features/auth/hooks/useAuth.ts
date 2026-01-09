@@ -70,8 +70,7 @@ export const useAuth = () => {
       data.id = user?.id
       return authService.updateProfile(data)
     },
-    onSuccess: (updatedUser) => {
-      setAuth(updatedUser, localStorage.getItem('token') || '')
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authKeys.me() })
       toast.success('Profile updated successfully!')
     },

@@ -28,6 +28,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { openDetailEventModal } from './DetailEvent'
 import { LIABILITY_MODIFIED_EVENT } from '../constants'
+import { getEventTitle, getEventDate } from '../libs/utils'
 
 const TimelineSkeleton = () => {
   return (
@@ -140,7 +141,9 @@ export const EventTimeline = ({
       {sortedEvents.length > 0 && (
         <>
           <div className="w-full flex justify-between items-center mb-6 pb-6 border-b">
-            <h3 className="font-semibold">Event Timeline</h3>
+            <h3 className="font-semibold">
+              Event Timeline ({sortedEvents.length})
+            </h3>
             <Button
               onClick={() =>
                 openUpSertEventModal({
@@ -168,11 +171,16 @@ export const EventTimeline = ({
                   <div className="flex flex-col gap-2 p-4 rounded-lg border bg-card shadow-sm">
                     <div className="flex items-start justify-between">
                       <div className="space-y-2">
-                        <h3 className="font-semibold">{event.title}</h3>
+                        <h3 className="font-semibold">
+                          {getEventTitle(event)}
+                        </h3>
                         <div className="flex items-center text-sm text-muted-foreground gap-3">
                           <span className="flex items-center gap-1">
                             <Calendar className="h-3.5 w-3.5" />
-                            {format(new Date(event.date), 'MMM d, yyyy')}
+                            {format(
+                              new Date(getEventDate(event)),
+                              'MMM d, yyyy'
+                            )}
                           </span>
                           <span className="flex items-center gap-1">
                             <User className="h-3.5 w-3.5" />

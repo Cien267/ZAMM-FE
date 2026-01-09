@@ -40,6 +40,7 @@ import { LinkedAssetsFields } from './LinkedAssetsFields'
 import { FixedRatePeriodsFields } from './FixedRatePeriodsFields'
 import { useAllLenders, useAllLoans } from '@/hooks/useSharedData'
 import type { Asset } from '@/features/assets/types'
+import { format } from 'date-fns'
 
 interface LiabilityFormDialogProps {
   liability?: Liability | null
@@ -189,7 +190,13 @@ export const LiabilityModalContent = ({
   ) => {
     try {
       if (isEditing && liability) {
-        await updateLiabilityAsync({ ...data, id: liability.id })
+        await updateLiabilityAsync({
+          ...data,
+          startDate: data.startDate
+            ? format(data.startDate, 'yyyy-MM-dd')
+            : undefined,
+          id: liability.id,
+        } as any)
       } else {
         await createLiabilityAsync(data)
       }

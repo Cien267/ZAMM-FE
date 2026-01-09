@@ -6,7 +6,6 @@ import {
   Info,
   Repeat,
   FileText,
-  Database,
   Link as LinkIcon,
   Paperclip,
   Loader2,
@@ -21,6 +20,8 @@ import { useEvents } from '../hooks/useEvents'
 import { openUpSertEventModal } from '../components/UpsertEvent'
 import { useEventQueries } from '../hooks/useEventsQueries'
 import { ErrorState } from '@/components/common/ErrorState'
+import { ModificationDiff } from './ModificationDiff'
+import { getEventTitle, getEventDate } from '../libs/utils'
 
 interface EventFormDialogProps {
   id: string
@@ -87,7 +88,7 @@ export const DetailEventModalContent = ({
         <div className="space-y-4">
           <div className="flex items-center gap-4">
             <Badge variant={event.isSystem ? 'secondary' : 'outline'}>
-              {event.type.replace(/_/g, ' ')}
+              {getEventTitle(event)}
             </Badge>
             {event.isSystem && (
               <Badge className="bg-blue-500/10 text-blue-600 hover:bg-blue-500/10 border-none">
@@ -99,7 +100,7 @@ export const DetailEventModalContent = ({
           <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />
-              {format(new Date(event.date), 'PPP')}
+              {format(new Date(getEventDate(event)), 'PPP')}
             </div>
             <div className="flex items-center gap-1.5">
               <User className="h-4 w-4" />
@@ -145,27 +146,7 @@ export const DetailEventModalContent = ({
           </div>
         )}
 
-        {isLiabilityModified && (
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold flex items-center gap-2">
-              <Database className="h-4 w-4" />
-              Modification Data
-            </h4>
-            <div className="grid gap-3">
-              {event.modifiedValuesJson && (
-                <div className="rounded-md bg-zinc-950 p-4 overflow-x-auto">
-                  <pre className="text-xs text-zinc-400 font-mono">
-                    {JSON.stringify(
-                      JSON.parse(event.modifiedValuesJson),
-                      null,
-                      2
-                    )}
-                  </pre>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        {isLiabilityModified && <ModificationDiff event={event} />}
 
         {(event.liabilityName || event.personName || event.companyName) && (
           <div className="space-y-3">

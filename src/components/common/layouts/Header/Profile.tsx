@@ -1,7 +1,7 @@
-import { Lock } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Lock } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Form,
   FormControl,
@@ -9,20 +9,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
-import { useAuth } from "@/features/auth/hooks/useAuth"
-import { Modal } from "@/components/common/modal"
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import { Modal } from '@/components/common/modal'
 import {
   UpdateProfileSchema,
   type UpdateProfileRequest,
   ChangePasswordSchema,
   type ChangePasswordRequest,
-} from "@/features/auth/types/auth.types"
-import { toast } from "sonner"
-import { DatePicker } from "@/components/common/DatePicker"
+} from '@/features/auth/types/auth.types'
+import { toast } from 'sonner'
+import { DatePicker } from '@/components/common/DatePicker'
+import { format } from 'date-fns'
 
 const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
   const { user, updateProfileAsync, changePasswordAsync } = useAuth()
@@ -40,18 +41,25 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
   const passwordForm = useForm<ChangePasswordRequest>({
     resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
     },
   })
 
   const onSubmit = async (data: UpdateProfileRequest) => {
     try {
-      await updateProfileAsync(data)
+      const payload = {
+        ...data,
+        dateOfBirth: data.dateOfBirth
+          ? format(data.dateOfBirth, 'yyyy-MM-dd')
+          : undefined,
+      }
+
+      await updateProfileAsync(payload as any)
       onClose()
     } catch (error: any) {
-      toast.error(error.message || "Failed to update profile")
+      toast.error(error.message || 'Failed to update profile')
     }
   }
 
@@ -62,7 +70,7 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
       onClose()
     } catch (error: any) {
       passwordForm.reset()
-      toast.error(error.message || "Failed to change password")
+      toast.error(error.message || 'Failed to change password')
     }
   }
 
@@ -136,10 +144,10 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                           type="number"
                           placeholder="Enter phoneNumber number"
                           {...field}
-                          value={field.value ?? ""}
+                          value={field.value ?? ''}
                           onChange={(e) => {
                             const val = e.target.value
-                            field.onChange(val === "" ? null : val)
+                            field.onChange(val === '' ? null : val)
                           }}
                         />
                       </FormControl>
@@ -250,10 +258,10 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
 
 export const openEditProfileModal = () => {
   Modal.open({
-    title: "Account Settings",
-    description: "Manage your public profile and security preferences.",
+    title: 'Account Settings',
+    description: 'Manage your public profile and security preferences.',
     content: <ProfileModalContent onClose={() => Modal.close()} />,
-    className: "max-w-2xl!",
+    className: 'max-w-2xl!',
   })
 }
 
