@@ -6,8 +6,8 @@ import {
   Sun,
   ChevronDown,
   TrendingUp,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,28 +16,45 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
+import { Modal } from '@/components/common/modal'
+import { UpSertBrokerageForm } from '@/features/brokerage/components/UpSertBrokerageForm'
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator"
-import { useAuth } from "@/features/auth/hooks/useAuth"
-import { useTheme } from "@/hooks/useTheme"
-import { HeaderBreadcrumb } from "@/components/common/layouts/Header/Breadcrumb"
-import { HelpMenu } from "@/components/common/layouts/Header/HelpMenu"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useTheme } from '@/hooks/useTheme'
+import { HeaderBreadcrumb } from '@/components/common/layouts/Header/Breadcrumb'
+import { HelpMenu } from '@/components/common/layouts/Header/HelpMenu'
 // import { Notifications } from "./Notifications"
-import { EditProfile } from "./Profile"
+import { EditProfile } from './Profile'
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuth()
   const { theme, setTheme } = useTheme()
 
   const getUserInitials = () => {
-    if (!user?.fullName) return "Admin"
-    return user.fullName.split(" ")[0].toUpperCase()
+    if (!user?.fullName) return 'Admin'
+    return user.fullName.split(' ')[0].toUpperCase()
   }
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
+
+  const handleOpenModalBrokerage = () => {
+    Modal.open({
+      title: 'Update Your Brokerage',
+      content: (
+        <UpSertBrokerageForm
+          brokerage={user?.brokerage}
+          onSubmit={() => {
+            Modal.close()
+          }}
+        />
+      ),
+      className: 'max-w-lg!',
+    })
   }
 
   return (
@@ -52,7 +69,7 @@ export const Header: React.FC = () => {
         </Button>
 
         <Button variant="ghost" size="icon" onClick={toggleTheme}>
-          {theme === "dark" ? (
+          {theme === 'dark' ? (
             <Sun className="h-5 w-5" />
           ) : (
             <Moon className="h-5 w-5" />
@@ -84,10 +101,10 @@ export const Header: React.FC = () => {
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium">
-                  {user?.fullName || "Admin"}
+                  {user?.fullName || 'Admin'}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {user?.email || "admin@gmail.com"}
+                  {user?.email || 'admin@gmail.com'}
                 </p>
               </div>
             </DropdownMenuLabel>
@@ -97,7 +114,7 @@ export const Header: React.FC = () => {
                 <User className="mr-2 h-4 w-4" />
                 <EditProfile />
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleOpenModalBrokerage}>
                 <TrendingUp className="mr-2 h-4 w-4" />
                 <span>Brokerage</span>
               </DropdownMenuItem>

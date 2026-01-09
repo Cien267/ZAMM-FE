@@ -37,7 +37,7 @@ export const CreateBrokerageSchema = z.object({
   logos: z
     .array(
       z.object({
-        url: z.string().url('Must be a valid URL'),
+        url: z.string().url('Must be a valid URL').optional(),
       })
     )
     .optional(),
