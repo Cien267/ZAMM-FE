@@ -1,6 +1,6 @@
 import { WelcomeHeader } from '../components/WelcomeHeader'
 import { StatsSection } from '../components/StatsSection'
-import { UpcomingEvents } from '../components/UpcomingEvents'
+import { UpcomingEventTable } from '@/features/events/components/UpcomingEventTable'
 import { usePageTitle } from '@/hooks/usePageTitle'
 // import { InterestRateChart } from "../components/InterestRateChart"
 
@@ -10,7 +10,7 @@ export const DashboardPage = () => {
     <div className="flex-1 space-y-6">
       <WelcomeHeader />
 
-      <UpcomingEvents />
+      <UpcomingEventTable />
 
       <StatsSection />
 

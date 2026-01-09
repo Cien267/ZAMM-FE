@@ -21,7 +21,7 @@ import { openUpSertEventModal } from '../components/UpsertEvent'
 import { useEventQueries } from '../hooks/useEventsQueries'
 import { ErrorState } from '@/components/common/ErrorState'
 import { ModificationDiff } from './ModificationDiff'
-import { getEventTitle, getEventDate } from '../libs/utils'
+import { getEventDate } from '../libs/utils'
 
 interface EventFormDialogProps {
   id: string
@@ -88,7 +88,7 @@ export const DetailEventModalContent = ({
         <div className="space-y-4">
           <div className="flex items-center gap-4">
             <Badge variant={event.isSystem ? 'secondary' : 'outline'}>
-              {getEventTitle(event)}
+              {event.type.replace(/_/g, ' ')}
             </Badge>
             {event.isSystem && (
               <Badge className="bg-blue-500/10 text-blue-600 hover:bg-blue-500/10 border-none">
