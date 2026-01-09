@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query'
 import { peopleService } from '@/features/people/services/peopleService'
 import { companyService } from '@/features/company/services/companyService'
 import { assetService } from '@/features/assets/services/assetService'
-import { authService } from '@/features/auth/services/authService'
 import { liabilityService } from '@/features/liabilities/services/liabilityService'
 import { lenderService } from '@/features/lenders/services/lenderService'
 import { loanService } from '@/features/lenders/services/loanService'
+import { brokerageService } from '@/features/brokerage/services/brokerageService'
 
 export const sharedKeys = {
   people: ['shared', 'people'] as const,
@@ -19,7 +19,7 @@ export const sharedKeys = {
     ['shared', 'liabilities-person', id] as const,
   liabilitiesByCompanyId: (id: string) =>
     ['shared', 'liabilities-company', id] as const,
-  users: ['shared', 'users'] as const,
+  brokers: ['shared', 'brokers'] as const,
   lenders: ['shared', 'lenders'] as const,
   loans: ['shared', 'loans'] as const,
 }
@@ -103,10 +103,10 @@ export const useAllLiabilitiesByCompanyId = (id: string, enabled = true) => {
   })
 }
 
-export const useAllUsers = () => {
+export const useAllBrokers = (brokerageId: string) => {
   return useQuery({
-    queryKey: sharedKeys.users,
-    queryFn: () => authService.getAllUser(),
+    queryKey: sharedKeys.brokers,
+    queryFn: () => brokerageService.getAllBrokers(brokerageId),
     staleTime: 5 * 60 * 1000,
   })
 }

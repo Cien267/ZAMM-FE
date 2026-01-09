@@ -39,6 +39,8 @@ export const API_ENDPOINTS = {
   BROKERAGE: {
     BASE: '/brokerage',
     DETAIL: (id: string) => `/brokerage/${id}`,
+    GET_ALL_BROKERS: (brokerageId: string) =>
+      `/brokerage/${brokerageId}/brokers`,
   },
   EVENT: {
     BASE: '/event',

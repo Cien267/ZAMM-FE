@@ -9,10 +9,16 @@ import {
 } from '@/components/ui/card'
 import { UpSertBrokerageForm } from '../components/UpSertBrokerageForm'
 import { usePageTitle } from '@/hooks/usePageTitle'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 export const CreateBrokeragePage = () => {
   usePageTitle('Create Brokerage')
   const navigate = useNavigate()
+  const { user } = useAuth()
+  if (user && user.brokerageId) {
+    navigate(-1)
+    return
+  }
 
   const handleOnSubmit = () => {
     navigate('/dashboard')

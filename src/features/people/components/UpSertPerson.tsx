@@ -42,6 +42,7 @@ import { DatePicker } from '@/components/common/DatePicker'
 import { InputNumber } from '@/components/common/InputNumber'
 import { openUpSertAssetModal } from '@/features/assets/components/UpSertAsset'
 import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useAllBrokers } from '@/hooks/useSharedData'
 
 interface PeopleFormDialogProps {
   person?: Person | null
@@ -65,7 +66,7 @@ export const PersonModalContent = ({
   } = usePeople()
 
   const { user } = useAuth()
-  const brokers = user ? [user] : []
+  const { data: brokers } = useAllBrokers(user?.brokerageId || '')
 
   const form = useForm<CreatePersonInput | UpdatePersonInput>({
     resolver: zodResolver(isEditing ? UpdatePersonSchema : CreatePersonSchema),
@@ -88,7 +89,7 @@ export const PersonModalContent = ({
       actingOnTrust: person?.actingOnTrust || false,
       trustName: person?.trustName || '',
       spouseId: person?.spouseId || null,
-      brokerId: person?.brokerId || brokers[0]?.id,
+      brokerId: person?.brokerId || (brokers ? brokers[0].id : ''),
       address: '',
       dependents: person?.dependents || [],
       ...(isEditing && person ? { id: person.id } : {}),
@@ -429,7 +430,7 @@ export const PersonModalContent = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {brokers.map((broker) => (
+                      {(brokers || []).map((broker) => (
                         <SelectItem key={broker.id} value={broker.id}>
                           {broker.fullName}
                         </SelectItem>

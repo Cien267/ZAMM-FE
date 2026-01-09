@@ -46,7 +46,7 @@ export const UpSertBrokerageForm = ({
       slug: brokerage?.slug || '',
       authorisedDomain: brokerage?.authorisedDomain || '',
       isMasterAccount: brokerage?.isMasterAccount || false,
-      logos: brokerage?.logos || [{ url: '' }],
+      logos: brokerage?.logos || [],
       ...(isEditing && brokerage ? { id: brokerage.id } : {}),
     },
   })
@@ -101,7 +101,7 @@ export const UpSertBrokerageForm = ({
             )}
           />
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="authorisedDomain"
             render={({ field }) => (
@@ -113,9 +113,9 @@ export const UpSertBrokerageForm = ({
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="logos.0.url"
             render={({ field }) => (
@@ -130,7 +130,7 @@ export const UpSertBrokerageForm = ({
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           <Button className="w-full" type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
