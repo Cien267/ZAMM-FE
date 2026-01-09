@@ -38,6 +38,7 @@ import { openUpSertAssetModal } from '@/features/assets/components/UpSertAsset'
 import { useAllPeople } from '@/hooks/useSharedData'
 import { AddressFields } from '@/features/address/components/AddressFields'
 import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useAllBrokers } from '@/hooks/useSharedData'
 
 interface CompanyFormDialogProps {
   company?: Company | null
@@ -64,7 +65,7 @@ export const CompanyModalContent = ({
   } = useCompanies()
 
   const { user } = useAuth()
-  const brokers = user ? [user] : []
+  const { data: brokers } = useAllBrokers(user?.brokerageId || '')
 
   const { data: peopleData } = useAllPeople()
   const people = peopleData?.data || []
@@ -94,7 +95,7 @@ export const CompanyModalContent = ({
       externalContactEmail: company?.externalContactEmail || '',
       externalContactPhone: company?.externalContactPhone || '',
       referrerId: company?.referrerId || null,
-      brokerId: company?.brokerId || brokers[0]?.id,
+      brokerId: company?.brokerId || (brokers ? brokers[0].id : ''),
       addressText: '',
       address: company?.address || {
         level: '',
@@ -372,7 +373,7 @@ export const CompanyModalContent = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {brokers.map((broker) => (
+                      {(brokers || []).map((broker) => (
                         <SelectItem key={broker.id} value={broker.id}>
                           {broker.fullName}
                         </SelectItem>

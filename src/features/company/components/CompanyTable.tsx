@@ -41,6 +41,14 @@ export const CompanyTable = () => {
     pageSize: DEFAULT_PAGE_SIZE,
     sortBy: 'Id',
     sortDescending: true,
+    name: '',
+    tradingName: '',
+    type: '',
+    abn: '',
+    acn: '',
+    email: '',
+    industry: '',
+    brokerId: '',
   })
 
   const { useCompaniesList } = useCompanyQueries()

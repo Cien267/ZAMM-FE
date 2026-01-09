@@ -7,6 +7,7 @@ import type {
   UpdateBrokerageInput,
 } from '../types'
 import type { PaginatedResponse } from '@/types'
+import type { User } from '@/features/auth/types/auth.types'
 import { API_ENDPOINTS } from '@/services/endpoints'
 
 export const brokerageService = {
@@ -45,5 +46,12 @@ export const brokerageService = {
 
   async deleteBrokerage(id: string): Promise<void> {
     await api.delete(API_ENDPOINTS.BROKERAGE.DETAIL(id))
+  },
+
+  async getAllBrokers(brokerageId: string): Promise<User[]> {
+    const response = await api.get<ApiResponse<User[]>>(
+      API_ENDPOINTS.BROKERAGE.GET_ALL_BROKERS(brokerageId)
+    )
+    return response.data
   },
 }

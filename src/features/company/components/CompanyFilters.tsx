@@ -13,6 +13,8 @@ import { X } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
 import { COMPANY_TYPES, INDUSTRIES } from '../constants'
 import type { CompanyQuery } from '../types'
+import { useAllBrokers } from '@/hooks/useSharedData'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 interface CompanyFiltersProps {
   onFilterChange: (filters: Partial<CompanyQuery>) => void
@@ -23,6 +25,9 @@ export const CompanyFilters = ({
   onFilterChange,
   onReset,
 }: CompanyFiltersProps) => {
+  const { user } = useAuth()
+  const { data: brokers } = useAllBrokers(user?.brokerageId || '')
+
   const [filters, setFilters] = useState<Partial<CompanyQuery>>({
     name: '',
     tradingName: '',
@@ -31,6 +36,7 @@ export const CompanyFilters = ({
     acn: '',
     email: '',
     industry: '',
+    brokerId: '',
   })
 
   const debouncedFilters = useDebounce(filters, 500)
@@ -53,6 +59,7 @@ export const CompanyFilters = ({
       acn: '',
       email: '',
       industry: '',
+      brokerId: '',
     }
     setFilters(emptyFilters)
     onReset()
@@ -146,6 +153,24 @@ export const CompanyFilters = ({
             value={filters.email}
             onChange={(e) => handleChange('email', e.target.value)}
           />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Broker</label>
+          <Select
+            onValueChange={(e) => handleChange('brokerId', e)}
+            value={filters.brokerId}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select broker" />
+            </SelectTrigger>
+            <SelectContent className="w-full">
+              {(brokers || []).map((broker) => (
+                <SelectItem key={broker.id} value={broker.id}>
+                  {broker.fullName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
