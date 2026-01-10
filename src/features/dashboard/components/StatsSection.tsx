@@ -1,23 +1,35 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Users, FileText, DollarSign } from "lucide-react";
-import { useDashboardData } from "../hooks/useDashboardData";
-import { formatCurrency } from "@/lib/utils";
+import { useState } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Eye, EyeOff, Users, FileText, DollarSign } from 'lucide-react'
+import { useReports } from '@/features/reports/hooks/useReports'
+import { formatCurrency, formatDate } from '@/lib/utils'
+import { ErrorState } from '@/components/common/ErrorState'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const StatsSection: React.FC = () => {
-  const { loanBookQuery } = useDashboardData();
-  const { data: stats, error, isLoading } = loanBookQuery;
+  const { useReportSummary } = useReports()
+  const { data: summary, isLoading, error } = useReportSummary()
 
-  const [isRevealed, setIsRevealed] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false)
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  if (!stats) return <div>No data</div>;
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Skeleton className="h-34 col-span-2" />
+        <Skeleton className="h-34" />
+        <Skeleton className="h-34" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return <ErrorState message={error.message} />
+  }
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card className="col-span-2">
+      <Card className="col-span-2 shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             LOAN BOOK VALUE
@@ -26,10 +38,10 @@ export const StatsSection: React.FC = () => {
         </CardHeader>
         <CardContent>
           {isRevealed ? (
-            <div className="animate-in fade-in duration-300 w-80">
+            <div className="animate-in fade-in duration-300 w-2/3">
               <div className="flex justify-between items-center gap-4">
                 <div className="text-3xl font-bold text-foreground">
-                  {formatCurrency(stats.totalValue)}
+                  {formatCurrency(summary?.totalLiabilityAmount || 0)}
                 </div>
 
                 <Button
@@ -42,13 +54,13 @@ export const StatsSection: React.FC = () => {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Last updated {stats.lastUpdated}
+                Last updated {formatDate(new Date())}
               </p>
             </div>
           ) : (
-            <div className="flex flex-col items-between space-y-2 w-80">
+            <div className="flex flex-col items-between space-y-2 w-2/3">
               <div className="flex justify-between items-center gap-4">
-                <div className="h-9 w-32 bg-gray-200 dark:bg-slate-700 animate-pulse rounded" />
+                <div className="h-9 w-50 bg-gray-200 dark:bg-slate-700 animate-pulse rounded" />
                 <Button
                   variant="ghost"
                   size="sm"
@@ -67,7 +79,7 @@ export const StatsSection: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             LOANS
@@ -76,7 +88,7 @@ export const StatsSection: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="text-4xl font-bold text-sky-500">
-            {stats.loanCount}
+            {summary?.totalLiabilities || 0}
           </div>
           <p className="text-xs text-muted-foreground mt-1">
             Active loan applications
@@ -84,7 +96,7 @@ export const StatsSection: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             CLIENTS
@@ -93,7 +105,8 @@ export const StatsSection: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="text-4xl font-bold text-sky-500">
-            {stats.clientCount}
+            {Number(summary?.totalPeople || 0) +
+              Number(summary?.totalCompanies || 0)}
           </div>
           <p className="text-xs text-muted-foreground mt-1">
             Total active clients
@@ -101,5 +114,5 @@ export const StatsSection: React.FC = () => {
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
