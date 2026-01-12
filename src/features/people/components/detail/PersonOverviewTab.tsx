@@ -2,7 +2,8 @@ import { PersonInfoCard } from './PersonInfoCard'
 import { PersonContactCard } from './PersonContactCard'
 import { PersonAddressCard } from './PersonAddressCard'
 import { PersonDependentsCard } from './PersonDependentsCard'
-import { EventTimeline } from '@/features/events/components/EventTimeline'
+import { PersonRightSection } from './PersonRightSection'
+
 import type { Person } from '../../types'
 
 interface PersonOverviewTabProps {
@@ -22,12 +23,7 @@ export const PersonOverviewTab = ({ person }: PersonOverviewTabProps) => {
 
         <PersonDependentsCard person={person} />
       </div>
-      <EventTimeline
-        type="person"
-        personId={person.id}
-        companyId={null}
-        liabilityId={null}
-      />
+      <PersonRightSection person={person} />
     </div>
   )
 }

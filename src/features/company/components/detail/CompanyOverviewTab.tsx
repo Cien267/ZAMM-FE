@@ -2,7 +2,7 @@ import { CompanyInfoCard } from './CompanyInfoCard'
 import { CompanyContactCard } from './CompanyContactCard'
 import { CompanyAddressCard } from './CompanyAddressCard'
 import { CompanyPeopleCard } from './CompanyPeopleCard'
-import { EventTimeline } from '@/features/events/components/EventTimeline'
+import { CompanyRightSection } from './CompanyRightSection'
 import type { Company } from '../../types'
 
 interface CompanyOverviewTabProps {
@@ -22,12 +22,7 @@ export const CompanyOverviewTab = ({ company }: CompanyOverviewTabProps) => {
 
         <CompanyPeopleCard company={company} />
       </div>
-      <EventTimeline
-        type="company"
-        personId={null}
-        companyId={company.id}
-        liabilityId={null}
-      />
+      <CompanyRightSection company={company} />
     </div>
   )
 }

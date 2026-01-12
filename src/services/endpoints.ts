@@ -47,6 +47,10 @@ export const API_ENDPOINTS = {
     DETAIL: (id: string) => `/event/${id}`,
     DISMISS: (id: string) => `/event/${id}/dismiss`,
   },
+  NOTE: {
+    BASE: '/note',
+    DETAIL: (id: string) => `/note/${id}`,
+  },
   DASHBOARD: {
     UPCOMING_EVENTS: '/dashboard/upcoming-events',
     INTEREST_RATES: '/dashboard/interest-rates',

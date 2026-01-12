@@ -158,7 +158,7 @@ export const LiabilityDetailPage = () => {
           </Button>
         </div>
       </div>
-      <div className="flex justify-between gap-10">
+      <div className="flex justify-between">
         <div className="space-y-6 w-3/4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
@@ -620,12 +620,15 @@ export const LiabilityDetailPage = () => {
             </CardContent>
           </Card>
         </div>
-        <EventTimeline
-          type="liability"
-          personId={personId}
-          companyId={companyId}
-          liabilityId={liability.id}
-        />
+        <div className="w-1/4 ml-10">
+          <EventTimeline
+            type="liability"
+            personId={personId}
+            companyId={companyId}
+            liabilityId={liability.id}
+            height="h-full"
+          />
+        </div>
       </div>
     </div>
   )

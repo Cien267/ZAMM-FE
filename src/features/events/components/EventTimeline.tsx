@@ -58,6 +58,7 @@ interface EventTimelineProps {
   companyId: string | null
   liabilityId: string | null
   type: 'person' | 'company' | 'liability'
+  height?: string
 }
 
 export const EventTimeline = ({
@@ -65,6 +66,7 @@ export const EventTimeline = ({
   companyId,
   liabilityId,
   type,
+  height = 'h-150',
 }: EventTimelineProps) => {
   const { openAlert } = useAlert()
   const { deleteEvent, toggleDismissEvent } = useEvents()
@@ -110,7 +112,7 @@ export const EventTimeline = ({
   }
 
   return (
-    <div className="relative space-y-0 w-1/4 ml-10">
+    <div className="relative space-y-0">
       {sortedEvents.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-12 text-center animate-in fade-in zoom-in duration-300">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
@@ -140,9 +142,9 @@ export const EventTimeline = ({
 
       {sortedEvents.length > 0 && (
         <>
-          <div className="w-full flex justify-between items-center mb-6 pb-6 border-b">
-            <h3 className="font-semibold">
-              Event Timeline ({sortedEvents.length})
+          <div className="w-full flex justify-between items-center mb-2 py-2">
+            <h3 className="font-semibold flex items-center gap-2">
+              {sortedEvents.length} events
             </h3>
             <Button
               onClick={() =>
@@ -160,7 +162,7 @@ export const EventTimeline = ({
               Add Event
             </Button>
           </div>
-          <ScrollArea className="h-150 flex-1 pr-4">
+          <ScrollArea className={`flex-1 pr-4 ${height}`}>
             <div className="relative space-y-0 ml-4 border-l-2 border-accent-foreground/20 min-h-150">
               {sortedEvents.map((event) => (
                 <div key={event.id} className="relative pl-8 pb-8 last:pb-0">

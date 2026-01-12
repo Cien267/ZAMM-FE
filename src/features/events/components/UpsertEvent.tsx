@@ -50,6 +50,7 @@ interface EventFormDialogProps {
   personId: string | null
   companyId: string | null
   liabilityId: string | null
+  description?: string
   onClose: () => void
   onSubmittingChange?: (isSubmitting: boolean) => void
   onSubmit: (createdEvent: Event | null) => void
@@ -61,6 +62,7 @@ export const EventModalContent = ({
   personId,
   companyId,
   liabilityId,
+  description,
   onClose,
   onSubmittingChange,
   onSubmit: handleSubmit,
@@ -94,7 +96,7 @@ export const EventModalContent = ({
     resolver: zodResolver(isEditing ? UpdateEventSchema : CreateEventSchema),
     defaultValues: {
       title: event?.title || '',
-      description: event?.description || '',
+      description: event?.description || description || '',
       modifiedValuesJson: event?.modifiedValuesJson || '',
       modifiedValuesObject: event?.modifiedValuesObject || '',
       type: event?.type || CUSTOM_EVENT,
@@ -353,12 +355,14 @@ export const openUpSertEventModal = ({
   personId,
   companyId,
   liabilityId,
+  description,
 }: {
   event: Event | null
   type: 'person' | 'company' | 'liability'
   personId: string | null
   companyId: string | null
   liabilityId: string | null
+  description?: string
 }) => {
   const isEditing = !!event
   let isSubmitting = false
@@ -380,6 +384,7 @@ export const openUpSertEventModal = ({
           personId={personId}
           companyId={companyId}
           liabilityId={liabilityId}
+          description={description}
           onClose={() => Modal.close()}
           onSubmittingChange={(submitting) => {
             isSubmitting = submitting
