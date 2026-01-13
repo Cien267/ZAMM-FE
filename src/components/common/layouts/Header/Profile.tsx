@@ -17,9 +17,9 @@ import { useAuth } from '@/features/auth/hooks/useAuth'
 import { Modal } from '@/components/common/modal'
 import {
   UpdateProfileSchema,
-  type UpdateProfileRequest,
+  type UpdateProfileInput,
   ChangePasswordSchema,
-  type ChangePasswordRequest,
+  type ChangePasswordInput,
 } from '@/features/auth/types/auth.types'
 import { toast } from 'sonner'
 import { DatePicker } from '@/components/common/DatePicker'
@@ -28,7 +28,7 @@ import { format } from 'date-fns'
 const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
   const { user, updateProfileAsync, changePasswordAsync } = useAuth()
 
-  const profileForm = useForm<UpdateProfileRequest>({
+  const profileForm = useForm<UpdateProfileInput>({
     resolver: zodResolver(UpdateProfileSchema),
     defaultValues: {
       fullName: user?.fullName,
@@ -38,7 +38,7 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
     },
   })
 
-  const passwordForm = useForm<ChangePasswordRequest>({
+  const passwordForm = useForm<ChangePasswordInput>({
     resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
       currentPassword: '',
@@ -47,7 +47,7 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
     },
   })
 
-  const onSubmit = async (data: UpdateProfileRequest) => {
+  const onSubmit = async (data: UpdateProfileInput) => {
     try {
       const payload = {
         ...data,
@@ -63,7 +63,7 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
     }
   }
 
-  const onPasswordSubmit = async (data: ChangePasswordRequest) => {
+  const onPasswordSubmit = async (data: ChangePasswordInput) => {
     try {
       await changePasswordAsync(data)
       passwordForm.reset()
@@ -263,12 +263,4 @@ export const openEditProfileModal = () => {
     content: <ProfileModalContent onClose={() => Modal.close()} />,
     className: 'max-w-2xl!',
   })
-}
-
-export const EditProfile = () => {
-  return (
-    <span className="w-full" onClick={openEditProfileModal}>
-      Profile
-    </span>
-  )
 }

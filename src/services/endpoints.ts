@@ -10,7 +10,13 @@ export const API_ENDPOINTS = {
     VERIFY_EMAIL: '/auth/verify-email',
     UPDATE_PROFILE: '/auth/update-profile',
     CHANGE_PASSWORD: '/auth/change-password',
-    ALL_USER: '/auth/get-all-users',
+    GET__LIST_USERS: '/auth/users',
+    DETAIL: (id: string) => `/auth/users/${id}`,
+  },
+  USER: {
+    BASE: '/users',
+    DETAIL: (id: string) => `/users/${id}`,
+    ROLES: (id: string) => `/users/${id}/roles`,
   },
   PEOPLE: {
     BASE: '/people',

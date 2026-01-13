@@ -95,7 +95,7 @@ export const CompanyModalContent = ({
       externalContactEmail: company?.externalContactEmail || '',
       externalContactPhone: company?.externalContactPhone || '',
       referrerId: company?.referrerId || null,
-      brokerId: company?.brokerId || (brokers ? brokers[0].id : ''),
+      brokerId: company?.brokerId || user?.id || '',
       addressText: '',
       address: company?.address || {
         level: '',

@@ -19,7 +19,7 @@ export const LoginSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 })
 
-export type LoginRequest = z.infer<typeof LoginSchema>
+export type LoginInput = z.infer<typeof LoginSchema>
 
 export const RegisterSchema = z
   .object({
@@ -27,6 +27,8 @@ export const RegisterSchema = z
     fullName: z.string().min(2, 'Name must be at least 2 characters'),
     email: z.string().email('Invalid email'),
     password: z.string().min(6, 'Password must be at least 6 characters'),
+    dateOfBirth: z.date().optional(),
+    phoneNumber: z.string().optional(),
     confirmPassword: z
       .string()
       .min(6, 'Confirm Password must be at least 6 characters'),
@@ -36,11 +38,11 @@ export const RegisterSchema = z
     path: ['confirmPassword'],
   })
 
-export type RegisterRequest = z.infer<typeof RegisterSchema>
+export type RegisterInput = z.infer<typeof RegisterSchema>
 
 export interface AuthContextType {
-  login: (data: LoginRequest) => Promise<void>
-  register: (data: RegisterRequest) => Promise<void>
+  login: (data: LoginInput) => Promise<void>
+  register: (data: RegisterInput) => Promise<void>
   logout: () => void
   isLoading: boolean
   error: string | null
@@ -60,7 +62,7 @@ export const UpdateProfileSchema = z.object({
   dateOfBirth: z.date().optional(),
 })
 
-export type UpdateProfileRequest = z.infer<typeof UpdateProfileSchema>
+export type UpdateProfileInput = z.infer<typeof UpdateProfileSchema>
 
 export const ChangePasswordSchema = z
   .object({
@@ -76,4 +78,4 @@ export const ChangePasswordSchema = z
     path: ['confirmPassword'],
   })
 
-export type ChangePasswordRequest = z.infer<typeof ChangePasswordSchema>
+export type ChangePasswordInput = z.infer<typeof ChangePasswordSchema>

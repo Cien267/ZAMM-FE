@@ -89,7 +89,7 @@ export const PersonModalContent = ({
       actingOnTrust: person?.actingOnTrust || false,
       trustName: person?.trustName || '',
       spouseId: person?.spouseId || null,
-      brokerId: person?.brokerId || (brokers ? brokers[0].id : ''),
+      brokerId: person?.brokerId || user?.id || '',
       address: '',
       dependents: person?.dependents || [],
       ...(isEditing && person ? { id: person.id } : {}),

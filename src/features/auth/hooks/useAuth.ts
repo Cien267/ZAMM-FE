@@ -3,10 +3,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { authService } from '../services/authService'
 import type {
-  ChangePasswordRequest,
-  LoginRequest,
-  RegisterRequest,
-  UpdateProfileRequest,
+  ChangePasswordInput,
+  LoginInput,
+  RegisterInput,
+  UpdateProfileInput,
 } from '../types/auth.types'
 import useAuthStore from '@/store/authStore'
 import { toast } from 'sonner'
@@ -24,7 +24,7 @@ export const useAuth = () => {
   const { setAuth, logout: logoutStore, user, isAuthenticated } = useAuthStore()
 
   const loginMutation = useMutation({
-    mutationFn: (credentials: LoginRequest) => authService.login(credentials),
+    mutationFn: (credentials: LoginInput) => authService.login(credentials),
     onSuccess: (data) => {
       setAuth(data.user, data.accessToken)
       localStorage.setItem('token', data.accessToken)
@@ -41,7 +41,7 @@ export const useAuth = () => {
   })
 
   const registerMutation = useMutation({
-    mutationFn: (userData: RegisterRequest) => authService.register(userData),
+    mutationFn: (userData: RegisterInput) => authService.register(userData),
     onSuccess: () => {
       toast.success('Register successfully!')
       navigate('/login')
@@ -66,7 +66,7 @@ export const useAuth = () => {
   })
 
   const updateProfileMutation = useMutation({
-    mutationFn: (data: UpdateProfileRequest) => {
+    mutationFn: (data: UpdateProfileInput) => {
       data.id = user?.id
       return authService.updateProfile(data)
     },
@@ -80,7 +80,7 @@ export const useAuth = () => {
   })
 
   const changePasswordMutation = useMutation({
-    mutationFn: (data: ChangePasswordRequest) => {
+    mutationFn: (data: ChangePasswordInput) => {
       data.id = user?.id
       return authService.changePassword(data)
     },

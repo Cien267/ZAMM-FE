@@ -27,7 +27,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { HeaderBreadcrumb } from '@/components/common/layouts/Header/Breadcrumb'
 import { HelpMenu } from '@/components/common/layouts/Header/HelpMenu'
 // import { Notifications } from "./Notifications"
-import { EditProfile } from './Profile'
+import { openEditProfileModal } from './Profile'
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuth()
@@ -112,7 +112,9 @@ export const Header: React.FC = () => {
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <User className="mr-2 h-4 w-4" />
-                <EditProfile />
+                <span className="w-full" onClick={openEditProfileModal}>
+                  Profile
+                </span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleOpenModalBrokerage}>
                 <TrendingUp className="mr-2 h-4 w-4" />

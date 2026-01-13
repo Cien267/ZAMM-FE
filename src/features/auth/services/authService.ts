@@ -1,72 +1,66 @@
-import api from "@/services/api";
-import { API_ENDPOINTS } from "@/services/endpoints";
-import type { ApiResponse } from "@/types/api.types";
+import api from '@/services/api'
+import { API_ENDPOINTS } from '@/services/endpoints'
+import type { ApiResponse } from '@/types/api.types'
 import type {
-  LoginRequest,
-  RegisterRequest,
+  LoginInput,
+  RegisterInput,
   LoginResponse,
-  UpdateProfileRequest,
-  ChangePasswordRequest,
-} from "../types/auth.types";
-import type { User } from "@/features/auth/types/auth.types";
+  UpdateProfileInput,
+  ChangePasswordInput,
+} from '../types/auth.types'
+import type { User } from '@/features/auth/types/auth.types'
 
 export const authService = {
-  async login(credentials: LoginRequest): Promise<LoginResponse> {
+  async login(credentials: LoginInput): Promise<LoginResponse> {
     const response = await api.post<ApiResponse<LoginResponse>>(
       API_ENDPOINTS.AUTH.LOGIN,
-      credentials,
-    );
-    return response.data;
+      credentials
+    )
+    return response.data
   },
 
-  async register(userData: RegisterRequest): Promise<User> {
+  async register(userData: RegisterInput): Promise<User> {
     const response = await api.post<ApiResponse<User>>(
       API_ENDPOINTS.AUTH.REGISTER,
-      userData,
-    );
-    return response.data;
+      userData
+    )
+    return response.data
   },
 
   async logout(): Promise<void> {
-    await api.post(API_ENDPOINTS.AUTH.LOGOUT);
+    await api.post(API_ENDPOINTS.AUTH.LOGOUT)
   },
 
   async getCurrentUser(): Promise<User> {
-    const response = await api.get<ApiResponse<User>>(API_ENDPOINTS.AUTH.ME);
-    return response.data;
+    const response = await api.get<ApiResponse<User>>(API_ENDPOINTS.AUTH.ME)
+    return response.data
   },
 
   async forgotPassword(email: string): Promise<void> {
-    await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
+    await api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email })
   },
 
   async resetPassword(token: string, password: string): Promise<void> {
-    await api.post(API_ENDPOINTS.AUTH.RESET_PASSWORD, { token, password });
+    await api.post(API_ENDPOINTS.AUTH.RESET_PASSWORD, { token, password })
   },
 
   async verifyEmail(token: string): Promise<void> {
-    await api.post(API_ENDPOINTS.AUTH.VERIFY_EMAIL, { token });
+    await api.post(API_ENDPOINTS.AUTH.VERIFY_EMAIL, { token })
   },
 
-  async updateProfile(data: UpdateProfileRequest): Promise<User> {
+  async updateProfile(data: UpdateProfileInput): Promise<User> {
     const response = await api.put<ApiResponse<User>>(
       `${API_ENDPOINTS.AUTH.UPDATE_PROFILE}/${data.id}`,
-      data,
-    );
-    return response.data;
+      data
+    )
+    return response.data
   },
 
-  async changePassword(data: ChangePasswordRequest): Promise<void> {
+  async changePassword(data: ChangePasswordInput): Promise<void> {
     await api.put(`${API_ENDPOINTS.AUTH.CHANGE_PASSWORD}/${data.id}`, {
       currentPassword: data.currentPassword,
       newPassword: data.newPassword,
       confirmPassword: data.confirmPassword,
-    });
+    })
   },
-  async getAllUser(): Promise<User[]> {
-    const response = await api.get<ApiResponse<User[]>>(
-      API_ENDPOINTS.AUTH.ALL_USER,
-    );
-    return response.data;
-  },
-};
+}

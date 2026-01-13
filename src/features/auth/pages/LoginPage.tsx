@@ -23,13 +23,13 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useAuth } from '../hooks/useAuth'
 import { usePageTitle } from '@/hooks/usePageTitle'
-import { type LoginRequest, LoginSchema } from '../types/auth.types'
+import { type LoginInput, LoginSchema } from '../types/auth.types'
 
 export const LoginPage = () => {
   usePageTitle('Login')
   const { login, isLoggingIn, loginError } = useAuth()
 
-  const form = useForm<LoginRequest>({
+  const form = useForm<LoginInput>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: '',
@@ -37,7 +37,7 @@ export const LoginPage = () => {
     },
   })
 
-  const onSubmit = (data: LoginRequest) => {
+  const onSubmit = (data: LoginInput) => {
     login(data)
   }
 

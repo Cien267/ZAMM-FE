@@ -30,6 +30,7 @@ const CompanyDetailPage = lazy(
   () => import('@/features/company/pages/CompanyDetailPage')
 )
 const ReportsPage = lazy(() => import('@/features/reports/pages/ReportsPage'))
+const StaffsPage = lazy(() => import('@/features/staffs/pages/StaffsPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
 const AssetDetailPage = lazy(
@@ -153,6 +154,14 @@ export const router = createBrowserRouter([
                 element: (
                   <SuspenseWrapper>
                     <ReportsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: '/staffs',
+                element: (
+                  <SuspenseWrapper>
+                    <StaffsPage />
                   </SuspenseWrapper>
                 ),
               },

@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useAuth } from '../hooks/useAuth'
-import { RegisterSchema, type RegisterRequest } from '../types/auth.types'
+import { RegisterSchema, type RegisterInput } from '../types/auth.types'
 import logo from '@/assets/images/logo.png'
 import { usePageTitle } from '@/hooks/usePageTitle'
 
@@ -30,7 +30,7 @@ export const RegisterPage = () => {
   usePageTitle('Register')
   const { register, isRegistering, registerError } = useAuth()
 
-  const form = useForm<RegisterRequest>({
+  const form = useForm<RegisterInput>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
       userName: '',
@@ -41,7 +41,7 @@ export const RegisterPage = () => {
     },
   })
 
-  const onSubmit = (data: RegisterRequest) => {
+  const onSubmit = (data: RegisterInput) => {
     register(data)
   }
 
