@@ -46,6 +46,7 @@ export const DetailEventModalContent = ({
     data: event,
     isLoading: isLoadingEvent,
     error,
+    refetch,
   } = useEvent(id || '', !!id)
   const { deleteEvent, toggleDismissEvent } = useEvents()
   if (isLoadingEvent) {
@@ -57,7 +58,7 @@ export const DetailEventModalContent = ({
   }
 
   if (error || !event) {
-    return <ErrorState message={error?.message} />
+    return <ErrorState message={error?.message} onRetry={refetch} />
   }
 
   const isCustom = event.type === CUSTOM_EVENT

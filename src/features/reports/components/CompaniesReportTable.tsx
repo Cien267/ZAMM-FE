@@ -32,7 +32,12 @@ export const CompaniesReportTable = () => {
   })
 
   const { useCompanyReport } = useReports()
-  const { data: companiesReport, isLoading, error } = useCompanyReport(query)
+  const {
+    data: companiesReport,
+    isLoading,
+    error,
+    refetch,
+  } = useCompanyReport(query)
 
   const handlePageChange = (newPage: number) => {
     setQuery((prev) => ({ ...prev, pageNumber: newPage }))
@@ -63,7 +68,7 @@ export const CompaniesReportTable = () => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

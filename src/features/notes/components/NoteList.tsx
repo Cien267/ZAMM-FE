@@ -87,7 +87,7 @@ export const NoteList = ({
     eventId: undefined,
   }
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
-  const { data: notesData, isLoading, error } = useNotesList(query)
+  const { data: notesData, isLoading, error, refetch } = useNotesList(query)
 
   const form = useForm<CreateNoteInput>({
     resolver: zodResolver(CreateNoteSchema),
@@ -117,7 +117,7 @@ export const NoteList = ({
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   const sortedNotes = [...(notesData?.data || [])].sort(

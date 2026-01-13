@@ -53,7 +53,7 @@ export const CompanyTable = () => {
   })
 
   const { useCompaniesList } = useCompanyQueries()
-  const { data, isLoading, error } = useCompaniesList(query)
+  const { data, isLoading, error, refetch } = useCompaniesList(query)
   const { deleteCompany } = useCompanies()
 
   const handleFilterChange = (filters: Partial<CompanyQuery>) => {
@@ -118,7 +118,7 @@ export const CompanyTable = () => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

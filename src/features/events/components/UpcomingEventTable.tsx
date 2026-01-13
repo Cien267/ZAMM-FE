@@ -41,7 +41,7 @@ export const UpcomingEventTable = () => {
   })
 
   const { useEventsList } = useEventQueries()
-  const { data, isLoading, error } = useEventsList(query)
+  const { data, isLoading, error, refetch } = useEventsList(query)
 
   const handleFilterChange = (filters: Partial<EventQuery>) => {
     setQuery((prev) => ({
@@ -71,7 +71,7 @@ export const UpcomingEventTable = () => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

@@ -35,7 +35,12 @@ export const PeopleReportTable = () => {
   })
 
   const { usePeopleReport } = useReports()
-  const { data: peopleReport, isLoading, error } = usePeopleReport(query)
+  const {
+    data: peopleReport,
+    isLoading,
+    error,
+    refetch,
+  } = usePeopleReport(query)
 
   const handlePageChange = (newPage: number) => {
     setQuery((prev) => ({ ...prev, pageNumber: newPage }))
@@ -66,7 +71,7 @@ export const PeopleReportTable = () => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

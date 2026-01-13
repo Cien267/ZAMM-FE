@@ -39,6 +39,7 @@ export const LiabilitiesReportTable = () => {
     data: liabilitiesReport,
     isLoading,
     error,
+    refetch,
   } = useLiabilityReport(query)
 
   const handlePageChange = (newPage: number) => {
@@ -84,7 +85,7 @@ export const LiabilitiesReportTable = () => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   const handleNavigateLiability = (liability: Liability) => {

@@ -54,7 +54,7 @@ export const PeopleTable = () => {
   })
 
   const { usePeopleList } = usePeopleQueries()
-  const { data: people, isLoading, error } = usePeopleList(query)
+  const { data: people, isLoading, error, refetch } = usePeopleList(query)
 
   const { deletePerson } = usePeople()
 
@@ -102,7 +102,7 @@ export const PeopleTable = () => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

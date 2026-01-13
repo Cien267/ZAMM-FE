@@ -24,6 +24,7 @@ export const PersonDetailPage = () => {
     data: person,
     isLoading: isLoadingPerson,
     error,
+    refetch,
   } = usePerson(id || '', !!id)
 
   const { data: assetsData } = useAllAssetsByPersonId(id || '', !!id)
@@ -64,7 +65,7 @@ export const PersonDetailPage = () => {
   }
 
   if (error || !person) {
-    return <ErrorState message={error?.message} />
+    return <ErrorState message={error?.message} onRetry={refetch} />
   }
 
   return (

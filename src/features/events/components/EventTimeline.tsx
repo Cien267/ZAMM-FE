@@ -82,14 +82,14 @@ export const EventTimeline = ({
     liabilityId: liabilityId || undefined,
   }
 
-  const { data: eventsData, isLoading, error } = useEventsList(query)
+  const { data: eventsData, isLoading, error, refetch } = useEventsList(query)
 
   if (isLoading) {
     return <TimelineSkeleton />
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   const sortedEvents = [...(eventsData?.data || [])].sort(

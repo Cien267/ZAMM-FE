@@ -65,7 +65,7 @@ export const LiabilitiesTable = ({
   })
 
   const { useLiabilitiesList } = useLiabilityQueries()
-  const { data, isLoading, error } = useLiabilitiesList(query)
+  const { data, isLoading, error, refetch } = useLiabilitiesList(query)
   const { deleteLiability } = useLiabilities()
   const navigate = useNavigate()
 
@@ -114,7 +114,7 @@ export const LiabilitiesTable = ({
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

@@ -22,7 +22,7 @@ export const ReportsPage = () => {
   const [activeTab, setActiveTab] = useState('overview')
 
   const { useReportSummary } = useReports()
-  const { data: summary, isLoading, error } = useReportSummary()
+  const { data: summary, isLoading, error, refetch } = useReportSummary()
   const { handleExport } = useReportExport()
 
   if (isLoading) {
@@ -53,7 +53,7 @@ export const ReportsPage = () => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

@@ -62,7 +62,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
   })
 
   const { useAssetsList } = useAssetQueries()
-  const { data, isLoading, error } = useAssetsList(query)
+  const { data, isLoading, error, refetch } = useAssetsList(query)
   const { deleteAsset } = useAssets()
   const navigate = useNavigate()
 
@@ -126,7 +126,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

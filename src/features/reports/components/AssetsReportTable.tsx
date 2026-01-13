@@ -33,7 +33,12 @@ export const AssetsReportTable = () => {
   })
 
   const { useAssetReport } = useReports()
-  const { data: assetsReport, isLoading, error } = useAssetReport(query)
+  const {
+    data: assetsReport,
+    isLoading,
+    error,
+    refetch,
+  } = useAssetReport(query)
 
   const handlePageChange = (newPage: number) => {
     setQuery((prev) => ({ ...prev, pageNumber: newPage }))
@@ -74,7 +79,7 @@ export const AssetsReportTable = () => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

@@ -55,14 +55,19 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export const LoanBookChart = () => {
-  const { data: liabilitiesData, isLoading, error } = useAllLiabilities()
+  const {
+    data: liabilitiesData,
+    isLoading,
+    error,
+    refetch,
+  } = useAllLiabilities()
 
   if (isLoading) {
     return <Skeleton className="h-94 w-full" />
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   const chartData = processData(liabilitiesData?.data || [])

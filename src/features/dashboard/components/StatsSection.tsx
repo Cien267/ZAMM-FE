@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export const StatsSection: React.FC = () => {
   const { useReportSummary } = useReports()
-  const { data: summary, isLoading, error } = useReportSummary()
+  const { data: summary, isLoading, error, refetch } = useReportSummary()
 
   const [isRevealed, setIsRevealed] = useState(false)
 
@@ -24,7 +24,7 @@ export const StatsSection: React.FC = () => {
   }
 
   if (error) {
-    return <ErrorState message={error.message} />
+    return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (

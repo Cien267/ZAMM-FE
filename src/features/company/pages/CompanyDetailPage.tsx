@@ -24,6 +24,7 @@ export const CompanyDetailPage = () => {
     data: company,
     isLoading: isLoadingCompany,
     error,
+    refetch,
   } = useCompany(id || '', !!id)
 
   const { data: assetsData } = useAllAssetsByCompanyId(id || '')
@@ -64,7 +65,7 @@ export const CompanyDetailPage = () => {
   }
 
   if (error || !company) {
-    return <ErrorState message={error?.message} />
+    return <ErrorState message={error?.message} onRetry={refetch} />
   }
 
   return (
