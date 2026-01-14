@@ -32,6 +32,7 @@ import { openUpSertLiabilityModal } from '../components/UpsertLiability'
 import { useAlert } from '@/contexts/AlertContext'
 import { EventTimeline } from '@/features/events/components/EventTimeline'
 import { useSearchParams } from 'react-router-dom'
+import { ErrorState } from '@/components/common/ErrorState'
 
 export const LiabilityDetailPage = () => {
   const { liabilityId } = useParams<{ liabilityId: string }>()
@@ -49,6 +50,7 @@ export const LiabilityDetailPage = () => {
     data: liability,
     isLoading,
     error,
+    refetch,
   } = useLiability(liabilityId || '', !!liabilityId)
 
   useEffect(() => {
@@ -68,19 +70,7 @@ export const LiabilityDetailPage = () => {
   }
 
   if (error || !liability) {
-    return (
-      <div className="container mx-auto py-6">
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-destructive">Failed to load liability details</p>
-            <Button onClick={() => navigate(-1)} className="mt-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Go Back
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
+    return <ErrorState message={error?.message} onRetry={refetch} />
   }
 
   const handleDelete = () => {

@@ -30,6 +30,7 @@ import { openUpSertAssetModal } from '../components/UpSertAsset'
 import { useBreadcrumbStore } from '@/store/breadcrumbStore'
 import { useAlert } from '@/contexts/AlertContext'
 import type { AssetLiability } from '../types'
+import { ErrorState } from '@/components/common/ErrorState'
 
 export const AssetDetailPage = () => {
   const { assetId } = useParams<{ assetId: string }>()
@@ -39,7 +40,12 @@ export const AssetDetailPage = () => {
 
   const { useAsset } = useAssetQueries()
   const { deleteAsset } = useAssets()
-  const { data: asset, isLoading, error } = useAsset(assetId || '', !!assetId)
+  const {
+    data: asset,
+    isLoading,
+    error,
+    refetch,
+  } = useAsset(assetId || '', !!assetId)
 
   useEffect(() => {
     if (asset?.name && assetId) {
@@ -58,19 +64,7 @@ export const AssetDetailPage = () => {
   }
 
   if (error || !asset) {
-    return (
-      <div className="container mx-auto py-6">
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-destructive">Failed to load asset details</p>
-            <Button onClick={() => navigate(-1)} className="mt-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Go Back
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
+    return <ErrorState message={error?.message} onRetry={refetch} />
   }
 
   const handleDelete = () => {

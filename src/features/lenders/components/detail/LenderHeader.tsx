@@ -28,7 +28,7 @@ export const LenderHeader = ({ lender }: LenderHeaderProps) => {
       onConfirm: () => {
         deleteLender(lender.id, {
           onSuccess: () => {
-            navigate('/lenders')
+            navigate('/admin/lenders')
           },
         })
       },

@@ -145,11 +145,13 @@ export const LendersTable = () => {
                 <TableRow key={lender.id}>
                   <TableCell className="font-medium">
                     {lender.logoUrl ? (
-                      <img
-                        src={lender.logoUrl}
-                        alt=""
-                        className="rounded-md object-cover h-20 w-auto"
-                      />
+                      <div className="h-20 w-32 flex items-center justify-center">
+                        <img
+                          src={lender.logoUrl}
+                          alt={`${lender.name} logo`}
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      </div>
                     ) : (
                       '-'
                     )}
