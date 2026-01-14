@@ -4,7 +4,7 @@ import { companyService } from '@/features/company/services/companyService'
 import { assetService } from '@/features/assets/services/assetService'
 import { liabilityService } from '@/features/liabilities/services/liabilityService'
 import { lenderService } from '@/features/lenders/services/lenderService'
-import { loanService } from '@/features/lenders/services/loanService'
+import { loanService } from '@/features/loans/services/loanService'
 import { brokerageService } from '@/features/brokerage/services/brokerageService'
 
 export const sharedKeys = {
@@ -22,6 +22,7 @@ export const sharedKeys = {
   brokers: ['shared', 'brokers'] as const,
   lenders: ['shared', 'lenders'] as const,
   loans: ['shared', 'loans'] as const,
+  loansByLenderId: (id: string) => ['shared', 'loans-lender', id] as const,
 }
 
 export const useAllPeople = () => {
@@ -124,5 +125,14 @@ export const useAllLoans = () => {
     queryKey: sharedKeys.loans,
     queryFn: () => loanService.getLoans({ pageSize: 1000 }),
     staleTime: 5 * 60 * 1000,
+  })
+}
+
+export const useAllLoansByLenderId = (id: string, enabled = true) => {
+  return useQuery({
+    queryKey: sharedKeys.loansByLenderId(id),
+    queryFn: () => loanService.getLoans({ pageSize: 1000, lenderId: id }),
+    staleTime: 5 * 60 * 1000,
+    enabled: enabled && !!id,
   })
 }

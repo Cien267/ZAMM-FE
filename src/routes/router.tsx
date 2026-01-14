@@ -39,6 +39,10 @@ const AssetDetailPage = lazy(
 const LiabilityDetailPage = lazy(
   () => import('@/features/liabilities/pages/LiabilityDetailPage')
 )
+const LendersPage = lazy(() => import('@/features/lenders/pages/LendersPage'))
+const LenderDetailPage = lazy(
+  () => import('@/features/lenders/pages/LenderDetailPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -162,6 +166,22 @@ export const router = createBrowserRouter([
                 element: (
                   <SuspenseWrapper>
                     <StaffsPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: '/admin/lenders',
+                element: (
+                  <SuspenseWrapper>
+                    <LendersPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
+                path: '/admin/lenders/:id',
+                element: (
+                  <SuspenseWrapper>
+                    <LenderDetailPage />
                   </SuspenseWrapper>
                 ),
               },

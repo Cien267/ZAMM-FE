@@ -38,7 +38,7 @@ import type { Company } from '@/features/company/types'
 import { LiabilityOwnershipFields } from './LiabilityOwnershipFields'
 import { LinkedAssetsFields } from './LinkedAssetsFields'
 import { FixedRatePeriodsFields } from './FixedRatePeriodsFields'
-import { useAllLenders, useAllLoans } from '@/hooks/useSharedData'
+import { useAllLenders } from '@/hooks/useSharedData'
 import type { Asset } from '@/features/assets/types'
 import { format } from 'date-fns'
 
@@ -70,17 +70,16 @@ export const LiabilityModalContent = ({
   } = useLiabilities()
 
   const { data: lenderData, isLoading: isLoadingLenders } = useAllLenders()
-  const { data: loanData, isLoading: isLoadingLoans } = useAllLoans()
   const lenders = useMemo(() => lenderData?.data || [], [lenderData?.data])
-  const loans = useMemo(() => loanData?.data || [], [loanData?.data])
 
   const initialLenderId = useMemo(() => {
-    if (liability?.loanId && loans.length > 0) {
-      const loan = loans.find((loan) => loan.id === liability.loanId)
-      if (loan?.lenderId) return loan.lenderId
+    if (liability?.loanId) {
+      return lenders.find((lender) =>
+        lender.loans?.some((loan) => loan.id === liability.loanId)
+      )?.id
     }
     return lenders[0]?.id || ''
-  }, [liability?.loanId, loans, lenders])
+  }, [liability?.loanId, lenders])
 
   const [selectedLenderId, setSelectedLenderId] = useState<string>('')
 
@@ -92,8 +91,11 @@ export const LiabilityModalContent = ({
 
   const loansBySelectedLender = useMemo(() => {
     if (!selectedLenderId) return []
-    return loans.filter((loan) => loan.lenderId === selectedLenderId)
-  }, [loans, selectedLenderId])
+    const lender = lenders.find((lender) => lender.id === selectedLenderId)
+    return (lender?.loans || []).filter(
+      (loan) => loan.lenderId === selectedLenderId
+    )
+  }, [lenders, selectedLenderId])
 
   const initialLoanId = useMemo(() => {
     if (liability?.loanId) return liability.loanId
@@ -162,14 +164,17 @@ export const LiabilityModalContent = ({
   })
 
   useEffect(() => {
-    if (!isLoadingLoans && initialLoanId && !form.getValues('loanId')) {
+    if (initialLoanId && !form.getValues('loanId')) {
       form.setValue('loanId', initialLoanId)
     }
-  }, [initialLoanId, form, isLoadingLoans])
+  }, [initialLoanId, form])
 
   const handleLenderChange = (lenderId: string) => {
     setSelectedLenderId(lenderId)
-    const firstLoan = loans.find((loan) => loan.lenderId === lenderId)
+    const lender = lenders.find((lender) => lender.id === lenderId)
+    const firstLoan = (lender?.loans || []).find(
+      (loan) => loan.lenderId === lenderId
+    )
     if (firstLoan) {
       form.setValue('loanId', firstLoan.id)
     } else if (!isEditing) {
@@ -340,22 +345,18 @@ export const LiabilityModalContent = ({
                     onValueChange={field.onChange}
                     value={field.value || ''}
                     disabled={
-                      isLoadingLoans ||
-                      !selectedLenderId ||
-                      loansBySelectedLender.length === 0
+                      !selectedLenderId || loansBySelectedLender.length === 0
                     }
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue
                           placeholder={
-                            isLoadingLoans
-                              ? 'Loading loans...'
-                              : !selectedLenderId
-                                ? 'Select a lender first'
-                                : loansBySelectedLender.length === 0
-                                  ? 'No loans available'
-                                  : 'Select loan product'
+                            !selectedLenderId
+                              ? 'Select a lender first'
+                              : loansBySelectedLender.length === 0
+                                ? 'No loans available'
+                                : 'Select loan product'
                           }
                         />
                       </SelectTrigger>
