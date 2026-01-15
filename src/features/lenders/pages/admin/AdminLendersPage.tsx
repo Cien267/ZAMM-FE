@@ -1,6 +1,6 @@
-import { LendersTable } from '../components/LendersTable'
+import { LendersTable } from '../../components/admin/LendersTable'
 
-export const LendersPage = () => {
+export const AdminLendersPage = () => {
   return (
     <>
       <div className="space-y-6">
@@ -16,4 +16,4 @@ export const LendersPage = () => {
   )
 }
 
-export default LendersPage
+export default AdminLendersPage

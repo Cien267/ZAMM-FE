@@ -55,16 +55,18 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
       if (returnString) {
         onChange?.(val)
       } else {
-        const numValue = allowDecimal ? parseFloat(val) : parseInt(val, 10)
-        if (!isNaN(numValue) && val !== '-' && !val.endsWith('.')) {
-          onChange?.(numValue)
-        } else {
-          onChange?.(val as any)
-        }
+        onChange?.(val as any)
       }
     }
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      if (!returnString && value !== null && value !== '') {
+        const val = String(value)
+        const numValue = allowDecimal ? parseFloat(val) : parseInt(val, 10)
+        if (!isNaN(numValue)) {
+          onChange?.(numValue)
+        }
+      }
       onBlur?.(e)
     }
 

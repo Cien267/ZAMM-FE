@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
-import { useLenders } from '../../hooks/useLenders'
+import { useLenders } from '../../../hooks/useLenders'
 import { openUpSertLenderModal } from '../UpSertLender'
-import type { Lender } from '../../types'
+import type { Lender } from '../../../types'
 import { useAlert } from '@/contexts/AlertContext'
 
 interface LenderHeaderProps {

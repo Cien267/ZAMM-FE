@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useLenders } from '../hooks/useLenders'
+import { useLenders } from '../../hooks/useLenders'
 import {
   Form,
   FormControl,
@@ -19,7 +19,7 @@ import {
   type CreateLenderInput,
   type Lender,
   type UpdateLenderInput,
-} from '../types'
+} from '../../types'
 import { Modal } from '@/components/common/modal'
 import { openCreateLoanModal } from '@/features/loans/components/CreateLoan'
 import { slugify } from '@/lib/utils'

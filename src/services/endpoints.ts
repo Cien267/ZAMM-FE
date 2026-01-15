@@ -37,6 +37,9 @@ export const API_ENDPOINTS = {
   LENDER: {
     BASE: '/lender',
     DETAIL: (id: string) => `/lender/${id}`,
+    ASSIGN_TO_BROKERAGE: (id: string) => `/lender/${id}/assign-to-brokerage`,
+    UNASSIGN_FROM_BROKERAGE: (id: string) =>
+      `/lender/${id}/unassign-from-brokerage`,
   },
   LOAN: {
     BASE: '/loan',
@@ -47,6 +50,8 @@ export const API_ENDPOINTS = {
     DETAIL: (id: string) => `/brokerage/${id}`,
     GET_ALL_BROKERS: (brokerageId: string) =>
       `/brokerage/${brokerageId}/brokers`,
+    GET_LENDERS_ASSIGNED_TO_BROKERAGE: (brokerageId: string) =>
+      `/brokerage/${brokerageId}/lenders`,
   },
   EVENT: {
     BASE: '/event',

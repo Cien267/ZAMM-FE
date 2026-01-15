@@ -2,15 +2,15 @@ import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2 } from 'lucide-react'
-import { useLendersQueries } from '../hooks/useLendersQueries'
-import { LenderHeader } from '../components/detail/LenderHeader'
-import { LenderOverviewTab } from '../components/detail/LenderOverviewTab'
+import { useLendersQueries } from '../../hooks/useLendersQueries'
+import { LenderHeader } from '../../components/admin/detail/LenderHeader'
+import { LenderOverviewTab } from '../../components/admin/detail/LenderOverviewTab'
 import { useAllLoansByLenderId } from '@/hooks/useSharedData'
 import { useBreadcrumbStore } from '@/store/breadcrumbStore'
 import { ErrorState } from '@/components/common/ErrorState'
 import LoansTable from '@/features/loans/components/LoansTable'
 
-export const LenderDetailPage = () => {
+export const AdminLenderDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const { useLender } = useLendersQueries()
   const setLabel = useBreadcrumbStore((state) => state.setLabel)
@@ -71,4 +71,4 @@ export const LenderDetailPage = () => {
   )
 }
 
-export default LenderDetailPage
+export default AdminLenderDetailPage

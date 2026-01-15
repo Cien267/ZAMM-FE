@@ -23,6 +23,7 @@ export const sharedKeys = {
   lenders: ['shared', 'lenders'] as const,
   loans: ['shared', 'loans'] as const,
   loansByLenderId: (id: string) => ['shared', 'loans-lender', id] as const,
+  lendersAssignedToBrokerage: ['shared', 'brokers', 'lenders'] as const,
 }
 
 export const useAllPeople = () => {
@@ -108,6 +109,14 @@ export const useAllBrokers = (brokerageId: string) => {
   return useQuery({
     queryKey: sharedKeys.brokers,
     queryFn: () => brokerageService.getAllBrokers(brokerageId),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export const useLendersAssignedToBrokerage = (brokerageId: string) => {
+  return useQuery({
+    queryKey: sharedKeys.lendersAssignedToBrokerage,
+    queryFn: () => brokerageService.getLendersAssignedToBrokerage(brokerageId),
     staleTime: 5 * 60 * 1000,
   })
 }

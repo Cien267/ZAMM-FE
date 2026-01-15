@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useLendersQueries } from '../hooks/useLendersQueries'
-import { useLenders } from '../hooks/useLenders'
-import { LendersFilters } from '../components/LendersFilters'
+import { useLendersQueries } from '../../hooks/useLendersQueries'
+import { useLenders } from '../../hooks/useLenders'
+import { LendersFilters } from './LendersFilters'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -26,9 +26,9 @@ import {
   Loader2,
 } from 'lucide-react'
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
-import type { LenderQuery, Lender } from '../types'
+import type { LenderQuery, Lender } from '../../types'
 import { Pagination } from '@/components/common/Pagination'
-import { openUpSertLenderModal } from '../components/UpSertLender'
+import { openUpSertLenderModal } from './UpSertLender'
 import { ErrorState } from '@/components/common/ErrorState'
 import { useAlert } from '@/contexts/AlertContext'
 import { useNavigate } from 'react-router-dom'

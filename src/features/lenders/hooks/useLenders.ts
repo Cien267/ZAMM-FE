@@ -46,6 +46,34 @@ export const useLenders = () => {
     },
   })
 
+  const assignToBrokerageMutation = useMutation({
+    mutationFn: (id: string) => lenderService.assignToBrokerage(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.lendersAssignedToBrokerage,
+      })
+      toast.success('Lender assigned!')
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to assign lender')
+      console.error('Assign lender error:', error)
+    },
+  })
+
+  const unassignFromBrokerageMutation = useMutation({
+    mutationFn: (id: string) => lenderService.unassignFromBrokerage(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.lendersAssignedToBrokerage,
+      })
+      toast.success('Lender unassigned!')
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to unassign lender')
+      console.error('Unassign lender error:', error)
+    },
+  })
+
   return {
     createLender: createLenderMutation.mutate,
     createLenderAsync: createLenderMutation.mutateAsync,
@@ -61,5 +89,15 @@ export const useLenders = () => {
     deleteLenderAsync: deleteLenderMutation.mutateAsync,
     isDeletingLender: deleteLenderMutation.isPending,
     deleteLenderError: deleteLenderMutation.error,
+
+    assignLender: assignToBrokerageMutation.mutate,
+    assignLenderAsync: assignToBrokerageMutation.mutateAsync,
+    isAssigningLender: assignToBrokerageMutation.isPending,
+    assignLenderError: assignToBrokerageMutation.error,
+
+    unassignLender: unassignFromBrokerageMutation.mutate,
+    unassignLenderAsync: unassignFromBrokerageMutation.mutateAsync,
+    isUnassigningLender: unassignFromBrokerageMutation.isPending,
+    unassignLenderError: unassignFromBrokerageMutation.error,
   }
 }

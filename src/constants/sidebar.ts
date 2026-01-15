@@ -1,4 +1,10 @@
-import { LayoutDashboard, Users, FileText, SquareUserRound } from 'lucide-react'
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  SquareUserRound,
+  Landmark,
+} from 'lucide-react'
 
 interface MenuItem {
   id: string
@@ -27,6 +33,12 @@ export const navigationItems: MenuItem[] = [
     label: 'Reports',
     icon: FileText,
     path: '/reports',
+  },
+  {
+    id: 'lenders',
+    label: 'Lenders',
+    icon: Landmark,
+    path: '/lenders',
   },
   {
     id: 'staffs',

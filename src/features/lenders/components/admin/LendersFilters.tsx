@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
-import type { LenderQuery } from '../types'
+import type { LenderQuery } from '../../types'
 
 interface LendersFiltersProps {
   onFilterChange: (filters: Partial<LenderQuery>) => void

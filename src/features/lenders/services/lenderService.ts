@@ -45,4 +45,12 @@ export const lenderService = {
   async deleteLender(id: string): Promise<void> {
     await api.delete(API_ENDPOINTS.LENDER.DETAIL(id))
   },
+
+  async assignToBrokerage(id: string): Promise<void> {
+    await api.post(API_ENDPOINTS.LENDER.ASSIGN_TO_BROKERAGE(id))
+  },
+
+  async unassignFromBrokerage(id: string): Promise<void> {
+    await api.post(API_ENDPOINTS.LENDER.UNASSIGN_FROM_BROKERAGE(id))
+  },
 }

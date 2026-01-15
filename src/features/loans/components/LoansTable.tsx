@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Plus, MoreHorizontal, Pencil, Trash2, Loader2 } from 'lucide-react'
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
-import type { LoanQuery, Loan, InterestRate } from '../types'
+import type { LoanQuery, Loan } from '../types'
 import { Pagination } from '@/components/common/Pagination'
 import { openUpdateLoanModal } from './UpdateLoan'
 import { openCreateLoanModal } from './CreateLoan'
@@ -87,13 +87,6 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
     })
   }
 
-  const getInterestRateType = (interestRate: InterestRate) => {
-    return (
-      INTEREST_RATE_TYPES.find((type) => type.value === interestRate.rateType)
-        ?.label || '-'
-    )
-  }
-
   if (error) {
     return <ErrorState message={error.message} onRetry={refetch} />
   }
@@ -106,7 +99,14 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
         onReset={handleResetFilters}
       />
 
-      <div className="flex justify-end">
+      <div className="flex justify-between">
+        <div className="flex gap-2 justify-between items-center italic text-sm text-sky-500">
+          {INTEREST_RATE_TYPES.map((type) => (
+            <div className="border-t-0 border-l-0 border-b-0 border-r border-sky-300 pr-2 last:border-none">
+              <span className="font-bold">{type.value}</span>: {type.label}
+            </div>
+          ))}
+        </div>
         <Button
           variant={'sky'}
           onClick={() => {
@@ -151,7 +151,7 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
                     {(loan?.interestRates || []).map((interestRate) => (
                       <div key={interestRate.id}>
                         <span className="text-accent-foreground font-normal mr-2">
-                          🔹 {getInterestRateType(interestRate)}:{' '}
+                          🔹 {interestRate.rateType}:{' '}
                         </span>{' '}
                         {interestRate.rate}%
                       </div>

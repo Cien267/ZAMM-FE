@@ -39,9 +39,14 @@ const AssetDetailPage = lazy(
 const LiabilityDetailPage = lazy(
   () => import('@/features/liabilities/pages/LiabilityDetailPage')
 )
-const LendersPage = lazy(() => import('@/features/lenders/pages/LendersPage'))
-const LenderDetailPage = lazy(
-  () => import('@/features/lenders/pages/LenderDetailPage')
+const LendersPage = lazy(
+  () => import('@/features/lenders/pages/user/LendersPage')
+)
+const AdminLendersPage = lazy(
+  () => import('@/features/lenders/pages/admin/AdminLendersPage')
+)
+const AdminLenderDetailPage = lazy(
+  () => import('@/features/lenders/pages/admin/AdminLenderDetailPage')
 )
 
 export const router = createBrowserRouter([
@@ -170,7 +175,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: '/admin/lenders',
+                path: '/lenders',
                 element: (
                   <SuspenseWrapper>
                     <LendersPage />
@@ -178,10 +183,18 @@ export const router = createBrowserRouter([
                 ),
               },
               {
+                path: '/admin/lenders',
+                element: (
+                  <SuspenseWrapper>
+                    <AdminLendersPage />
+                  </SuspenseWrapper>
+                ),
+              },
+              {
                 path: '/admin/lenders/:id',
                 element: (
                   <SuspenseWrapper>
-                    <LenderDetailPage />
+                    <AdminLenderDetailPage />
                   </SuspenseWrapper>
                 ),
               },

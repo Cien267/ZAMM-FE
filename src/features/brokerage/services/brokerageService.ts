@@ -9,6 +9,7 @@ import type {
 import type { PaginatedResponse } from '@/types'
 import type { User } from '@/features/auth/types/auth.types'
 import { API_ENDPOINTS } from '@/services/endpoints'
+import type { Lender } from '@/features/lenders/types'
 
 export const brokerageService = {
   async getBrokerages(
@@ -51,6 +52,13 @@ export const brokerageService = {
   async getAllBrokers(brokerageId: string): Promise<User[]> {
     const response = await api.get<ApiResponse<User[]>>(
       API_ENDPOINTS.BROKERAGE.GET_ALL_BROKERS(brokerageId)
+    )
+    return response.data
+  },
+
+  async getLendersAssignedToBrokerage(brokerageId: string): Promise<Lender[]> {
+    const response = await api.get<ApiResponse<Lender[]>>(
+      API_ENDPOINTS.BROKERAGE.GET_LENDERS_ASSIGNED_TO_BROKERAGE(brokerageId)
     )
     return response.data
   },

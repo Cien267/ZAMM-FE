@@ -38,9 +38,10 @@ import type { Company } from '@/features/company/types'
 import { LiabilityOwnershipFields } from './LiabilityOwnershipFields'
 import { LinkedAssetsFields } from './LinkedAssetsFields'
 import { FixedRatePeriodsFields } from './FixedRatePeriodsFields'
-import { useAllLenders } from '@/hooks/useSharedData'
+import { useLendersAssignedToBrokerage } from '@/hooks/useSharedData'
 import type { Asset } from '@/features/assets/types'
 import { format } from 'date-fns'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 interface LiabilityFormDialogProps {
   liability?: Liability | null
@@ -69,8 +70,10 @@ export const LiabilityModalContent = ({
     isUpdatingLiability,
   } = useLiabilities()
 
-  const { data: lenderData, isLoading: isLoadingLenders } = useAllLenders()
-  const lenders = useMemo(() => lenderData?.data || [], [lenderData?.data])
+  const { user } = useAuth()
+  const { data: lenderData, isLoading: isLoadingLenders } =
+    useLendersAssignedToBrokerage(user?.brokerageId || '')
+  const lenders = useMemo(() => lenderData || [], [lenderData])
 
   const initialLenderId = useMemo(() => {
     if (liability?.loanId) {
