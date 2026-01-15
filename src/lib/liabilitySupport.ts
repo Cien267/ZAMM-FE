@@ -1,4 +1,5 @@
 import type { Loan } from '@/features/loans/types'
+import { INTEREST_RATE_TYPES } from '@/features/loans/constants'
 
 type RateType = 'OOPI' | 'OOIO' | 'IVPI' | 'IVIO'
 
@@ -8,6 +9,7 @@ type EffectiveRateResult = {
   discountPercent: number
   rateType: RateType
   rateId?: string
+  message?: string
 }
 
 type CalculateEffectiveRateParams = {
@@ -53,7 +55,15 @@ export function calculateEffectiveInterestRate(
     (r) => r.rateType === rateType
   )
 
-  if (!matchedRate) return null
+  if (!matchedRate)
+    return {
+      rate: 0,
+      baseRate: 0,
+      discountPercent: discountPercent || 0,
+      rateType,
+      rateId: undefined,
+      message: `This loan doesn't support ${INTEREST_RATE_TYPES.find((type) => type.value === rateType)?.label || '-'} loans`,
+    }
 
   const baseRate = matchedRate.rate
   let effectiveRate = baseRate - (discountPercent || 0)

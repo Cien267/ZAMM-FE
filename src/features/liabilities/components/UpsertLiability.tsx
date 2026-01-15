@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/select'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
-import { Loader2 } from 'lucide-react'
+import { Loader2, TriangleAlert } from 'lucide-react'
 import { FINANCE_PURPOSES, REPAYMENT_FREQUENCIES } from '../constants'
 import {
   CreateLiabilitySchema,
@@ -207,7 +207,36 @@ export const LiabilityModalContent = ({
     return result?.rate ?? 0
   }
 
+  const resolveEffectiveRateMessage = (): string => {
+    if (settlementRate != null && Number(settlementRate)) {
+      return ''
+    }
+
+    const result = calculateEffectiveInterestRate({
+      loan: selectedLoan,
+      financePurpose: financePurpose ?? 'Investment',
+      commencementDate: commencementDate ?? null,
+      interestOnlyTerm,
+      discountPercent,
+      introRateYears,
+      introRatePercent,
+    })
+
+    return result?.message ?? ''
+  }
+
   const effectiveRate = useMemo(resolveEffectiveRate, [
+    selectedLoan,
+    financePurpose,
+    commencementDate,
+    interestOnlyTerm,
+    discountPercent,
+    introRateYears,
+    introRatePercent,
+    settlementRate,
+  ])
+
+  const effectiveRateMessage = useMemo(resolveEffectiveRateMessage, [
     selectedLoan,
     financePurpose,
     commencementDate,
@@ -309,40 +338,6 @@ export const LiabilityModalContent = ({
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="financePurpose"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Finance Purpose</FormLabel>
-                  <RadioGroup
-                    value={field.value || ''}
-                    onValueChange={field.onChange}
-                    defaultValue="Residential"
-                    className="flex justify-start items-center gap-2"
-                  >
-                    {FINANCE_PURPOSES.map((purpose) => (
-                      <RadioGroupItem
-                        key={purpose}
-                        value={purpose}
-                        id={purpose}
-                      >
-                        <Label htmlFor={purpose} className="cursor-pointer">
-                          {purpose}
-                        </Label>
-                      </RadioGroupItem>
-                    ))}
-                  </RadioGroup>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormItem>
               <FormLabel>
                 Lender <span className="text-destructive">*</span>
@@ -421,6 +416,40 @@ export const LiabilityModalContent = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
+              name="financePurpose"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Finance Purpose</FormLabel>
+                  <RadioGroup
+                    value={field.value || ''}
+                    onValueChange={field.onChange}
+                    defaultValue="Residential"
+                    className="flex justify-start items-center gap-2"
+                  >
+                    {FINANCE_PURPOSES.map((purpose) => (
+                      <RadioGroupItem
+                        key={purpose}
+                        value={purpose}
+                        id={purpose}
+                      >
+                        <Label htmlFor={purpose} className="cursor-pointer">
+                          {purpose}
+                        </Label>
+                      </RadioGroupItem>
+                    ))}
+                  </RadioGroup>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
               name="loanTerm"
               render={({ field }) => (
                 <FormItem>
@@ -486,11 +515,15 @@ export const LiabilityModalContent = ({
               )}
             />
 
-            <FormItem>
+            <FormItem className="relative">
               <FormLabel>Effective Interest Rate</FormLabel>
               <div className="h-10 px-3 py-2 border rounded-md bg-muted text-muted-foreground flex items-center">
                 {Number(effectiveRate).toFixed(2)}%
               </div>
+              <span className="text-amber-500 text-sm">
+                <TriangleAlert className="h-4 w-4 inline mr-1" />
+                {effectiveRateMessage && effectiveRateMessage}
+              </span>
             </FormItem>
           </div>
         </div>
