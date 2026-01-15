@@ -10,6 +10,7 @@ import { TrendingDown, Building2 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import type { Liability } from '@/features/liabilities/types'
 import { useNavigate } from 'react-router-dom'
+import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
 
 interface TopLiabilitiesProps {
   liabilities: Liability[]
@@ -52,7 +53,7 @@ export const TopLiabilities = ({ liabilities }: TopLiabilitiesProps) => {
         </CardHeader>
         <CardContent>
           <p className="text-center text-muted-foreground py-8">
-            No liabilities found
+            No liabilities with valid amounts available
           </p>
         </CardContent>
       </Card>
@@ -122,7 +123,7 @@ export const TopLiabilities = ({ liabilities }: TopLiabilitiesProps) => {
                 <div className="flex items-center gap-2 mt-2 flex-wrap">
                   {liability.loanId && (
                     <Badge variant="outline" className="text-xs">
-                      {liability.loanId}
+                      {liability.loan.name}
                     </Badge>
                   )}
                   {liability.financePurpose && (
@@ -140,6 +141,25 @@ export const TopLiabilities = ({ liabilities }: TopLiabilitiesProps) => {
                 {liability.liabilityPeople?.length ||
                 liability.liabilityCompanies?.length ? (
                   <p className="text-xs text-muted-foreground mt-2">
+                    Effective Rate:{' '}
+                    {calculateEffectiveInterestRate({
+                      loan: liability.loan,
+                      financePurpose: liability.financePurpose || 'Investment',
+                      commencementDate: liability.startDate
+                        ? new Date(liability.startDate)
+                        : null,
+                      interestOnlyTerm: liability.interestOnlyTerm,
+                      discountPercent: liability.discountPercent,
+                      introRateYears: liability.introRateYears,
+                      introRatePercent: liability.introRatePercent,
+                    })?.rate || 0}
+                    %
+                  </p>
+                ) : null}
+
+                {liability.liabilityPeople?.length ||
+                liability.liabilityCompanies?.length ? (
+                  <p className="text-xs text-muted-foreground mt-1">
                     Borrowers: {formatBorrowers(liability)}
                   </p>
                 ) : null}

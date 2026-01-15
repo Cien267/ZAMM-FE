@@ -5,7 +5,7 @@ import {
   COMPANY_COLUMNS,
   ASSET_COLUMNS,
   LIABILITY_COLUMNS,
-} from '@/constants'
+} from '@/constants/export'
 import { useReports } from '../hooks/useReports'
 
 export const useReportExport = () => {

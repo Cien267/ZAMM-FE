@@ -35,6 +35,7 @@ import type { Company } from '@/features/company/types'
 import { openUpSertLiabilityModal } from './UpsertLiability'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '@/contexts/AlertContext'
+import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
 
 interface LiabilitiesTableProps {
   initialData: Person | Company | null
@@ -150,6 +151,7 @@ export const LiabilitiesTable = ({
               <TableHead className="font-semibold">Lender</TableHead>
               <TableHead className="font-semibold">Loan</TableHead>
               <TableHead className="font-semibold">Amount</TableHead>
+              <TableHead className="font-semibold">Effective Rate</TableHead>
               <TableHead className="text-right font-semibold">
                 Actions
               </TableHead>
@@ -181,11 +183,24 @@ export const LiabilitiesTable = ({
                     {liability.lenderName}
                   </TableCell>
                   <TableCell className="font-medium">
-                    {liability.loanName}
+                    {liability.loan.name}
                   </TableCell>
-
                   <TableCell className="font-medium">
                     {formatCurrency(Number(liability.amount || 0))}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {calculateEffectiveInterestRate({
+                      loan: liability.loan,
+                      financePurpose: liability.financePurpose || 'Investment',
+                      commencementDate: liability.startDate
+                        ? new Date(liability.startDate)
+                        : null,
+                      interestOnlyTerm: liability.interestOnlyTerm,
+                      discountPercent: liability.discountPercent,
+                      introRateYears: liability.introRateYears,
+                      introRatePercent: liability.introRatePercent,
+                    })?.rate || 0}
+                    %
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>

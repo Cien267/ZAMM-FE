@@ -23,6 +23,7 @@ import {
   CreditCard,
   Percent,
   Clock,
+  BadgePercent,
 } from 'lucide-react'
 import { useLiabilityQueries } from '../hooks/useLiabilityQueries'
 import { useLiabilities } from '../hooks/useLiabilities'
@@ -33,6 +34,7 @@ import { useAlert } from '@/contexts/AlertContext'
 import { EventTimeline } from '@/features/events/components/EventTimeline'
 import { useSearchParams } from 'react-router-dom'
 import { ErrorState } from '@/components/common/ErrorState'
+import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
 
 export const LiabilityDetailPage = () => {
   const { liabilityId } = useParams<{ liabilityId: string }>()
@@ -125,6 +127,28 @@ export const LiabilityDetailPage = () => {
               <span>{liability.lenderName}</span>
             </div>
           )}
+          {liability.lenderName && (
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <BadgePercent className="h-4 w-4" />
+              <span>
+                Effective Rate:{' '}
+                <span className="font-bold text-sky-600">
+                  {calculateEffectiveInterestRate({
+                    loan: liability.loan,
+                    financePurpose: liability.financePurpose || 'Investment',
+                    commencementDate: liability.startDate
+                      ? new Date(liability.startDate)
+                      : null,
+                    interestOnlyTerm: liability.interestOnlyTerm,
+                    discountPercent: liability.discountPercent,
+                    introRateYears: liability.introRateYears,
+                    introRatePercent: liability.introRatePercent,
+                  })?.rate || 0}
+                  %
+                </span>
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex gap-2">
           <Button
@@ -204,18 +228,10 @@ export const LiabilityDetailPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Loan ID
-                  </p>
-                  <p className="text-base font-semibold mt-1">
-                    {liability.loanId || '-'}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
                     Loan Name
                   </p>
                   <p className="text-base font-semibold mt-1">
-                    {liability.loanName || '-'}
+                    {liability.loan.name || '-'}
                   </p>
                 </div>
                 <div>

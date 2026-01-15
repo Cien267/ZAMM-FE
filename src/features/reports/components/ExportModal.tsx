@@ -19,7 +19,7 @@ import {
   COMPANY_COLUMNS,
   ASSET_COLUMNS,
   LIABILITY_COLUMNS,
-} from '@/constants'
+} from '@/constants/export'
 import type { ExportSettings } from '@/types'
 
 interface ExportModalProps {

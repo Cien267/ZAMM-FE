@@ -19,6 +19,7 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import { Pagination } from '@/components/common/Pagination'
 import type { Liability } from '@/features/liabilities/types'
+import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
 
 export const LiabilitiesReportTable = () => {
   const navigate = useNavigate()
@@ -123,6 +124,7 @@ export const LiabilitiesReportTable = () => {
                 <TableHead>Terms</TableHead>
                 <TableHead>Borrowers</TableHead>
                 <TableHead>Secured Assets</TableHead>
+                <TableHead>Effective Rate</TableHead>
                 <TableHead>Created</TableHead>
               </TableRow>
             </TableHeader>
@@ -152,7 +154,7 @@ export const LiabilitiesReportTable = () => {
                     </TableCell>
                     <TableCell>
                       {liability.loanId ? (
-                        liability.loanName
+                        liability.loan.name
                       ) : (
                         <span className="text-muted-foreground">-</span>
                       )}
@@ -207,13 +209,30 @@ export const LiabilitiesReportTable = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm text-muted-foreground max-w-[200px] truncate">
+                      <div className="text-sm text-muted-foreground max-w-50 truncate">
                         {formatBorrowers(liability) || '-'}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm text-muted-foreground max-w-[180px] truncate">
+                      <div className="text-sm text-muted-foreground max-w-45 truncate">
                         {formatAssets(liability) || '-'}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm text-muted-foreground max-w-45 truncate">
+                        {calculateEffectiveInterestRate({
+                          loan: liability.loan,
+                          financePurpose:
+                            liability.financePurpose || 'Investment',
+                          commencementDate: liability.startDate
+                            ? new Date(liability.startDate)
+                            : null,
+                          interestOnlyTerm: liability.interestOnlyTerm,
+                          discountPercent: liability.discountPercent,
+                          introRateYears: liability.introRateYears,
+                          introRatePercent: liability.introRatePercent,
+                        })?.rate || 0}
+                        %
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">

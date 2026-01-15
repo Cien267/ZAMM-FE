@@ -5,7 +5,7 @@ import {
   COMPANY_COLUMNS,
   ASSET_COLUMNS,
   LIABILITY_COLUMNS,
-} from '../constants'
+} from '../constants/export'
 
 const formatValue = (value: any): string => {
   if (value === null || value === undefined) return ''

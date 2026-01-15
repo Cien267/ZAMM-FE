@@ -1,6 +1,7 @@
 import type { BaseEntity, PaginationParams } from '@/types'
 import { VALIDATION } from '../constants'
 import { z } from 'zod'
+import type { Loan } from '@/features/loans/types'
 
 export interface LiabilityQuery extends PaginationParams {
   name?: string
@@ -59,7 +60,7 @@ export interface Liability extends BaseEntity {
   offsetAccountBsb?: string
   offsetAccountNumber?: string
   loanId: string
-  loanName?: string
+  loan: Loan
   lenderName?: string
   liabilityPeople?: LiabilityPerson[]
   liabilityCompanies?: LiabilityCompany[]

@@ -42,6 +42,7 @@ import { useLendersAssignedToBrokerage } from '@/hooks/useSharedData'
 import type { Asset } from '@/features/assets/types'
 import { format } from 'date-fns'
 import { useAuth } from '@/features/auth/hooks/useAuth'
+import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
 
 interface LiabilityFormDialogProps {
   liability?: Liability | null
@@ -172,6 +173,51 @@ export const LiabilityModalContent = ({
     }
   }, [initialLoanId, form])
 
+  const {
+    startDate: commencementDate,
+    loanId,
+    financePurpose,
+    interestOnlyTerm,
+    introRateYears,
+    introRatePercent,
+    discountPercent,
+    settlementRate,
+  } = form.watch()
+
+  const selectedLoan = useMemo(
+    () => loansBySelectedLender.find((l) => l.id === loanId),
+    [loansBySelectedLender, loanId]
+  )
+
+  const resolveEffectiveRate = (): number => {
+    if (settlementRate != null && Number(settlementRate)) {
+      return Number(settlementRate)
+    }
+
+    const result = calculateEffectiveInterestRate({
+      loan: selectedLoan,
+      financePurpose: financePurpose ?? 'Investment',
+      commencementDate: commencementDate ?? null,
+      interestOnlyTerm,
+      discountPercent,
+      introRateYears,
+      introRatePercent,
+    })
+
+    return result?.rate ?? 0
+  }
+
+  const effectiveRate = useMemo(resolveEffectiveRate, [
+    selectedLoan,
+    financePurpose,
+    commencementDate,
+    interestOnlyTerm,
+    discountPercent,
+    introRateYears,
+    introRatePercent,
+    settlementRate,
+  ])
+
   const handleLenderChange = (lenderId: string) => {
     setSelectedLenderId(lenderId)
     const lender = lenders.find((lender) => lender.id === lenderId)
@@ -184,14 +230,6 @@ export const LiabilityModalContent = ({
       form.setValue('loanId', '')
     }
   }
-
-  const discountPercent = form.watch('discountPercent')
-  const settlementRate = form.watch('settlementRate')
-
-  const effectiveRate =
-    settlementRate && discountPercent
-      ? Number(settlementRate) - Number(discountPercent)
-      : settlementRate || 0
 
   const onSubmit = async (
     data: CreateLiabilityInput | UpdateLiabilityInput
