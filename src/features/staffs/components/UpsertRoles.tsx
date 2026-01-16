@@ -17,6 +17,7 @@ import { UpdateRolesSchema, type UpdateRolesInput } from '../types'
 import type { User } from '@/features/auth/types/auth.types'
 import { Modal } from '@/components/common/modal'
 import { ROLE_OPTIONS } from '../constants'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 interface RolesFormDialogProps {
   staff: User
@@ -30,6 +31,7 @@ export const RoleModalContent = ({
   onSubmittingChange,
 }: RolesFormDialogProps) => {
   const { updateRolesAsync, isUpdatingRoles } = useStaffs()
+  const { user } = useAuth()
 
   const form = useForm<UpdateRolesInput>({
     resolver: zodResolver(UpdateRolesSchema),
@@ -41,7 +43,7 @@ export const RoleModalContent = ({
 
   const onSubmit = async (data: UpdateRolesInput) => {
     try {
-      await updateRolesAsync(data)
+      await updateRolesAsync({ id: user?.id || '', data })
       onClose()
       form.reset()
     } catch (error) {

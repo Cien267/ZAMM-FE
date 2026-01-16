@@ -46,9 +46,9 @@ export const staffService = {
     await api.delete(API_ENDPOINTS.USER.DETAIL(id))
   },
 
-  async updateRoles(data: UpdateRolesInput): Promise<User> {
+  async updateRoles(id: string, data: UpdateRolesInput): Promise<User> {
     const response = await api.put<ApiResponse<User>>(
-      API_ENDPOINTS.USER.ROLES(data.id),
+      API_ENDPOINTS.USER.ROLES(id),
       data
     )
     return response.data

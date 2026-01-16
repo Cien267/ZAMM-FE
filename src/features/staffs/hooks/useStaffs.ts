@@ -48,7 +48,8 @@ export const useStaffs = () => {
   })
 
   const updateRolesMutation = useMutation({
-    mutationFn: (data: UpdateRolesInput) => staffService.updateRoles(data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateRolesInput }) =>
+      staffService.updateRoles(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: staffsKeys.staffs() })
       toast.success('Roles updated successfully!')
