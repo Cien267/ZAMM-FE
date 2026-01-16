@@ -23,7 +23,7 @@ export const CompaniesReportTable = () => {
   const [query, setQuery] = useState<CompanyReportQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     dateFrom: '',
     dateTo: '',

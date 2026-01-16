@@ -14,7 +14,7 @@ export const useReportExport = () => {
   const query = {
     pageNumber: 1,
     pageSize: 1000,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
   }
 

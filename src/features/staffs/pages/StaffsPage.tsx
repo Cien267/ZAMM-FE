@@ -43,7 +43,7 @@ export const StaffsTable = () => {
   const [query, setQuery] = useState<StaffQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     fullName: '',
     email: '',
@@ -68,7 +68,7 @@ export const StaffsTable = () => {
     setQuery({
       pageNumber: 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: 'Id',
+      sortBy: 'CreatedAt',
       sortDescending: true,
     })
   }

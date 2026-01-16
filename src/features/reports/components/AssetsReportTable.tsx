@@ -23,7 +23,7 @@ export const AssetsReportTable = () => {
   const [query, setQuery] = useState<AssetReportQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     dateFrom: '',
     dateTo: '',

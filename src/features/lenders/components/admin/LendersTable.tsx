@@ -61,7 +61,7 @@ export const LendersTable = () => {
     setQuery({
       pageNumber: 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: 'Id',
+      sortBy: 'CreatedAt',
       sortDescending: true,
     })
   }

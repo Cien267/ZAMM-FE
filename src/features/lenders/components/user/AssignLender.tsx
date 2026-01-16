@@ -70,7 +70,7 @@ export const AssignLender = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {lenders.map((lender) => {
         const isSelected = selectedLenderIds.has(lender.id)
 
@@ -93,7 +93,7 @@ export const AssignLender = () => {
             )}
 
             <div className="flex flex-col items-center space-y-4">
-              <div className="w-20 h-20 rounded-lg overflow-hidden flex items-center justify-center bg-white border border-slate-50 shadow-sm group-hover:scale-105 transition-transform duration-200">
+              <div className="w-40 h-40 rounded-lg overflow-hidden flex items-center justify-center bg-white border border-slate-50 shadow-sm group-hover:scale-105 transition-transform duration-200">
                 <img
                   src={lender.logoUrl}
                   alt={`${lender.name} logo`}

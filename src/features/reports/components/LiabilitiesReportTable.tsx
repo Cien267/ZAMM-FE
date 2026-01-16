@@ -26,7 +26,7 @@ export const LiabilitiesReportTable = () => {
   const [query, setQuery] = useState<LiabilityReportQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     dateFrom: '',
     dateTo: '',

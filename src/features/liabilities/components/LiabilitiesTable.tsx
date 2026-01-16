@@ -54,7 +54,7 @@ export const LiabilitiesTable = ({
   const [query, setQuery] = useState<LiabilityQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     personId: personId,
     companyId: companyId,
@@ -82,7 +82,7 @@ export const LiabilitiesTable = ({
     setQuery({
       pageNumber: 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: 'Id',
+      sortBy: 'CreatedAt',
       sortDescending: true,
     })
   }

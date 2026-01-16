@@ -514,17 +514,24 @@ export const LiabilityModalContent = ({
                 </FormItem>
               )}
             />
-
-            <FormItem className="relative">
+          </div>
+        </div>
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormItem>
               <FormLabel>Effective Interest Rate</FormLabel>
               <div className="h-10 px-3 py-2 border rounded-md bg-muted text-muted-foreground flex items-center">
                 {Number(effectiveRate).toFixed(2)}%
               </div>
-              <span className="text-amber-500 text-sm">
-                <TriangleAlert className="h-4 w-4 inline mr-1" />
-                {effectiveRateMessage && effectiveRateMessage}
-              </span>
             </FormItem>
+            <span className="text-amber-500 text-sm col-span-2">
+              {effectiveRateMessage && (
+                <>
+                  <TriangleAlert className="h-4 w-4 inline" />{' '}
+                  {effectiveRateMessage}
+                </>
+              )}
+            </span>
           </div>
         </div>
 

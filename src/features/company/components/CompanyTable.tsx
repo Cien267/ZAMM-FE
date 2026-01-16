@@ -40,7 +40,7 @@ export const CompanyTable = () => {
   const [query, setQuery] = useState<CompanyQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     name: '',
     tradingName: '',
@@ -68,7 +68,7 @@ export const CompanyTable = () => {
     setQuery({
       pageNumber: 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: 'Id',
+      sortBy: 'CreatedAt',
       sortDescending: true,
     })
   }

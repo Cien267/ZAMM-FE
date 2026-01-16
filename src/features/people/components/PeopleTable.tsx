@@ -44,7 +44,7 @@ export const PeopleTable = () => {
   const [query, setQuery] = useState<PersonQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     firstName: '',
     lastName: '',
@@ -70,7 +70,7 @@ export const PeopleTable = () => {
     setQuery({
       pageNumber: 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: 'Id',
+      sortBy: 'CreatedAt',
       sortDescending: true,
     })
   }

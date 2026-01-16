@@ -75,7 +75,7 @@ export const EventTimeline = ({
   const query: EventQuery = {
     pageNumber: 1,
     pageSize: 1000,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     personId: personId || undefined,
     companyId: companyId || undefined,

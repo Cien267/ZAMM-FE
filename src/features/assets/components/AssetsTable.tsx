@@ -47,7 +47,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
   const [query, setQuery] = useState<AssetQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     personId:
       type === 'person' && initialData ? (initialData as Person).id : undefined,
@@ -78,7 +78,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
     setQuery({
       pageNumber: 1,
       pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: 'Id',
+      sortBy: 'CreatedAt',
       sortDescending: true,
     })
   }

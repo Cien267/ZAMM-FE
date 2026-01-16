@@ -26,7 +26,7 @@ export const PeopleReportTable = () => {
   const [query, setQuery] = useState<PeopleReportQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
-    sortBy: 'Id',
+    sortBy: 'CreatedAt',
     sortDescending: true,
     dateFrom: '',
     dateTo: '',
