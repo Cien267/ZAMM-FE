@@ -11,8 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { ErrorState } from '@/components/common/ErrorState'
 import { format, formatDistanceToNow } from 'date-fns'
 import { openDetailEventModal } from '@/features/events/components/DetailEvent'
-import { Calendar, User, UserCheck, MoreHorizontal, Clock } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Calendar, User, UserCheck, Clock } from 'lucide-react'
 
 export const UpcomingEvent = () => {
   const navigate = useNavigate()
@@ -82,7 +81,7 @@ export const UpcomingEvent = () => {
   }
 
   return (
-    <Card className="border-none shadow-xl bg-white/50 backdrop-blur-sm dark:bg-slate-950/50">
+    <Card className="border shadow-sm bg-white/50 backdrop-blur-sm dark:bg-slate-950/50">
       <CardHeader className="flex flex-row items-center justify-between pb-6">
         <div className="space-y-1">
           <CardTitle className="text-xl font-semibold tracking-tight">
@@ -175,13 +174,6 @@ export const UpcomingEvent = () => {
                       addSuffix: true,
                     })}
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
             ))}
