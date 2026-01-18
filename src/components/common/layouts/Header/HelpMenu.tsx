@@ -5,35 +5,35 @@ import {
   LifeBuoy,
   Bug,
   Lightbulb,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { GuidanceCarousel } from "./GettingStartedCarousel"
-import { Modal } from "@/components/common/modal"
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
+import { GuidanceCarousel } from './GettingStartedCarousel'
+import { Modal } from '@/components/common/modal'
 
 const faqs = [
   {
-    question: "How do I add a new client or company?",
+    question: 'How do I add a new client or company?',
     answer:
       'Click the "+ Add Person" or "+ Add Company" button in the Clients page, fill in the details, and click Save.',
   },
   {
-    question: "Can I export reports?",
+    question: 'Can I export reports?',
     answer:
       'Yes, go to Reports page and click the "Export" button. Choose PDF or Excel format.',
   },
   {
-    question: "How do I change my password?",
+    question: 'How do I change my password?',
     answer:
-      "Go to Header Settings > Profile > Security > Change Password. Enter your current password and new password.",
+      'Go to Header Settings > Profile > Security > Change Password. Enter your current password and new password.',
   },
 ]
 
 export const HelpMenuContent = () => {
   const handleContactSupport = () => {
-    window.location.href = "mailto:support@zamm.com?subject=Help Request"
+    window.location.href = 'mailto:support@zamm.com?subject=Help Request'
   }
 
   return (
@@ -167,10 +167,10 @@ export const HelpMenuContent = () => {
 
 export const openHelpModal = () => {
   Modal.open({
-    title: "Help Center",
-    description: "Find answers, tutorials, and get support.",
+    title: 'Help Center',
+    description: 'Find answers, tutorials, and get support.',
     content: <HelpMenuContent />,
-    className: "max-w-4xl! max-h-[80vh]",
+    className: 'max-w-6xl! max-h-[80vh]',
   })
 }
 
