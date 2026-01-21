@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { BaseEntity, PaginationParams } from '@/types'
+import type { User } from '@/features/auth/types/auth.types'
 
 export interface BrokerageQuery extends PaginationParams {
   name?: string
@@ -16,6 +17,13 @@ export interface Brokerage extends BaseEntity {
   logos?: { url: string }[]
   usersCount: number
   invitationsCount: number
+}
+
+export interface CreateBrokerageResult {
+  brokerage: Brokerage
+  accessToken: string
+  refreshToken: string
+  user: User
 }
 
 export const CreateBrokerageSchema = z.object({

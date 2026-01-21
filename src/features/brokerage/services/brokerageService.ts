@@ -5,6 +5,7 @@ import type {
   BrokerageQuery,
   CreateBrokerageInput,
   UpdateBrokerageInput,
+  CreateBrokerageResult,
 } from '../types'
 import type { PaginatedResponse } from '@/types'
 import type { User } from '@/features/auth/types/auth.types'
@@ -29,8 +30,10 @@ export const brokerageService = {
     return response.data
   },
 
-  async createBrokerage(data: CreateBrokerageInput): Promise<Brokerage> {
-    const response = await api.post<ApiResponse<Brokerage>>(
+  async createBrokerage(
+    data: CreateBrokerageInput
+  ): Promise<CreateBrokerageResult> {
+    const response = await api.post<ApiResponse<CreateBrokerageResult>>(
       API_ENDPOINTS.BROKERAGE.BASE,
       data
     )

@@ -4,14 +4,18 @@ import { brokeragesKeys } from '../constants'
 import { authKeys } from '@/features/auth/hooks/useAuth'
 import { brokerageService } from '../services/brokerageService'
 import type { CreateBrokerageInput, UpdateBrokerageInput } from '../types'
+import useAuthStore from '@/store/authStore'
 
 export const useBrokerage = () => {
   const queryClient = useQueryClient()
+  const { setAuth } = useAuthStore()
 
   const createBrokerageMutation = useMutation({
     mutationFn: (data: CreateBrokerageInput) =>
       brokerageService.createBrokerage(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setAuth(data.user, data.accessToken)
+      localStorage.setItem('token', data.accessToken)
       queryClient.invalidateQueries({ queryKey: brokeragesKeys.brokerages() })
       queryClient.invalidateQueries({ queryKey: authKeys.me() })
       toast.success('Brokerage created successfully!')
