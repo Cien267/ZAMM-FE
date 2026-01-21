@@ -35,11 +35,16 @@ import { EventTimeline } from '@/features/events/components/EventTimeline'
 import { useSearchParams } from 'react-router-dom'
 import { ErrorState } from '@/components/common/ErrorState'
 import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
+import { useEvents } from '@/features/events/hooks/useEvents'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import { ASSET_DELETE_EVENT } from '@/features/events/constants'
 
 export const LiabilityDetailPage = () => {
   const { liabilityId } = useParams<{ liabilityId: string }>()
   const navigate = useNavigate()
   const { openAlert } = useAlert()
+  const { createEvent } = useEvents()
+  const { user } = useAuth()
   const [searchParams] = useSearchParams()
   const setLabel = useBreadcrumbStore((state) => state.setLabel)
 
@@ -75,17 +80,42 @@ export const LiabilityDetailPage = () => {
     return <ErrorState message={error?.message} onRetry={refetch} />
   }
 
+  const liabilityType =
+    (liability.liabilityPeople?.length || 0) > 0 ? 'person' : 'company'
+
   const handleDelete = () => {
     openAlert({
       title: 'Are you sure?',
       description: `This action cannot be undone. This will permanently delete ${liability.name} and all associated
                data.`,
       confirmText: 'Delete',
+      showReasonInput: true,
       onConfirm: () => {
         deleteLiability(liability.id, {
           onSuccess: () => {
             navigate(-1)
           },
+        })
+      },
+      onSuccess: (reason: string) => {
+        createEvent({
+          title: `Delete Liability ${liability.name}`,
+          description: reason,
+          type: ASSET_DELETE_EVENT,
+          date: new Date(),
+          isSystem: false,
+          isRepeating: false,
+          isDismissed: false,
+          repeatingDateDismissed: undefined,
+          addedByUserId: user?.id || '',
+          personId:
+            liabilityType === 'person' && liability.liabilityPeople
+              ? liability.liabilityPeople[0].personId
+              : undefined,
+          companyId:
+            liabilityType === 'company' && liability.liabilityCompanies
+              ? liability.liabilityCompanies[0].companyId
+              : undefined,
         })
       },
     })
@@ -94,9 +124,6 @@ export const LiabilityDetailPage = () => {
   const totalBorrowerPercent =
     (liability.liabilityPeople?.reduce((sum, p) => sum + p.percent, 0) || 0) +
     (liability.liabilityCompanies?.reduce((sum, c) => sum + c.percent, 0) || 0)
-
-  const liabilityType =
-    (liability.liabilityPeople?.length || 0) > 0 ? 'person' : 'company'
 
   return (
     <div className="mx-auto space-y-6">

@@ -31,10 +31,15 @@ import { useBreadcrumbStore } from '@/store/breadcrumbStore'
 import { useAlert } from '@/contexts/AlertContext'
 import type { AssetLiability } from '../types'
 import { ErrorState } from '@/components/common/ErrorState'
+import { useEvents } from '@/features/events/hooks/useEvents'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import { ASSET_DELETE_EVENT } from '@/features/events/constants'
 
 export const AssetDetailPage = () => {
   const { assetId } = useParams<{ assetId: string }>()
   const navigate = useNavigate()
+  const { createEvent } = useEvents()
+  const { user } = useAuth()
   const { openAlert } = useAlert()
   const setLabel = useBreadcrumbStore((state) => state.setLabel)
 
@@ -67,17 +72,41 @@ export const AssetDetailPage = () => {
     return <ErrorState message={error?.message} onRetry={refetch} />
   }
 
+  const assetType = (asset.assetPeople?.length || 0) > 0 ? 'person' : 'company'
+
   const handleDelete = () => {
     openAlert({
       title: 'Are you sure?',
       description: `This action cannot be undone. This will permanently delete ${asset.name} and all associated
                 data.`,
       confirmText: 'Delete',
+      showReasonInput: true,
       onConfirm: () => {
         deleteAsset(asset.id, {
           onSuccess: () => {
             navigate(-1)
           },
+        })
+      },
+      onSuccess: (reason: string) => {
+        createEvent({
+          title: `Delete Asset ${asset.name}`,
+          description: reason,
+          type: ASSET_DELETE_EVENT,
+          date: new Date(),
+          isSystem: false,
+          isRepeating: false,
+          isDismissed: false,
+          repeatingDateDismissed: undefined,
+          addedByUserId: user?.id || '',
+          personId:
+            assetType === 'person' && asset.assetPeople
+              ? asset.assetPeople[0].personId
+              : undefined,
+          companyId:
+            assetType === 'company' && asset.assetCompanies
+              ? asset.assetCompanies[0].companyId
+              : undefined,
         })
       },
     })
@@ -98,8 +127,6 @@ export const AssetDetailPage = () => {
   const totalOwnership =
     (asset.assetPeople?.reduce((sum, p) => sum + p.percent, 0) || 0) +
     (asset.assetCompanies?.reduce((sum, c) => sum + c.percent, 0) || 0)
-
-  const assetType = (asset.assetPeople?.length || 0) > 0 ? 'person' : 'company'
 
   return (
     <div className="mx-auto space-y-6">

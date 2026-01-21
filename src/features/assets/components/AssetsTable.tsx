@@ -36,6 +36,9 @@ import type { Person } from '@/features/people/types'
 import type { Company } from '@/features/company/types'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '@/contexts/AlertContext'
+import { useEvents } from '@/features/events/hooks/useEvents'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import { ASSET_DELETE_EVENT } from '@/features/events/constants'
 
 interface AssetsTableProps {
   initialData: Person | Company | null
@@ -44,6 +47,8 @@ interface AssetsTableProps {
 
 export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
   const { openAlert } = useAlert()
+  const { createEvent } = useEvents()
+  const { user } = useAuth()
   const [query, setQuery] = useState<AssetQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -97,8 +102,30 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
       description: `This action cannot be undone. This will permanently delete ${asset.name} and all associated
               data.`,
       confirmText: 'Delete',
+      showReasonInput: true,
       onConfirm: () => {
         deleteAsset(asset.id)
+      },
+      onSuccess: (reason: string) => {
+        createEvent({
+          title: `Delete Asset ${asset.name}`,
+          description: reason,
+          type: ASSET_DELETE_EVENT,
+          date: new Date(),
+          isSystem: false,
+          isRepeating: false,
+          isDismissed: false,
+          repeatingDateDismissed: undefined,
+          addedByUserId: user?.id || '',
+          personId:
+            type === 'person' && initialData
+              ? (initialData as Person).id
+              : undefined,
+          companyId:
+            type === 'company' && initialData
+              ? (initialData as Company).id
+              : undefined,
+        })
       },
     })
   }

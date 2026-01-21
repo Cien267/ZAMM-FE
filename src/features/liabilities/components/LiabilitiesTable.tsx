@@ -36,6 +36,9 @@ import { openUpSertLiabilityModal } from './UpsertLiability'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '@/contexts/AlertContext'
 import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
+import { useEvents } from '@/features/events/hooks/useEvents'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import { ASSET_DELETE_EVENT } from '@/features/events/constants'
 
 interface LiabilitiesTableProps {
   initialData: Person | Company | null
@@ -69,6 +72,8 @@ export const LiabilitiesTable = ({
   const { data, isLoading, error, refetch } = useLiabilitiesList(query)
   const { deleteLiability } = useLiabilities()
   const navigate = useNavigate()
+  const { createEvent } = useEvents()
+  const { user } = useAuth()
 
   const handleFilterChange = (filters: Partial<LiabilityQuery>) => {
     setQuery((prev) => ({
@@ -101,8 +106,30 @@ export const LiabilitiesTable = ({
       description: `This action cannot be undone. This will permanently delete ${liability.name} and all associated
               data.`,
       confirmText: 'Delete',
+      showReasonInput: true,
       onConfirm: () => {
         deleteLiability(liability.id)
+      },
+      onSuccess: (reason: string) => {
+        createEvent({
+          title: `Delete Liability ${liability.name}`,
+          description: reason,
+          type: ASSET_DELETE_EVENT,
+          date: new Date(),
+          isSystem: false,
+          isRepeating: false,
+          isDismissed: false,
+          repeatingDateDismissed: undefined,
+          addedByUserId: user?.id || '',
+          personId:
+            type === 'person' && initialData
+              ? (initialData as Person).id
+              : undefined,
+          companyId:
+            type === 'company' && initialData
+              ? (initialData as Company).id
+              : undefined,
+        })
       },
     })
   }
