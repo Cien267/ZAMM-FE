@@ -173,7 +173,7 @@ export const LiabilityDetailPage = () => {
         </div>
       </div>
       <div className="flex justify-between">
-        <div className="space-y-6 w-3/4">
+        <div className="space-y-6 w-full">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader className="pb-3">
@@ -626,7 +626,7 @@ export const LiabilityDetailPage = () => {
             </CardContent>
           </Card>
         </div>
-        <div className="w-1/4 ml-10">
+        {/* <div className="w-1/4 ml-10">
           <EventTimeline
             type="liability"
             personId={personId}
@@ -634,7 +634,7 @@ export const LiabilityDetailPage = () => {
             liabilityId={liability.id}
             height="h-full"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   )

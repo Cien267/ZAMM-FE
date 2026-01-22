@@ -1,6 +1,6 @@
 import { Pencil, Clock } from 'lucide-react'
 import { useState } from 'react'
-import { EventTimeline } from '@/features/events/components/EventTimeline'
+// import { EventTimeline } from '@/features/events/components/EventTimeline'
 import { NoteList } from '@/features/notes/components/NoteList'
 import type { Person } from '../../types'
 
@@ -12,7 +12,7 @@ interface RightSectionProps {
 }
 
 export const PersonRightSection = ({ person }: RightSectionProps) => {
-  const [tab, setTab] = useState(EVENT_TAB)
+  const [tab, setTab] = useState(NOTE_TAB)
 
   return (
     <div className="w-1/4 ml-10">
@@ -30,14 +30,14 @@ export const PersonRightSection = ({ person }: RightSectionProps) => {
           <Pencil className="w-5 h-5" /> Note
         </h3>
       </div>
-      {tab === EVENT_TAB && (
+      {/* {tab === EVENT_TAB && (
         <EventTimeline
           type="person"
           personId={person.id}
           companyId={null}
           liabilityId={null}
         />
-      )}
+      )} */}
       {tab === NOTE_TAB && (
         <NoteList
           type="person"

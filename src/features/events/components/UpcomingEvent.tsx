@@ -81,7 +81,7 @@ export const UpcomingEvent = () => {
   }
 
   return (
-    <Card className="border shadow-sm bg-white/50 backdrop-blur-sm dark:bg-slate-950/50">
+    <Card className="border shadow-sm backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between pb-6">
         <div className="space-y-1">
           <CardTitle className="text-xl font-semibold tracking-tight">
@@ -112,15 +112,15 @@ export const UpcomingEvent = () => {
             {data?.data.map((event) => (
               <div
                 key={event.id}
-                onClick={() =>
-                  openDetailEventModal({
-                    event,
-                    type: getTypeEventModal(event),
-                    personId: event.personId || null,
-                    companyId: event.companyId || null,
-                    liabilityId: event.liabilityId || null,
-                  })
-                }
+                // onClick={() =>
+                //   openDetailEventModal({
+                //     event,
+                //     type: getTypeEventModal(event),
+                //     personId: event.personId || null,
+                //     companyId: event.companyId || null,
+                //     liabilityId: event.liabilityId || null,
+                //   })
+                // }
                 className={`group relative flex items-center justify-between p-4 rounded-xl border transition-all hover:shadow-md hover:border-sky-200 hover:bg-sky-50 dark:hover:border-sky-800 cursor-pointer ${
                   event.isDismissed ? 'opacity-60 bg-slate-50' : 'bg-card'
                 }`}
@@ -159,7 +159,7 @@ export const UpcomingEvent = () => {
                       </span>
                       <Badge
                         variant="outline"
-                        className={`text-[10px] px-1.5 py-0 uppercase tracking-wider font-bold ${getEventColor(event.type)}`}
+                        className={`uppercase tracking-wider font-bold ${getEventColor(event.type)}`}
                       >
                         {event.type.replace(/_/g, ' ')}
                       </Badge>

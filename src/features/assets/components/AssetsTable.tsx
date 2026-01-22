@@ -80,6 +80,18 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
       pageSize: DEFAULT_PAGE_SIZE,
       sortBy: 'CreatedAt',
       sortDescending: true,
+      personId:
+        type === 'person' && initialData
+          ? (initialData as Person).id
+          : undefined,
+      companyId:
+        type === 'company' && initialData
+          ? (initialData as Company).id
+          : undefined,
+      name: '',
+      isInvestment: undefined,
+      zoningType: '',
+      propertyType: '',
     })
   }
 

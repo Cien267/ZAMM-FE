@@ -613,10 +613,10 @@ export const LiabilityModalContent = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="initialBalance"
+              name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Current Balance (Last Known)</FormLabel>
+                  <FormLabel>Original Loan Limit</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <InputNumber
@@ -631,13 +631,12 @@ export const LiabilityModalContent = ({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
-              name="amount"
+              name="initialBalance"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Original Loan Limit</FormLabel>
+                  <FormLabel>Current Balance (Last Known)</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <InputNumber

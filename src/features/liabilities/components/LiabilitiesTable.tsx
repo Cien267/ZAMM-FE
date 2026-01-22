@@ -84,6 +84,13 @@ export const LiabilitiesTable = ({
       pageSize: DEFAULT_PAGE_SIZE,
       sortBy: 'CreatedAt',
       sortDescending: true,
+      personId: personId,
+      companyId: companyId,
+      name: '',
+      loanId: '',
+      financePurpose: '',
+      startDateFrom: undefined,
+      startDateTo: undefined,
     })
   }
 
