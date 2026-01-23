@@ -70,11 +70,9 @@ export const EventTimeline = ({
 }: EventTimelineProps) => {
   const { openAlert } = useAlert()
   const { deleteEvent, toggleDismissEvent } = useEvents()
-  const { useEventsList } = useEventQueries()
+  const { useAllEvents } = useEventQueries()
 
   const query: EventQuery = {
-    pageNumber: 1,
-    pageSize: 1000,
     sortBy: 'CreatedAt',
     sortDescending: true,
     personId: personId || undefined,
@@ -82,7 +80,7 @@ export const EventTimeline = ({
     liabilityId: liabilityId || undefined,
   }
 
-  const { data: eventsData, isLoading, error, refetch } = useEventsList(query)
+  const { data: eventsData, isLoading, error, refetch } = useAllEvents(query)
 
   if (isLoading) {
     return <TimelineSkeleton />
@@ -92,7 +90,7 @@ export const EventTimeline = ({
     return <ErrorState message={error.message} onRetry={refetch} />
   }
 
-  const sortedEvents = [...(eventsData?.data || [])].sort(
+  const sortedEvents = [...(eventsData || [])].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   )
 
@@ -123,6 +121,7 @@ export const EventTimeline = ({
             Keep track of important milestones by adding your first event.
           </p>
           <Button
+            variant="sky"
             onClick={() =>
               openUpSertEventModal({
                 event: null,
@@ -147,6 +146,7 @@ export const EventTimeline = ({
               {sortedEvents.length} events
             </h3>
             <Button
+              variant="sky"
               onClick={() =>
                 openUpSertEventModal({
                   event: null,

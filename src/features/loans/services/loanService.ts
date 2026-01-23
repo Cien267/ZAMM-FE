@@ -10,6 +10,14 @@ import type { PaginatedResponse } from '@/types'
 import { API_ENDPOINTS } from '@/services/endpoints'
 
 export const loanService = {
+  async getAllLoans(query: LoanQuery): Promise<Loan[]> {
+    const response = await api.get<ApiResponse<Loan[]>>(
+      API_ENDPOINTS.LOAN.ALL,
+      { params: query }
+    )
+    return response.data
+  },
+
   async getLoans(query: LoanQuery): Promise<PaginatedResponse<Loan>> {
     const response = await api.get<ApiResponse<PaginatedResponse<Loan>>>(
       API_ENDPOINTS.LOAN.BASE,

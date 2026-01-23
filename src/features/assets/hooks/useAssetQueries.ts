@@ -1,9 +1,16 @@
-import { useQuery } from "@tanstack/react-query"
-import { assetKeys } from "../constants"
-import { assetService } from "../services/assetService"
-import type { AssetQuery } from "../types"
+import { useQuery } from '@tanstack/react-query'
+import { assetKeys } from '../constants'
+import { assetService } from '../services/assetService'
+import type { AssetQuery } from '../types'
 
 export const useAssetQueries = () => {
+  const useAllAssets = (query: AssetQuery) => {
+    return useQuery({
+      queryKey: assetKeys.list(query),
+      queryFn: () => assetService.getAllAssets(query),
+    })
+  }
+
   const useAssetsList = (query: AssetQuery) => {
     return useQuery({
       queryKey: assetKeys.list(query),
@@ -20,6 +27,7 @@ export const useAssetQueries = () => {
   }
 
   return {
+    useAllAssets,
     useAssetsList,
     useAsset,
   }

@@ -4,6 +4,13 @@ import type { EventQuery } from '../types'
 import { eventKeys } from '../constants'
 
 export const useEventQueries = () => {
+  const useAllEvents = (query: EventQuery) => {
+    return useQuery({
+      queryKey: eventKeys.eventsList(query),
+      queryFn: () => eventService.getAllEvents(query),
+    })
+  }
+
   const useEventsList = (query: EventQuery) => {
     return useQuery({
       queryKey: eventKeys.eventsList(query),
@@ -20,6 +27,7 @@ export const useEventQueries = () => {
   }
 
   return {
+    useAllEvents,
     useEventsList,
     useEvent,
   }

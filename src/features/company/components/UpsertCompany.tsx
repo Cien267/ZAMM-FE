@@ -68,7 +68,7 @@ export const CompanyModalContent = ({
   const { data: brokers } = useAllBrokers(user?.brokerageId || '')
 
   const { data: peopleData } = useAllPeople()
-  const people = peopleData?.data || []
+  const people = peopleData || []
 
   const form = useForm<CreateCompanyInput>({
     resolver: zodResolver(
@@ -646,6 +646,7 @@ export const openUpSertCompanyModal = ({
             Cancel
           </Button>
           <Button
+            variant="sky"
             type="submit"
             form="company-form"
             disabled={isSubmitting}
@@ -667,6 +668,7 @@ export const openUpSertCompanyModal = ({
 
           {!isEditing && (
             <Button
+              variant="sky"
               type="submit"
               form="company-form"
               disabled={isSubmitting}

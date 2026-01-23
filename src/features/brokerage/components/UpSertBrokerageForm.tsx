@@ -8,6 +8,7 @@ import {
   CreateBrokerageSchema,
   type Brokerage,
   type CreateBrokerageInput,
+  type CreateBrokerageResult,
   type UpdateBrokerageInput,
 } from '../types'
 import { Button } from '@/components/ui/button'
@@ -24,7 +25,7 @@ import { Toaster } from 'sonner'
 
 interface BrokerageFormProps {
   brokerage?: Brokerage | null
-  onSubmit: (createdBrokerage: Brokerage | null) => void
+  onSubmit: (createdBrokerage: CreateBrokerageResult | null) => void
 }
 
 export const UpSertBrokerageForm = ({
@@ -132,7 +133,12 @@ export const UpSertBrokerageForm = ({
             )}
           /> */}
 
-          <Button className="w-full" type="submit" disabled={isSubmitting}>
+          <Button
+            variant="sky"
+            className="w-full"
+            type="submit"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

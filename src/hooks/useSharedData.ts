@@ -29,7 +29,7 @@ export const sharedKeys = {
 export const useAllPeople = () => {
   return useQuery({
     queryKey: sharedKeys.people,
-    queryFn: () => peopleService.getPeople({ pageSize: 1000 }),
+    queryFn: () => peopleService.getAllPeople({}),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -37,7 +37,7 @@ export const useAllPeople = () => {
 export const useAllPeopleByCompanyId = (id: string, enabled = true) => {
   return useQuery({
     queryKey: sharedKeys.peopleByCompanyId(id),
-    queryFn: () => peopleService.getPeople({ pageSize: 1000, companyId: id }),
+    queryFn: () => peopleService.getAllPeople({ companyId: id }),
     staleTime: 5 * 60 * 1000,
     enabled: enabled && !!id,
   })
@@ -46,7 +46,7 @@ export const useAllPeopleByCompanyId = (id: string, enabled = true) => {
 export const useAllCompanies = () => {
   return useQuery({
     queryKey: sharedKeys.companies,
-    queryFn: () => companyService.getCompanies({ pageSize: 1000 }),
+    queryFn: () => companyService.getAllCompanies({}),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -54,7 +54,7 @@ export const useAllCompanies = () => {
 export const useAllAssets = () => {
   return useQuery({
     queryKey: sharedKeys.assets,
-    queryFn: () => assetService.getAssets({ pageSize: 1000 }),
+    queryFn: () => assetService.getAllAssets({}),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -62,7 +62,7 @@ export const useAllAssets = () => {
 export const useAllAssetsByPersonId = (id: string, enabled = true) => {
   return useQuery({
     queryKey: sharedKeys.assetsByPersonId(id),
-    queryFn: () => assetService.getAssets({ pageSize: 1000, personId: id }),
+    queryFn: () => assetService.getAllAssets({ personId: id }),
     staleTime: 5 * 60 * 1000,
     enabled: enabled && !!id,
   })
@@ -71,7 +71,7 @@ export const useAllAssetsByPersonId = (id: string, enabled = true) => {
 export const useAllAssetsByCompanyId = (id: string, enabled = true) => {
   return useQuery({
     queryKey: sharedKeys.assetsByCompanyId(id),
-    queryFn: () => assetService.getAssets({ pageSize: 1000, companyId: id }),
+    queryFn: () => assetService.getAllAssets({ companyId: id }),
     staleTime: 5 * 60 * 1000,
     enabled: enabled && !!id,
   })
@@ -80,7 +80,7 @@ export const useAllAssetsByCompanyId = (id: string, enabled = true) => {
 export const useAllLiabilities = () => {
   return useQuery({
     queryKey: sharedKeys.liabilities,
-    queryFn: () => liabilityService.getLiabilities({ pageSize: 1000 }),
+    queryFn: () => liabilityService.getAllLiabilities({}),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -88,8 +88,7 @@ export const useAllLiabilities = () => {
 export const useAllLiabilitiesByPersonId = (id: string, enabled = true) => {
   return useQuery({
     queryKey: sharedKeys.liabilitiesByPersonId(id),
-    queryFn: () =>
-      liabilityService.getLiabilities({ pageSize: 1000, personId: id }),
+    queryFn: () => liabilityService.getAllLiabilities({ personId: id }),
     staleTime: 5 * 60 * 1000,
     enabled: enabled && !!id,
   })
@@ -98,8 +97,7 @@ export const useAllLiabilitiesByPersonId = (id: string, enabled = true) => {
 export const useAllLiabilitiesByCompanyId = (id: string, enabled = true) => {
   return useQuery({
     queryKey: sharedKeys.liabilitiesByCompanyId(id),
-    queryFn: () =>
-      liabilityService.getLiabilities({ pageSize: 1000, companyId: id }),
+    queryFn: () => liabilityService.getAllLiabilities({ companyId: id }),
     staleTime: 5 * 60 * 1000,
     enabled: enabled && !!id,
   })
@@ -124,7 +122,7 @@ export const useLendersAssignedToBrokerage = (brokerageId: string) => {
 export const useAllLenders = () => {
   return useQuery({
     queryKey: sharedKeys.lenders,
-    queryFn: () => lenderService.getLenders({ pageSize: 1000 }),
+    queryFn: () => lenderService.getAllLenders({}),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -132,7 +130,7 @@ export const useAllLenders = () => {
 export const useAllLoans = () => {
   return useQuery({
     queryKey: sharedKeys.loans,
-    queryFn: () => loanService.getLoans({ pageSize: 1000 }),
+    queryFn: () => loanService.getAllLoans({}),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -140,7 +138,7 @@ export const useAllLoans = () => {
 export const useAllLoansByLenderId = (id: string, enabled = true) => {
   return useQuery({
     queryKey: sharedKeys.loansByLenderId(id),
-    queryFn: () => loanService.getLoans({ pageSize: 1000, lenderId: id }),
+    queryFn: () => loanService.getAllLoans({ lenderId: id }),
     staleTime: 5 * 60 * 1000,
     enabled: enabled && !!id,
   })

@@ -37,9 +37,7 @@ export const AssetOwnershipFields = ({
   const { data: peopleData } = useAllPeople()
   const { data: companiesData } = useAllCompanies()
 
-  const options = isAssetPeople
-    ? peopleData?.data || []
-    : companiesData?.data || []
+  const options = isAssetPeople ? peopleData || [] : companiesData || []
 
   const { fields, append, remove } = useFieldArray({
     control,

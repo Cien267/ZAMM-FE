@@ -291,7 +291,12 @@ export const openUpSertStaffModal = ({ staff }: { staff: User | null }) => {
           >
             Cancel
           </Button>
-          <Button type="submit" form="staff-form" disabled={isSubmitting}>
+          <Button
+            variant="sky"
+            type="submit"
+            form="staff-form"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

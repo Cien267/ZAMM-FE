@@ -23,7 +23,7 @@ export const AdminLenderDetailPage = () => {
   } = useLender(id || '', !!id)
 
   const { data: loansData } = useAllLoansByLenderId(id || '', !!id)
-  const loans = loansData?.data || []
+  const loans = loansData || []
 
   useEffect(() => {
     if (lender?.name && id) {

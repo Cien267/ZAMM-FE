@@ -4,6 +4,13 @@ import type { NoteQuery } from '../types'
 import { noteKeys } from '../constants'
 
 export const useNoteQueries = () => {
+  const useAllNotes = (query: NoteQuery) => {
+    return useQuery({
+      queryKey: noteKeys.notesList(query),
+      queryFn: () => noteService.getAllNotes(query),
+    })
+  }
+
   const useNotesList = (query: NoteQuery) => {
     return useQuery({
       queryKey: noteKeys.notesList(query),
@@ -20,6 +27,7 @@ export const useNoteQueries = () => {
   }
 
   return {
+    useAllNotes,
     useNotesList,
     useNote,
   }

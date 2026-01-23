@@ -155,7 +155,12 @@ export const openCreateLoanModal = ({ lender }: { lender: Lender }) => {
           >
             Cancel
           </Button>
-          <Button type="submit" form="loan-form" disabled={isSubmitting}>
+          <Button
+            variant="sky"
+            type="submit"
+            form="loan-form"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

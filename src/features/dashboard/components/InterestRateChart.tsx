@@ -36,7 +36,7 @@ export const InterestRateChart = () => {
     refetch,
   } = useAllLenders()
 
-  const lenders = useMemo(() => lenderData?.data || [], [lenderData])
+  const lenders = useMemo(() => lenderData || [], [lenderData])
   const [selectedLenders, setSelectedLenders] = useState<string[]>([])
   const [sortBy, setSortBy] = useState('highest')
 

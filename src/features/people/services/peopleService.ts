@@ -10,6 +10,14 @@ import type {
 import type { PaginatedResponse } from '@/types'
 
 export const peopleService = {
+  async getAllPeople(query: PersonQuery): Promise<Person[]> {
+    const response = await api.get<ApiResponse<Person[]>>(
+      API_ENDPOINTS.PEOPLE.ALL,
+      { params: query }
+    )
+    return response.data
+  },
+
   async getPeople(query: PersonQuery): Promise<PaginatedResponse<Person>> {
     const response = await api.get<ApiResponse<PaginatedResponse<Person>>>(
       API_ENDPOINTS.PEOPLE.BASE,

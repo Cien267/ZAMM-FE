@@ -86,9 +86,9 @@ export const EventModalContent = ({
   )
   const liabilities: Liability[] =
     type === 'person'
-      ? liabilitiesDataByPersonId?.data || []
+      ? liabilitiesDataByPersonId || []
       : type === 'company'
-        ? liabilitiesDataByCompanyId?.data || []
+        ? liabilitiesDataByCompanyId || []
         : []
   const showLiabilityField = type === 'person' || type === 'company'
 
@@ -403,7 +403,12 @@ export const openUpSertEventModal = ({
           >
             Cancel
           </Button>
-          <Button type="submit" form="event-form" disabled={isSubmitting}>
+          <Button
+            variant="sky"
+            type="submit"
+            form="event-form"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

@@ -29,7 +29,7 @@ export const AssignLender = () => {
   } = useLenders()
   const isProcessing = isAssigningLender || isUnassigningLender
 
-  const lenders = useMemo(() => lenderData?.data ?? [], [lenderData])
+  const lenders = useMemo(() => lenderData ?? [], [lenderData])
   const brokerageLenders = useMemo(
     () => brokerageLenderData ?? [],
     [brokerageLenderData]

@@ -476,6 +476,7 @@ export const openUpSertAssetModal = ({
             Cancel
           </Button>
           <Button
+            variant="sky"
             type="submit"
             form="asset-form"
             disabled={isSubmitting}
@@ -497,6 +498,7 @@ export const openUpSertAssetModal = ({
 
           {!isEditing && (
             <Button
+              variant="sky"
               type="submit"
               form="asset-form"
               disabled={isSubmitting}

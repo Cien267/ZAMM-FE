@@ -73,11 +73,9 @@ export const NoteList = ({
 }: NoteListProps) => {
   const { openAlert } = useAlert()
   const { deleteNote, createNote, updateNote } = useNotes()
-  const { useNotesList } = useNoteQueries()
+  const { useAllNotes } = useNoteQueries()
 
   const query: NoteQuery = {
-    pageNumber: 1,
-    pageSize: 1000,
     sortBy: 'CreatedAt',
     sortDescending: true,
     authorId: undefined,
@@ -87,7 +85,7 @@ export const NoteList = ({
     eventId: undefined,
   }
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
-  const { data: notesData, isLoading, error, refetch } = useNotesList(query)
+  const { data: notesData, isLoading, error, refetch } = useAllNotes(query)
 
   const form = useForm<CreateNoteInput>({
     resolver: zodResolver(CreateNoteSchema),
@@ -120,7 +118,7 @@ export const NoteList = ({
     return <ErrorState message={error.message} onRetry={refetch} />
   }
 
-  const sortedNotes = [...(notesData?.data || [])].sort(
+  const sortedNotes = [...(notesData || [])].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   )
 
@@ -178,7 +176,7 @@ export const NoteList = ({
             className="space-y-6 flex justify-between items-center w-full gap-2"
           >
             <NoteField control={form.control} />
-            <Button type="submit" className="gap-2">
+            <Button variant="sky" type="submit" className="gap-2">
               <Plus className="h-4 w-4" />
               Add Note
             </Button>
@@ -221,7 +219,7 @@ export const NoteList = ({
                           >
                             Cancel
                           </Button>
-                          <Button size="sm" type="submit">
+                          <Button variant="sky" size="sm" type="submit">
                             Save Changes
                           </Button>
                         </div>

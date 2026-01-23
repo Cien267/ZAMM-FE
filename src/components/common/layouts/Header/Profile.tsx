@@ -159,7 +159,9 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                   <Button type="button" variant="ghost" onClick={onClose}>
                     Cancel
                   </Button>
-                  <Button type="submit">Save Changes</Button>
+                  <Button variant="sky" type="submit">
+                    Save Changes
+                  </Button>
                 </div>
               </form>
             </Form>
@@ -242,7 +244,7 @@ const ProfileModalContent = ({ onClose }: { onClose: () => void }) => {
                   >
                     Reset Form
                   </Button>
-                  <Button type="submit">
+                  <Button variant="sky" type="submit">
                     <Lock className="mr-2 h-4 w-4" />
                     Update Password
                   </Button>

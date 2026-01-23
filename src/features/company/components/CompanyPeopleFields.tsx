@@ -24,7 +24,7 @@ interface CompanyPeopleFieldsProps {
 
 export const CompanyPeopleFields = ({ control }: CompanyPeopleFieldsProps) => {
   const { data: peopleData } = useAllPeople()
-  const people = peopleData?.data || []
+  const people = peopleData || []
 
   const { fields, append, remove } = useFieldArray({
     control,

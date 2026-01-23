@@ -134,6 +134,7 @@ export const LiabilitiesTable = ({
 
       <div className="flex justify-end">
         <Button
+          variant="sky"
           onClick={() =>
             openUpSertLiabilityModal({
               liability: null,

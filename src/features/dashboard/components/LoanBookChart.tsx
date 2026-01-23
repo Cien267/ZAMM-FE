@@ -70,7 +70,7 @@ export const LoanBookChart = () => {
     return <ErrorState message={error.message} onRetry={refetch} />
   }
 
-  const chartData = processData(liabilitiesData?.data || [])
+  const chartData = processData(liabilitiesData || [])
 
   return (
     <Card>

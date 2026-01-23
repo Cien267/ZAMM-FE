@@ -1,44 +1,44 @@
-import { useFieldArray, type Control } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { useFieldArray, type Control } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Plus, X } from "lucide-react";
-import type { CreateLiabilityInput, UpdateLiabilityInput } from "../types";
-import { useAllAssets } from "@/hooks/useSharedData";
+} from '@/components/ui/form'
+import { Plus, X } from 'lucide-react'
+import type { CreateLiabilityInput, UpdateLiabilityInput } from '../types'
+import { useAllAssets } from '@/hooks/useSharedData'
 
 interface LinkedAssetsFieldsProps {
-  control: Control<CreateLiabilityInput | UpdateLiabilityInput>;
+  control: Control<CreateLiabilityInput | UpdateLiabilityInput>
 }
 
 export const LinkedAssetsFields = ({ control }: LinkedAssetsFieldsProps) => {
-  const { data: assetsData } = useAllAssets();
+  const { data: assetsData } = useAllAssets()
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "liabilityAssets",
-  });
+    name: 'liabilityAssets',
+  })
 
   const addAsset = () => {
     append({
-      assetId: "",
-    });
-  };
+      assetId: '',
+    })
+  }
 
   const removeAsset = (index: number) => {
-    remove(index);
-  };
+    remove(index)
+  }
 
   return (
     <div className="space-y-4">
@@ -79,7 +79,7 @@ export const LinkedAssetsFields = ({ control }: LinkedAssetsFieldsProps) => {
                       <FormLabel className="w-1/2">Asset {index + 1}</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || ""}
+                        value={field.value || ''}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -87,7 +87,7 @@ export const LinkedAssetsFields = ({ control }: LinkedAssetsFieldsProps) => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {(assetsData?.data || []).map((a) => (
+                          {(assetsData || []).map((a) => (
                             <SelectItem key={a.id} value={a.id}>
                               {a.name}
                             </SelectItem>
@@ -113,5 +113,5 @@ export const LinkedAssetsFields = ({ control }: LinkedAssetsFieldsProps) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

@@ -141,7 +141,12 @@ export const openUpSertRolesModal = ({ staff }: { staff: User }) => {
           >
             Cancel
           </Button>
-          <Button type="submit" form="role-form" disabled={isSubmitting}>
+          <Button
+            variant="sky"
+            type="submit"
+            form="role-form"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

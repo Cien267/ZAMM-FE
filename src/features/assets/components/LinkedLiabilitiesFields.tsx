@@ -1,23 +1,23 @@
-import { useFieldArray, type Control } from "react-hook-form"
-import { Button } from "@/components/ui/button"
+import { useFieldArray, type Control } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select'
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from '@/components/ui/form'
 
-import { Plus, X } from "lucide-react"
-import type { CreateAssetInput, UpdateAssetInput } from "../types"
-import { useAllLiabilities } from "@/hooks/useSharedData"
+import { Plus, X } from 'lucide-react'
+import type { CreateAssetInput, UpdateAssetInput } from '../types'
+import { useAllLiabilities } from '@/hooks/useSharedData'
 
 interface LinkedLiabilitiesFieldsProps {
   control: Control<CreateAssetInput | UpdateAssetInput>
@@ -30,12 +30,12 @@ export const LinkedLiabilitiesFields = ({
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "assetLiabilities",
+    name: 'assetLiabilities',
   })
 
   const addLiability = () => {
     append({
-      liabilityId: "",
+      liabilityId: '',
     })
   }
 
@@ -88,7 +88,7 @@ export const LinkedLiabilitiesFields = ({
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value || ""}
+                        value={field.value || ''}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -96,7 +96,7 @@ export const LinkedLiabilitiesFields = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {(liabilitiesData?.data || []).map((li) => (
+                          {(liabilitiesData || []).map((li) => (
                             <SelectItem key={li.id} value={li.id}>
                               {li.name}
                             </SelectItem>

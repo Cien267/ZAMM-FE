@@ -37,8 +37,8 @@ export const CompanyDetailPage = () => {
     }
   }, [company, id, setLabel])
 
-  const companyAssets = assetsData?.data || []
-  const companyLiabilities = liabilitiesData?.data || []
+  const companyAssets = assetsData || []
+  const companyLiabilities = liabilitiesData || []
 
   const totalAssetValue = companyAssets.reduce((sum, asset) => {
     const ownership = asset.assetCompanies?.find((ac) => ac.companyId === id)

@@ -4,6 +4,13 @@ import type { LoanQuery } from '../types'
 import { loanKeys } from '../constants'
 
 export const useLoansQueries = () => {
+  const useAllLoans = (query: LoanQuery) => {
+    return useQuery({
+      queryKey: loanKeys.loansList(query),
+      queryFn: () => loanService.getAllLoans(query),
+    })
+  }
+
   const useLoansList = (query: LoanQuery) => {
     return useQuery({
       queryKey: loanKeys.loansList(query),
@@ -20,6 +27,7 @@ export const useLoansQueries = () => {
   }
 
   return {
+    useAllLoans,
     useLoansList,
     usePerson,
   }

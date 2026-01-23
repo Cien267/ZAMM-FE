@@ -36,9 +36,7 @@ export const LiabilityOwnershipFields = ({
   const { data: peopleData } = useAllPeople()
   const { data: companiesData } = useAllCompanies()
 
-  const options = isLiabilityPeople
-    ? peopleData?.data || []
-    : companiesData?.data || []
+  const options = isLiabilityPeople ? peopleData || [] : companiesData || []
 
   const { fields, append, remove } = useFieldArray({
     control,

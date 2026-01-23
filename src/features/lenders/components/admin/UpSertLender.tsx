@@ -181,6 +181,7 @@ export const openUpSertLenderModal = ({
             Cancel
           </Button>
           <Button
+            variant="sky"
             type="submit"
             form="lender-form"
             disabled={isSubmitting}
@@ -202,6 +203,7 @@ export const openUpSertLenderModal = ({
 
           {!isEditing && (
             <Button
+              variant="sky"
               type="submit"
               form="lender-form"
               disabled={isSubmitting}

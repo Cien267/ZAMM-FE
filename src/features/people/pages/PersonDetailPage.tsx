@@ -37,8 +37,8 @@ export const PersonDetailPage = () => {
     }
   }, [person, id, setLabel])
 
-  const personAssets = assetsData?.data || []
-  const personLiabilities = liabilitiesData?.data || []
+  const personAssets = assetsData || []
+  const personLiabilities = liabilitiesData || []
 
   const totalAssetValue = personAssets.reduce((sum, asset) => {
     const ownership = asset.assetPeople?.find((ap) => ap.personId === id)

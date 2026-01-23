@@ -10,6 +10,14 @@ import type {
 import type { PaginatedResponse } from '@/types'
 
 export const eventService = {
+  async getAllEvents(query: EventQuery): Promise<Event[]> {
+    const response = await api.get<ApiResponse<Event[]>>(
+      API_ENDPOINTS.EVENT.ALL,
+      { params: query }
+    )
+    return response.data
+  },
+
   async getEvents(query: EventQuery): Promise<PaginatedResponse<Event>> {
     const response = await api.get<ApiResponse<PaginatedResponse<Event>>>(
       API_ENDPOINTS.EVENT.BASE,

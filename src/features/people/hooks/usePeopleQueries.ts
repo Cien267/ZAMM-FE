@@ -4,7 +4,13 @@ import type { PersonQuery } from '../types'
 import { peopleKeys } from '../constants'
 
 export const usePeopleQueries = () => {
-  // People queries
+  const useAllPeople = (query: PersonQuery) => {
+    return useQuery({
+      queryKey: peopleKeys.peopleList(query),
+      queryFn: () => peopleService.getAllPeople(query),
+    })
+  }
+
   const usePeopleList = (query: PersonQuery) => {
     return useQuery({
       queryKey: peopleKeys.peopleList(query),
@@ -21,6 +27,7 @@ export const usePeopleQueries = () => {
   }
 
   return {
+    useAllPeople,
     usePeopleList,
     usePerson,
   }

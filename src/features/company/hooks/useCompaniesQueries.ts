@@ -4,6 +4,13 @@ import type { CompanyQuery } from '../types'
 import { companyKeys } from '../constants'
 
 export const useCompanyQueries = () => {
+  const useAllCompanies = (query: CompanyQuery) => {
+    return useQuery({
+      queryKey: companyKeys.companiesList(query),
+      queryFn: () => companyService.getAllCompanies(query),
+    })
+  }
+
   const useCompaniesList = (query: CompanyQuery) => {
     return useQuery({
       queryKey: companyKeys.companiesList(query),
@@ -20,6 +27,7 @@ export const useCompanyQueries = () => {
   }
 
   return {
+    useAllCompanies,
     useCompaniesList,
     useCompany,
   }

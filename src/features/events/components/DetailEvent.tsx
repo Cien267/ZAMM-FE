@@ -213,6 +213,7 @@ export const DetailEventModalContent = ({
           {event.isDismissed ? 'Un-dismiss' : 'Dismiss'}
         </Button>
         <Button
+          variant="sky"
           type="button"
           onClick={() => {
             onClose()

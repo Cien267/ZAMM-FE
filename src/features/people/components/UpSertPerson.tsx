@@ -500,6 +500,7 @@ export const openUpSertPersonModal = ({
             Cancel
           </Button>
           <Button
+            variant="sky"
             type="submit"
             form="person-form"
             disabled={isSubmitting}
@@ -521,6 +522,7 @@ export const openUpSertPersonModal = ({
 
           {!isEditing && (
             <Button
+              variant="sky"
               type="submit"
               form="person-form"
               disabled={isSubmitting}

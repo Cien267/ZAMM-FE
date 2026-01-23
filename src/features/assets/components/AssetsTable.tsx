@@ -150,6 +150,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
 
       <div className="flex justify-end">
         <Button
+          variant="sky"
           onClick={() =>
             openUpSertAssetModal({
               asset: null,

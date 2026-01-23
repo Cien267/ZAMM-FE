@@ -10,6 +10,14 @@ import type {
 import type { PaginatedResponse } from '@/types'
 
 export const noteService = {
+  async getAllNotes(query: NoteQuery): Promise<Note[]> {
+    const response = await api.get<ApiResponse<Note[]>>(
+      API_ENDPOINTS.NOTE.ALL,
+      { params: query }
+    )
+    return response.data
+  },
+
   async getNotes(query: NoteQuery): Promise<PaginatedResponse<Note>> {
     const response = await api.get<ApiResponse<PaginatedResponse<Note>>>(
       API_ENDPOINTS.NOTE.BASE,

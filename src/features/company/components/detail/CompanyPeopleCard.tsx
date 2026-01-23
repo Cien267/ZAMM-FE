@@ -40,7 +40,7 @@ export const CompanyPeopleCard = ({ company }: CompanyPeopleCardProps) => {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {people?.data.map((person) => {
+          {(people || []).map((person) => {
             if (!person) return null
 
             return (

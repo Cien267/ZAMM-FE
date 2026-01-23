@@ -12,8 +12,6 @@ export const useReportExport = () => {
   const { handleExport: sharedExport, isExporting } = useExport()
 
   const query = {
-    pageNumber: 1,
-    pageSize: 1000,
     sortBy: 'CreatedAt',
     sortDescending: true,
   }
@@ -26,13 +24,13 @@ export const useReportExport = () => {
   } = useReports()
 
   const { data: peopleData } = usePeopleReport(query)
-  const people = peopleData?.data || []
+  const people = peopleData || []
   const { data: companiesData } = useCompanyReport(query)
-  const companies = companiesData?.data || []
+  const companies = companiesData || []
   const { data: assetsData } = useAssetReport(query)
-  const assets = assetsData?.data || []
+  const assets = assetsData || []
   const { data: liabilitiesData } = useLiabilityReport(query)
-  const liabilities = liabilitiesData?.data || []
+  const liabilities = liabilitiesData || []
 
   const getNestedValue = (obj: any, key: string): any => {
     if (key.includes('.')) {
