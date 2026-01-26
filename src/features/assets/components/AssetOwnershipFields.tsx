@@ -1,4 +1,4 @@
-import { useFieldArray, type Control } from 'react-hook-form'
+import { useFieldArray, type Control, useWatch } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { InputNumber } from '@/components/common/InputNumber'
 import {
@@ -53,6 +53,17 @@ export const AssetOwnershipFields = ({
       setValue(`${fieldName}.${i}.percent` as any, finalPercent)
     }
   }
+
+  const watchedOwnerships = useWatch({
+    control,
+    name: fieldName,
+  })
+
+  const selectedIds = new Set(
+    (watchedOwnerships as any[])
+      ?.map((item) => (isAssetPeople ? item?.personId : item?.companyId))
+      .filter(Boolean) || []
+  )
 
   const addOwner = () => {
     const nextCount = fields.length + 1
@@ -140,11 +151,18 @@ export const AssetOwnershipFields = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {options.map((opt) => (
-                            <SelectItem key={opt.id} value={opt.id}>
-                              {'fullName' in opt ? opt.fullName : opt.name}
-                            </SelectItem>
-                          ))}
+                          {options.map((opt) => {
+                            const isAlreadySelected = selectedIds.has(opt.id)
+                            const isCurrentValue = field.value === opt.id
+                            if (isAlreadySelected && !isCurrentValue)
+                              return null
+
+                            return (
+                              <SelectItem key={opt.id} value={opt.id}>
+                                {'fullName' in opt ? opt.fullName : opt.name}
+                              </SelectItem>
+                            )
+                          })}
                         </SelectContent>
                       </Select>
                       <FormMessage />

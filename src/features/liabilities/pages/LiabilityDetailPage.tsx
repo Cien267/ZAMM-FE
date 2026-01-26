@@ -629,6 +629,7 @@ export const LiabilityDetailPage = () => {
         {/* <div className="w-1/4 ml-10">
           <EventTimeline
             type="liability"
+            exportTitle={liability.name}
             personId={personId}
             companyId={companyId}
             liabilityId={liability.id}

@@ -29,6 +29,9 @@ import { Badge } from '@/components/ui/badge'
 import { openDetailEventModal } from './DetailEvent'
 import { LIABILITY_MODIFIED_EVENT } from '../constants'
 import { getEventTitle, getEventDate } from '../libs/utils'
+import { pdf } from '@react-pdf/renderer'
+import { TimelinePDF } from './TimelinePDF'
+import { FileDown } from 'lucide-react'
 
 const TimelineSkeleton = () => {
   return (
@@ -59,6 +62,7 @@ interface EventTimelineProps {
   liabilityId: string | null
   type: 'person' | 'company' | 'liability'
   height?: string
+  exportTitle: string
 }
 
 export const EventTimeline = ({
@@ -67,6 +71,7 @@ export const EventTimeline = ({
   liabilityId,
   type,
   height = 'h-150',
+  exportTitle,
 }: EventTimelineProps) => {
   const { openAlert } = useAlert()
   const { deleteEvent, toggleDismissEvent } = useEvents()
@@ -109,6 +114,21 @@ export const EventTimeline = ({
     })
   }
 
+  const handleDownloadPDF = async () => {
+    const blob = await pdf(
+      <TimelinePDF
+        events={sortedEvents}
+        title={`${exportTitle} - ${sortedEvents.length} events`}
+      />
+    ).toBlob()
+
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `timeline-export-${format(new Date(), 'yyyy-MM-dd')}.pdf`
+    link.click()
+  }
+
   return (
     <div className="relative space-y-0">
       {sortedEvents.length === 0 && (
@@ -145,22 +165,32 @@ export const EventTimeline = ({
             <h3 className="font-semibold flex items-center gap-2">
               {sortedEvents.length} events
             </h3>
-            <Button
-              variant="sky"
-              onClick={() =>
-                openUpSertEventModal({
-                  event: null,
-                  type: type,
-                  personId: personId,
-                  companyId: companyId,
-                  liabilityId: liabilityId,
-                })
-              }
-              className="gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              Add Event
-            </Button>
+            <div>
+              <Button
+                variant="outline"
+                onClick={handleDownloadPDF}
+                className="gap-2 mr-2"
+              >
+                <FileDown className="h-4 w-4" />
+                Export PDF
+              </Button>
+              <Button
+                variant="sky"
+                onClick={() =>
+                  openUpSertEventModal({
+                    event: null,
+                    type: type,
+                    personId: personId,
+                    companyId: companyId,
+                    liabilityId: liabilityId,
+                  })
+                }
+                className="gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                Add Event
+              </Button>
+            </div>
           </div>
           <ScrollArea className={`flex-1 pr-4 ${height}`}>
             <div className="relative space-y-0 ml-4 border-l-2 border-accent-foreground/20 min-h-150">

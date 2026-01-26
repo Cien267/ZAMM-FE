@@ -33,6 +33,7 @@ export const CompanyRightSection = ({ company }: RightSectionProps) => {
       {/* {tab === EVENT_TAB && (
         <EventTimeline
           type="company"
+          exportTitle={company.name}
           personId={null}
           companyId={company.id}
           liabilityId={null}

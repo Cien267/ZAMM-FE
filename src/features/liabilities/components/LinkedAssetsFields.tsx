@@ -1,4 +1,4 @@
-import { useFieldArray, type Control } from 'react-hook-form'
+import { useFieldArray, type Control, useWatch } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import {
   Select,
@@ -23,12 +23,21 @@ interface LinkedAssetsFieldsProps {
 }
 
 export const LinkedAssetsFields = ({ control }: LinkedAssetsFieldsProps) => {
-  const { data: assetsData } = useAllAssets()
+  const { data: assetsData = [] } = useAllAssets()
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'liabilityAssets',
   })
+
+  const watchedAssets = useWatch({
+    control,
+    name: 'liabilityAssets',
+  })
+
+  const selectedIds = new Set(
+    watchedAssets?.map((item: any) => item.assetId).filter(Boolean)
+  )
 
   const addAsset = () => {
     append({
@@ -87,11 +96,19 @@ export const LinkedAssetsFields = ({ control }: LinkedAssetsFieldsProps) => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {(assetsData || []).map((a) => (
-                            <SelectItem key={a.id} value={a.id}>
-                              {a.name}
-                            </SelectItem>
-                          ))}
+                          {assetsData.map((a) => {
+                            const isAlreadySelected = selectedIds.has(a.id)
+                            const isCurrentValue = field.value === a.id
+
+                            if (isAlreadySelected && !isCurrentValue)
+                              return null
+
+                            return (
+                              <SelectItem key={a.id} value={a.id}>
+                                {a.name}
+                              </SelectItem>
+                            )
+                          })}
                         </SelectContent>
                       </Select>
                       <FormMessage />
