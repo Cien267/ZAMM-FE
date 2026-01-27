@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { format } from 'date-fns'
 import {
   MoreVertical,
@@ -32,6 +33,8 @@ import { getEventTitle, getEventDate } from '../libs/utils'
 import { pdf } from '@react-pdf/renderer'
 import { TimelinePDF } from './TimelinePDF'
 import { FileDown } from 'lucide-react'
+import { ExportModal } from './ExportModal'
+import { eventService } from '../services/eventService'
 
 const TimelineSkeleton = () => {
   return (
@@ -76,13 +79,15 @@ export const EventTimeline = ({
   const { openAlert } = useAlert()
   const { deleteEvent, toggleDismissEvent } = useEvents()
   const { useAllEvents } = useEventQueries()
-
+  const [exportModalOpen, setExportModalOpen] = useState(false)
   const query: EventQuery = {
     sortBy: 'CreatedAt',
     sortDescending: true,
     personId: personId || undefined,
     companyId: companyId || undefined,
     liabilityId: liabilityId || undefined,
+    dateFrom: undefined,
+    dateTo: undefined,
   }
 
   const { data: eventsData, isLoading, error, refetch } = useAllEvents(query)
@@ -114,18 +119,38 @@ export const EventTimeline = ({
     })
   }
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async (
+    fileName: string,
+    dateFrom: Date | undefined,
+    dateTo: Date | undefined
+  ) => {
+    const eventsData = await eventService.getAllEvents({
+      sortBy: 'CreatedAt',
+      sortDescending: true,
+      personId: personId || undefined,
+      companyId: companyId || undefined,
+      liabilityId: liabilityId || undefined,
+      dateFrom: dateFrom,
+      dateTo: dateTo,
+    })
+
+    const dataToExport = eventsData || []
+
+    const sortedForPdf = [...dataToExport].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
+
     const blob = await pdf(
       <TimelinePDF
-        events={sortedEvents}
-        title={`${exportTitle} - ${sortedEvents.length} events`}
+        events={sortedForPdf}
+        title={`${exportTitle} - ${sortedForPdf.length} events`}
       />
     ).toBlob()
 
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `timeline-export-${format(new Date(), 'yyyy-MM-dd')}.pdf`
+    link.download = `${fileName}.pdf`
     link.click()
   }
 
@@ -168,7 +193,7 @@ export const EventTimeline = ({
             <div>
               <Button
                 variant="outline"
-                onClick={handleDownloadPDF}
+                onClick={() => setExportModalOpen(true)}
                 className="gap-2 mr-2"
               >
                 <FileDown className="h-4 w-4" />
@@ -281,6 +306,12 @@ export const EventTimeline = ({
               ))}
             </div>
           </ScrollArea>
+          <ExportModal
+            open={exportModalOpen}
+            onOpenChange={setExportModalOpen}
+            onExport={handleDownloadPDF}
+            defaultFileName={`timeline_${new Date().toISOString().split('T')[0]}`}
+          />
         </>
       )}
     </div>
