@@ -2,7 +2,7 @@ import {
   LayoutDashboard,
   Users,
   FileText,
-  // SquareUserRound,
+  SquareUserRound,
   Landmark,
 } from 'lucide-react'
 
@@ -40,10 +40,10 @@ export const navigationItems: MenuItem[] = [
     icon: Landmark,
     path: '/lenders',
   },
-  // {
-  //   id: 'staffs',
-  //   label: 'Staffs',
-  //   icon: SquareUserRound,
-  //   path: '/staffs',
-  // },
+  {
+    id: 'staffs',
+    label: 'Staffs',
+    icon: SquareUserRound,
+    path: '/staffs',
+  },
 ]

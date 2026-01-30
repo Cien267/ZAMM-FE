@@ -3,7 +3,7 @@ import { StatsSection } from '../components/StatsSection'
 import { LoanBookChart } from '../components/LoanBookChart'
 import { UpcomingEvent } from '@/features/events/components/UpcomingEvent'
 import { usePageTitle } from '@/hooks/usePageTitle'
-// import { InterestRateChart } from '../components/InterestRateChart'
+import { InterestRateChart } from '../components/InterestRateChart'
 
 export const DashboardPage = () => {
   usePageTitle('Dashboard')
@@ -13,7 +13,7 @@ export const DashboardPage = () => {
       <UpcomingEvent />
       <StatsSection />
       <LoanBookChart />
-      {/* <InterestRateChart /> */}
+      <InterestRateChart />
     </div>
   )
 }

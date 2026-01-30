@@ -12,7 +12,7 @@ interface RightSectionProps {
 }
 
 export const PersonRightSection = ({ person }: RightSectionProps) => {
-  const [tab, setTab] = useState(NOTE_TAB)
+  const [tab, setTab] = useState(EVENT_TAB)
 
   return (
     <div className="w-1/4 ml-10">

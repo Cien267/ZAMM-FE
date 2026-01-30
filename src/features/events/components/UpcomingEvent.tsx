@@ -112,15 +112,15 @@ export const UpcomingEvent = () => {
             {data?.data.map((event) => (
               <div
                 key={event.id}
-                // onClick={() =>
-                //   openDetailEventModal({
-                //     event,
-                //     type: getTypeEventModal(event),
-                //     personId: event.personId || null,
-                //     companyId: event.companyId || null,
-                //     liabilityId: event.liabilityId || null,
-                //   })
-                // }
+                onClick={() =>
+                  openDetailEventModal({
+                    event,
+                    type: getTypeEventModal(event),
+                    personId: event.personId || null,
+                    companyId: event.companyId || null,
+                    liabilityId: event.liabilityId || null,
+                  })
+                }
                 className={`group relative flex items-center justify-between p-4 rounded-xl border transition-all hover:shadow-md hover:border-sky-200 hover:bg-sky-50 dark:hover:border-sky-800 cursor-pointer ${
                   event.isDismissed ? 'opacity-60 bg-slate-50' : 'bg-card'
                 }`}
