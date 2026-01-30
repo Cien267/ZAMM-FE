@@ -7,6 +7,8 @@ export const ANNIVERSARY_EVENT = 'ANNIVERSARY'
 export const INTRO_RATE_END_EVENT = 'INTRO_RATE_END'
 export const FIXED_TERM_START_EVENT = 'FIXED_TERM_START'
 export const FIXED_TERM_END_EVENT = 'FIXED_TERM_END'
+export const ASSET_DELETE_EVENT = 'ASSET_DELETE'
+export const LIABILITY_DELETE_EVENT = 'LIABILITY_DELETE'
 
 export const EVENT_TYPES = [
   CUSTOM_EVENT,
@@ -16,6 +18,8 @@ export const EVENT_TYPES = [
   INTEREST_ONLY_END_EVENT,
   ANNIVERSARY_EVENT,
   INTRO_RATE_END_EVENT,
+  ASSET_DELETE_EVENT,
+  LIABILITY_DELETE_EVENT,
 ] as const
 
 export const REPEAT_UNITS = ['weeks', 'months', 'quarters', 'years'] as const
