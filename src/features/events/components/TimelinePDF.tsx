@@ -6,9 +6,15 @@ const styles = StyleSheet.create({
   page: { padding: 40, backgroundColor: '#FFFFFF' },
   title: {
     fontSize: 20,
-    marginBottom: 20,
+    marginBottom: 6,
     fontWeight: 'bold',
     color: '#0f172a',
+  },
+  exportDateText: {
+    fontSize: 8,
+    color: '#94a3b8',
+    marginBottom: 20,
+    fontStyle: 'italic',
   },
   eventContainer: {
     position: 'relative',
@@ -61,6 +67,9 @@ export const TimelinePDF = ({
   <Document>
     <Page size="A4" style={styles.page}>
       <Text style={styles.title}>{title}</Text>
+      <Text style={styles.exportDateText}>
+        Exported on: {format(new Date(), 'MMM d, yyyy HH:mm')}
+      </Text>
       <View>
         {events.map((event, i) => (
           <View key={i} style={styles.eventContainer}>

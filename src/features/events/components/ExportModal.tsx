@@ -113,6 +113,8 @@ export const ExportModal = ({
                     selected={date}
                     onSelect={setDate}
                     numberOfMonths={2}
+                    fromYear={1900}
+                    toYear={3000}
                   />
                 </PopoverContent>
               </Popover>

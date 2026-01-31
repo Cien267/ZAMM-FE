@@ -89,7 +89,7 @@ export const LiabilityDetailPage = () => {
       description: `This action cannot be undone. This will permanently delete ${liability.name} and all associated
                data.`,
       confirmText: 'Delete',
-      showReasonInput: true,
+      showTimelineCheckbox: true,
       onConfirm: () => {
         deleteLiability(liability.id, {
           onSuccess: () => {

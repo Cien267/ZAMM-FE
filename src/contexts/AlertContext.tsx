@@ -10,13 +10,14 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
 
 type AlertOptions = {
   title?: string
   description: string | ReactNode
   cancelText?: string
   confirmText?: string
-  showReasonInput?: boolean
+  showTimelineCheckbox?: boolean
   onConfirm: () => Promise<void> | void
   onSuccess?: (reason: string) => Promise<void> | void
 }
@@ -31,11 +32,13 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [config, setConfig] = useState<AlertOptions | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [addToTimeline, setAddToTimeline] = useState(true)
   const [reason, setReason] = useState('')
 
   const openAlert = (options: AlertOptions) => {
     setConfig(options)
     setReason('')
+    setAddToTimeline(true)
     setIsOpen(true)
   }
 
@@ -46,7 +49,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
       try {
         await config.onConfirm()
 
-        if (config.showReasonInput && config.onSuccess) {
+        if (config?.showTimelineCheckbox && addToTimeline && config.onSuccess) {
           await config.onSuccess(reason)
         }
         setIsOpen(false)
@@ -57,6 +60,10 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
       }
     }
   }
+
+  const isConfirmDisabled =
+    isLoading ||
+    (config?.showTimelineCheckbox && addToTimeline && !reason.trim())
 
   return (
     <AlertContext.Provider value={{ openAlert }}>
@@ -71,16 +78,35 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
               {config?.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          {config?.showReasonInput && (
-            <div className="py-4">
-              <label className="text-sm font-medium mb-2 block">
-                Reason for deletion
-              </label>
-              <Textarea
-                placeholder="Why are you deleting this?"
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-              />
+          {config?.showTimelineCheckbox && (
+            <div className="space-y-4 py-2">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="timeline"
+                  checked={addToTimeline}
+                  onCheckedChange={(checked) => setAddToTimeline(!!checked)}
+                />
+                <label
+                  htmlFor="timeline"
+                  className="text-sm leading-none cursor-pointer"
+                >
+                  Add this action to Event Timeline
+                </label>
+              </div>
+
+              {addToTimeline && (
+                <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
+                  <label className="text-sm text-muted-foreground">
+                    Reason for deletion
+                  </label>
+                  <Textarea
+                    placeholder="Provide a brief explanation..."
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    autoFocus
+                  />
+                </div>
+              )}
             </div>
           )}
           <AlertDialogFooter>
@@ -89,7 +115,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirm}
-              disabled={isLoading || (config?.showReasonInput && reason === '')}
+              disabled={isConfirmDisabled}
               className="bg-destructive text-destructive-foreground! hover:bg-destructive/90"
             >
               {isLoading ? 'Processing...' : config?.confirmText || 'Confirm'}

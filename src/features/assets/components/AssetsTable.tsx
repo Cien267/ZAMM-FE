@@ -114,7 +114,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
       description: `This action cannot be undone. This will permanently delete ${asset.name} and all associated
               data.`,
       confirmText: 'Delete',
-      showReasonInput: true,
+      showTimelineCheckbox: true,
       onConfirm: () => {
         deleteAsset(asset.id)
       },
