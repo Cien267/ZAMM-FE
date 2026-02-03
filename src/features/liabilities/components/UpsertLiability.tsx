@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLiabilities } from '../hooks/useLiabilities'
 import {
@@ -173,8 +173,23 @@ export const LiabilityModalContent = ({
     }
   }, [initialLoanId, form])
 
-  const {
-    startDate: commencementDate,
+  const watchedValues = useWatch({
+    control: form.control,
+    name: [
+      'startDate',
+      'loanId',
+      'financePurpose',
+      'interestOnlyTerm',
+      'introRateYears',
+      'introRatePercent',
+      'discountPercent',
+      'settlementRate',
+      'fixedRatePeriods',
+    ],
+  })
+
+  const [
+    commencementDate,
     loanId,
     financePurpose,
     interestOnlyTerm,
@@ -182,7 +197,8 @@ export const LiabilityModalContent = ({
     introRatePercent,
     discountPercent,
     settlementRate,
-  } = form.watch()
+    fixedRatePeriods,
+  ] = watchedValues
 
   const selectedLoan = useMemo(
     () => loansBySelectedLender.find((l) => l.id === loanId),
@@ -190,10 +206,6 @@ export const LiabilityModalContent = ({
   )
 
   const resolveEffectiveRate = (): number => {
-    if (settlementRate != null && Number(settlementRate)) {
-      return Number(settlementRate)
-    }
-
     const result = calculateEffectiveInterestRate({
       loan: selectedLoan,
       financePurpose: financePurpose ?? 'Investment',
@@ -202,16 +214,14 @@ export const LiabilityModalContent = ({
       discountPercent,
       introRateYears,
       introRatePercent,
+      settlementRate,
+      fixedRatePeriods,
     })
 
     return result?.rate ?? 0
   }
 
   const resolveEffectiveRateMessage = (): string => {
-    if (settlementRate != null && Number(settlementRate)) {
-      return ''
-    }
-
     const result = calculateEffectiveInterestRate({
       loan: selectedLoan,
       financePurpose: financePurpose ?? 'Investment',
@@ -220,6 +230,8 @@ export const LiabilityModalContent = ({
       discountPercent,
       introRateYears,
       introRatePercent,
+      settlementRate,
+      fixedRatePeriods,
     })
 
     return result?.message ?? ''
@@ -234,6 +246,7 @@ export const LiabilityModalContent = ({
     introRateYears,
     introRatePercent,
     settlementRate,
+    fixedRatePeriods,
   ])
 
   const effectiveRateMessage = useMemo(resolveEffectiveRateMessage, [
@@ -245,6 +258,7 @@ export const LiabilityModalContent = ({
     introRateYears,
     introRatePercent,
     settlementRate,
+    fixedRatePeriods,
   ])
 
   const handleLenderChange = (lenderId: string) => {

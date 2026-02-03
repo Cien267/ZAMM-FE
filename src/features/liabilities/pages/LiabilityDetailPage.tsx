@@ -170,6 +170,8 @@ export const LiabilityDetailPage = () => {
                     discountPercent: liability.discountPercent,
                     introRateYears: liability.introRateYears,
                     introRatePercent: liability.introRatePercent,
+                    settlementRate: liability.settlementRate,
+                    fixedRatePeriods: liability.fixedRatePeriods,
                   })?.rate || 0}
                   %
                 </span>

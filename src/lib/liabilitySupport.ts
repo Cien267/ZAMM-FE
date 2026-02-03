@@ -1,7 +1,8 @@
 import type { Loan } from '@/features/loans/types'
+import type { FixedRatePeriodInput } from '@/features/liabilities/types'
 import { INTEREST_RATE_TYPES } from '@/features/loans/constants'
 
-type RateType = 'OOPI' | 'OOIO' | 'IVPI' | 'IVIO'
+type RateType = 'OOPI' | 'OOIO' | 'IVPI' | 'IVIO' | 'SETTLEMENT' | 'FIXED_RATE'
 
 type EffectiveRateResult = {
   rate: number
@@ -20,7 +21,8 @@ type CalculateEffectiveRateParams = {
   discountPercent?: number | null
   introRateYears?: number | null
   introRatePercent?: number | null
-  today?: Date
+  settlementRate?: number | null
+  fixedRatePeriods?: FixedRatePeriodInput[] | null
 }
 
 export function calculateEffectiveInterestRate(
@@ -34,9 +36,48 @@ export function calculateEffectiveInterestRate(
     discountPercent = 0,
     introRateYears,
     introRatePercent,
+    settlementRate,
+    fixedRatePeriods,
   } = params
   if (loan == undefined) return null
   if (!commencementDate) return null
+
+  // settlement rate takes precedence
+  if (settlementRate != null && Number(settlementRate)) {
+    return {
+      rate: Number(settlementRate),
+      baseRate: Number(settlementRate),
+      discountPercent: 0,
+      rateType: 'SETTLEMENT',
+      rateId: undefined,
+    }
+  }
+
+  // check for fixed rate periods
+  if (fixedRatePeriods && fixedRatePeriods.length > 0) {
+    const comparedDate = new Date(commencementDate)
+    for (const period of fixedRatePeriods.reverse()) {
+      const periodStartDate = new Date(period.startDate)
+      const periodEndDate = new Date(periodStartDate)
+      periodEndDate.setFullYear(
+        periodEndDate.getFullYear() + Number(period.term)
+      )
+      if (comparedDate >= periodStartDate && comparedDate < periodEndDate) {
+        const customRate = period.customRate
+        if (customRate != null && Number(customRate)) {
+          return {
+            rate: Number(customRate),
+            baseRate: Number(customRate),
+            discountPercent: 0,
+            rateType: 'FIXED_RATE',
+            rateId: undefined,
+          }
+        }
+      }
+    }
+  }
+
+  // determine rate type based on purpose and repayment type
   const today = new Date()
   const purposePrefix = financePurpose === 'Investment' ? 'IV' : 'OO'
   let repaymentSuffix: 'PI' | 'IO' = 'PI'
