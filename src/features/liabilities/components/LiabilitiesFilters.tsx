@@ -101,7 +101,6 @@ export const LiabilitiesFilters = ({
             value={filters.startDateFrom}
             onChange={(value) => handleChange('startDateFrom', value)}
             placeholder="Pick a date"
-            disableFutureDates
           />
         </div>
 
@@ -111,7 +110,6 @@ export const LiabilitiesFilters = ({
             value={filters.startDateTo}
             onChange={(value) => handleChange('startDateTo', value)}
             placeholder="Pick a date"
-            disableFutureDates
           />
         </div>
       </div>

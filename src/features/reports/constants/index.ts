@@ -11,3 +11,6 @@ export const reportKeys = {
   liabilitiesReport: (query: any) =>
     [...reportKeys.report(), 'liabilities', query] as const,
 }
+
+export const LOAN_TYPES = ['Fixed-rate', 'Variable'] as const
+export const REPAYMENTS = ['Principal & Interest', 'Interest-only'] as const

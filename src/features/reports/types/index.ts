@@ -47,4 +47,15 @@ export interface LiabilityReportQuery extends ReportQuery {
   personId?: string
   companyId?: string
   financePurpose?: string
+  loanIds?: string[]
+  loanType?: string
+  repayment?: string
+  startDateFrom?: Date
+  startDateTo?: Date
+  discountPercentValue?: string
+  discountPercentOperator?: string
+  amountValue?: number
+  amountOperator?: string
+  fixedRateEndDate?: Date
+  fixedRateEndOperator?: string
 }
