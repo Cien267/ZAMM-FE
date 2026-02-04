@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import type { BaseEntity } from '@/types'
-import type { Brokerage } from '@/features/brokerage/types'
+import type { Brokerage } from '@/features/brokerages/types'
 export interface User extends BaseEntity {
   id: string
   email: string

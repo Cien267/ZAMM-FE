@@ -43,6 +43,12 @@ import { InputNumber } from '@/components/common/InputNumber'
 import { openUpSertAssetModal } from '@/features/assets/components/UpSertAsset'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useAllBrokers } from '@/hooks/useSharedData'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import {
+  ACTION_TYPE_CREATED,
+  ACTION_TYPE_UPDATED,
+  ENTITY_TYPE_PERSON,
+} from '@/features/activity-logs/constants'
 
 interface PeopleFormDialogProps {
   person?: Person | null
@@ -64,7 +70,7 @@ export const PersonModalContent = ({
     isCreatingPerson,
     isUpdatingPerson,
   } = usePeople()
-
+  const { createActivityLog } = useActivityLogs()
   const { user } = useAuth()
   const { data: brokers } = useAllBrokers(user?.brokerageId || '')
 
@@ -101,8 +107,22 @@ export const PersonModalContent = ({
       let createdPerson = null
       if (isEditing && person) {
         await updatePersonAsync({ ...data, id: person.id })
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_UPDATED,
+          entityType: ENTITY_TYPE_PERSON,
+          entityId: person.id,
+        })
       } else {
         createdPerson = await createPersonAsync(data)
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_CREATED,
+          entityType: ENTITY_TYPE_PERSON,
+          entityId: createdPerson.id,
+        })
       }
       const action = (window as any).__personFormAction || 'exit'
       onClose()

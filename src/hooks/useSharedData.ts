@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { peopleService } from '@/features/people/services/peopleService'
-import { companyService } from '@/features/company/services/companyService'
+import { companyService } from '@/features/companies/services/companyService'
 import { assetService } from '@/features/assets/services/assetService'
 import { liabilityService } from '@/features/liabilities/services/liabilityService'
 import { lenderService } from '@/features/lenders/services/lenderService'
 import { loanService } from '@/features/loans/services/loanService'
-import { brokerageService } from '@/features/brokerage/services/brokerageService'
+import { brokerageService } from '@/features/brokerages/services/brokerageService'
 
 export const sharedKeys = {
   people: ['shared', 'people'] as const,

@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Modal } from '@/components/common/modal'
-import { UpSertBrokerageForm } from '@/features/brokerage/components/UpSertBrokerageForm'
+import { UpSertBrokerageForm } from '@/features/brokerages/components/UpSertBrokerageForm'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
@@ -34,7 +34,7 @@ export const Header: React.FC = () => {
   const { theme, setTheme } = useTheme()
 
   const getUserInitials = () => {
-    if (!user?.fullName) return 'Admin'
+    if (!user?.fullName) return 'Broker'
     return user.fullName.split(' ')[0].toUpperCase()
   }
 
@@ -58,7 +58,7 @@ export const Header: React.FC = () => {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 lg:px-6 pl-18">
       <div className="flex flex-1 items-center gap-4">
         <HeaderBreadcrumb />
       </div>

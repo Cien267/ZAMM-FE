@@ -10,7 +10,7 @@ import ErrorPage from '@/pages/ErrorPage'
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
 const CreateBrokeragePage = lazy(
-  () => import('@/features/brokerage/pages/CreateBrokeragePage')
+  () => import('@/features/brokerages/pages/CreateBrokeragePage')
 )
 const DashboardPage = lazy(
   () => import('@/features/dashboard/pages/DashboardPage')
@@ -24,10 +24,10 @@ const PeopleTable = lazy(
 )
 
 const CompanyTable = lazy(
-  () => import('@/features/company/components/CompanyTable')
+  () => import('@/features/companies/components/CompanyTable')
 )
 const CompanyDetailPage = lazy(
-  () => import('@/features/company/pages/CompanyDetailPage')
+  () => import('@/features/companies/pages/CompanyDetailPage')
 )
 const ReportsPage = lazy(() => import('@/features/reports/pages/ReportsPage'))
 const StaffsPage = lazy(() => import('@/features/staffs/pages/StaffsPage'))

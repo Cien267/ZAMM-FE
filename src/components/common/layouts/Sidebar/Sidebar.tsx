@@ -1,40 +1,40 @@
-import { NavLink, useLocation, Link } from "react-router-dom"
-import { ChevronLeft, ChevronRight, LogOut, Menu, X } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
+import { NavLink, useLocation, Link } from 'react-router-dom'
+import { ChevronLeft, ChevronRight, LogOut, Menu } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from '@/components/ui/tooltip'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { useAuth } from "@/features/auth/hooks/useAuth"
-import { useState } from "react"
-import { navigationItems } from "@/constants/sidebar"
-import logo from "@/assets/images/logo.png"
+} from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import { useState } from 'react'
+import { navigationItems } from '@/constants/sidebar'
+import logo from '@/assets/images/logo.png'
 
 export const Sidebar: React.FC = () => {
   const { user, logout } = useAuth()
   const location = useLocation()
   const [isCollapsed, setIsCollapsed] = useState(() => {
-    return localStorage.getItem("sidebar-collapsed") === "true"
+    return localStorage.getItem('sidebar-collapsed') === 'true'
   })
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   const toggleCollapse = () => {
     const newState = !isCollapsed
     setIsCollapsed(newState)
-    localStorage.setItem("sidebar-collapsed", String(newState))
+    localStorage.setItem('sidebar-collapsed', String(newState))
   }
 
   const filteredMenuItems = navigationItems.filter((item) => {
@@ -49,13 +49,13 @@ export const Sidebar: React.FC = () => {
 
   const isActiveRoute = (path: string) => {
     return (
-      location.pathname === path || location.pathname.startsWith(path + "/")
+      location.pathname === path || location.pathname.startsWith(path + '/')
     )
   }
 
   const getUserInitials = () => {
-    if (!user?.fullName) return "Admin"
-    return user.fullName.split(" ")[0].toUpperCase()
+    if (!user?.fullName) return 'Broker'
+    return user.fullName.split(' ')[0].toUpperCase()
   }
 
   return (
@@ -66,11 +66,7 @@ export const Sidebar: React.FC = () => {
         className="fixed top-4 left-4 z-50 lg:hidden"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
       >
-        {isMobileOpen ? (
-          <X className="h-5 w-5" />
-        ) : (
-          <Menu className="h-5 w-5" />
-        )}
+        {!isMobileOpen && <Menu className="h-5 w-5" />}
       </Button>
 
       {isMobileOpen && (
@@ -82,10 +78,10 @@ export const Sidebar: React.FC = () => {
 
       <aside
         className={cn(
-          "fixed left-0 top-0 z-40 h-screen bg-background border-r transition-all duration-300",
-          isCollapsed ? "w-18" : "w-64",
-          "lg:translate-x-0",
-          isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          'fixed left-0 top-0 z-40 h-screen bg-background border-r transition-all duration-300',
+          isCollapsed ? 'w-18' : 'w-64',
+          'lg:translate-x-0',
+          isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
         <div className="flex h-full flex-col">
@@ -122,12 +118,12 @@ export const Sidebar: React.FC = () => {
                       to={item.path}
                       onClick={() => setIsMobileOpen(false)}
                       className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                        "hover:bg-accent hover:text-accent-foreground",
+                        'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                        'hover:bg-accent hover:text-accent-foreground',
                         isActive
-                          ? "bg-accent text-accent-foreground "
-                          : "text-muted-foreground",
-                        isCollapsed && "justify-center"
+                          ? 'bg-accent text-accent-foreground '
+                          : 'text-muted-foreground',
+                        isCollapsed && 'justify-center'
                       )}
                     >
                       <Icon className="h-5 w-5 shrink-0" />
@@ -234,8 +230,8 @@ export const Sidebar: React.FC = () => {
 
       <div
         className={cn(
-          "hidden lg:block transition-all duration-300",
-          isCollapsed ? "w-16" : "w-64"
+          'hidden lg:block transition-all duration-300',
+          isCollapsed ? 'w-16' : 'w-64'
         )}
       />
     </>

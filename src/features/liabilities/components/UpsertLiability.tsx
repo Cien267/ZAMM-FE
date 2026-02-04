@@ -34,7 +34,7 @@ import { Modal } from '@/components/common/modal'
 import { DatePicker } from '@/components/common/DatePicker'
 import { InputNumber } from '@/components/common/InputNumber'
 import type { Person } from '@/features/people/types'
-import type { Company } from '@/features/company/types'
+import type { Company } from '@/features/companies/types'
 import { LiabilityOwnershipFields } from './LiabilityOwnershipFields'
 import { LinkedAssetsFields } from './LinkedAssetsFields'
 import { FixedRatePeriodsFields } from './FixedRatePeriodsFields'
@@ -43,6 +43,12 @@ import type { Asset } from '@/features/assets/types'
 import { format } from 'date-fns'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import {
+  ACTION_TYPE_CREATED,
+  ACTION_TYPE_UPDATED,
+  ENTITY_TYPE_LIABILITY,
+} from '@/features/activity-logs/constants'
 
 interface LiabilityFormDialogProps {
   liability?: Liability | null
@@ -70,7 +76,7 @@ export const LiabilityModalContent = ({
     isCreatingLiability,
     isUpdatingLiability,
   } = useLiabilities()
-
+  const { createActivityLog } = useActivityLogs()
   const { user } = useAuth()
   const { data: lenderData, isLoading: isLoadingLenders } =
     useLendersAssignedToBrokerage(user?.brokerageId || '')
@@ -286,8 +292,22 @@ export const LiabilityModalContent = ({
             : undefined,
           id: liability.id,
         } as any)
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_UPDATED,
+          entityType: ENTITY_TYPE_LIABILITY,
+          entityId: liability.id,
+        })
       } else {
-        await createLiabilityAsync(data)
+        const createdLiability = await createLiabilityAsync(data)
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_CREATED,
+          entityType: ENTITY_TYPE_LIABILITY,
+          entityId: createdLiability.id,
+        })
       }
       onClose()
       form.reset()

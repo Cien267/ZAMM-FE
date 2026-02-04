@@ -34,12 +34,18 @@ import { ErrorState } from '@/components/common/ErrorState'
 import { useEvents } from '@/features/events/hooks/useEvents'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { ASSET_DELETE_EVENT } from '@/features/events/constants'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import {
+  ENTITY_TYPE_ASSET,
+  ACTION_TYPE_DELETED,
+} from '@/features/activity-logs/constants'
 
 export const AssetDetailPage = () => {
   const { assetId } = useParams<{ assetId: string }>()
   const navigate = useNavigate()
   const { createEvent } = useEvents()
   const { user } = useAuth()
+  const { createActivityLog } = useActivityLogs()
   const { openAlert } = useAlert()
   const setLabel = useBreadcrumbStore((state) => state.setLabel)
 
@@ -88,7 +94,7 @@ export const AssetDetailPage = () => {
           },
         })
       },
-      onSuccess: (reason: string) => {
+      onSuccess: (reason?: string) => {
         createEvent({
           title: `Delete Asset ${asset.name}`,
           description: reason,
@@ -107,6 +113,13 @@ export const AssetDetailPage = () => {
             assetType === 'company' && asset.assetCompanies
               ? asset.assetCompanies[0].companyId
               : undefined,
+        })
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_DELETED,
+          entityType: ENTITY_TYPE_ASSET,
+          entityId: asset.id,
         })
       },
     })

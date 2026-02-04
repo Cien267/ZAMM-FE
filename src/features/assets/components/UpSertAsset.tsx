@@ -38,11 +38,18 @@ import { Modal } from '@/components/common/modal'
 import { DatePicker } from '@/components/common/DatePicker'
 import { InputNumber } from '@/components/common/InputNumber'
 import type { Person } from '@/features/people/types'
-import type { Company } from '@/features/company/types'
+import type { Company } from '@/features/companies/types'
 import { AssetOwnershipFields } from './AssetOwnershipFields'
 import { LinkedLiabilitiesFields } from './LinkedLiabilitiesFields'
 import { openUpSertLiabilityModal } from '@/features/liabilities/components/UpsertLiability'
 import { AddressFields } from '@/features/address/components/AddressFields'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import {
+  ACTION_TYPE_CREATED,
+  ACTION_TYPE_UPDATED,
+  ENTITY_TYPE_ASSET,
+} from '@/features/activity-logs/constants'
 
 interface AssetFormDialogProps {
   initialPerson: Person | null
@@ -73,7 +80,8 @@ export const AssetModalContent = ({
     isCreatingAsset,
     isUpdatingAsset,
   } = useAssets()
-
+  const { createActivityLog } = useActivityLogs()
+  const { user } = useAuth()
   const form = useForm<CreateAssetInput | UpdateAssetInput>({
     resolver: zodResolver(isEditing ? UpdateAssetSchema : CreateAssetSchema),
     defaultValues: {
@@ -160,8 +168,22 @@ export const AssetModalContent = ({
       let createdAsset = null
       if (isEditing && asset) {
         await updateAssetAsync({ ...data, id: asset.id })
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_UPDATED,
+          entityType: ENTITY_TYPE_ASSET,
+          entityId: asset.id,
+        })
       } else {
         createdAsset = await createAssetAsync(data)
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_CREATED,
+          entityType: ENTITY_TYPE_ASSET,
+          entityId: createdAsset.id,
+        })
       }
       const action = (window as any).__assetFormAction || 'exit'
       onClose()

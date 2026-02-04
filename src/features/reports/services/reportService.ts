@@ -9,7 +9,7 @@ import type {
   LiabilityReportQuery,
 } from '../types'
 import type { Person } from '@/features/people/types'
-import type { Company } from '@/features/company/types'
+import type { Company } from '@/features/companies/types'
 import type { Asset } from '@/features/assets/types'
 import type { Liability } from '@/features/liabilities/types'
 import type { PaginatedResponse } from '@/types'

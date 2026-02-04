@@ -114,7 +114,9 @@ export const InterestRateChart = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Interest Rates</CardTitle>
+        <CardTitle className="text-xl font-semibold tracking-tight">
+          Interest Rates
+        </CardTitle>
         <CardDescription>
           Comparative breakdown of current interest rates by lender and loan
           product

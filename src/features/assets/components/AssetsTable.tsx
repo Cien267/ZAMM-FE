@@ -33,12 +33,18 @@ import { openUpSertAssetModal } from './UpSertAsset'
 import { formatCurrency, formatAddress } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import type { Person } from '@/features/people/types'
-import type { Company } from '@/features/company/types'
+import type { Company } from '@/features/companies/types'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '@/contexts/AlertContext'
 import { useEvents } from '@/features/events/hooks/useEvents'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { ASSET_DELETE_EVENT } from '@/features/events/constants'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import {
+  ACTION_TYPE_VIEWED,
+  ENTITY_TYPE_ASSET,
+  ACTION_TYPE_DELETED,
+} from '@/features/activity-logs/constants'
 
 interface AssetsTableProps {
   initialData: Person | Company | null
@@ -49,6 +55,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
   const { openAlert } = useAlert()
   const { createEvent } = useEvents()
   const { user } = useAuth()
+  const { createActivityLog } = useActivityLogs()
   const [query, setQuery] = useState<AssetQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -118,7 +125,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
       onConfirm: () => {
         deleteAsset(asset.id)
       },
-      onSuccess: (reason: string) => {
+      onSuccess: (reason?: string) => {
         createEvent({
           title: `Delete Asset ${asset.name}`,
           description: reason,
@@ -138,11 +145,25 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
               ? (initialData as Company).id
               : undefined,
         })
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_DELETED,
+          entityType: ENTITY_TYPE_ASSET,
+          entityId: asset.id,
+        })
       },
     })
   }
 
   const handleView = (asset: Asset) => {
+    createActivityLog({
+      brokerId: user?.id || '',
+      brokerageId: user?.brokerageId || '',
+      actionType: ACTION_TYPE_VIEWED,
+      entityType: ENTITY_TYPE_ASSET,
+      entityId: asset.id,
+    })
     navigate(`/clients/assets/${asset.id}`)
   }
 

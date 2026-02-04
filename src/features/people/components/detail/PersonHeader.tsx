@@ -5,6 +5,12 @@ import { usePeople } from '../../hooks/usePeople'
 import { openUpSertPersonModal } from '../UpSertPerson'
 import type { Person } from '../../types'
 import { useAlert } from '@/contexts/AlertContext'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import {
+  ACTION_TYPE_DELETED,
+  ENTITY_TYPE_PERSON,
+} from '@/features/activity-logs/constants'
 
 interface PersonHeaderProps {
   person: Person
@@ -14,6 +20,8 @@ export const PersonHeader = ({ person }: PersonHeaderProps) => {
   const navigate = useNavigate()
   const { openAlert } = useAlert()
   const { deletePerson } = usePeople()
+  const { createActivityLog } = useActivityLogs()
+  const { user } = useAuth()
 
   const handleEdit = () => {
     openUpSertPersonModal({ person })
@@ -30,6 +38,15 @@ export const PersonHeader = ({ person }: PersonHeaderProps) => {
           onSuccess: () => {
             navigate('/clients/people')
           },
+        })
+      },
+      onSuccess: () => {
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_DELETED,
+          entityType: ENTITY_TYPE_PERSON,
+          entityId: person.id,
         })
       },
     })

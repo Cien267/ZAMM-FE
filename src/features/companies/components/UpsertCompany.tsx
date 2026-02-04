@@ -39,6 +39,12 @@ import { useAllPeople } from '@/hooks/useSharedData'
 import { AddressFields } from '@/features/address/components/AddressFields'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useAllBrokers } from '@/hooks/useSharedData'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import {
+  ACTION_TYPE_CREATED,
+  ACTION_TYPE_UPDATED,
+  ENTITY_TYPE_COMPANY,
+} from '@/features/activity-logs/constants'
 
 interface CompanyFormDialogProps {
   company?: Company | null
@@ -63,7 +69,7 @@ export const CompanyModalContent = ({
     isCreatingCompany,
     isUpdatingCompany,
   } = useCompanies()
-
+  const { createActivityLog } = useActivityLogs()
   const { user } = useAuth()
   const { data: brokers } = useAllBrokers(user?.brokerageId || '')
 
@@ -122,8 +128,22 @@ export const CompanyModalContent = ({
       let createdCompany = null
       if (isEditing && company) {
         await updateCompanyAsync({ ...data, id: company.id })
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_UPDATED,
+          entityType: ENTITY_TYPE_COMPANY,
+          entityId: company.id,
+        })
       } else {
         createdCompany = await createCompanyAsync(data)
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_CREATED,
+          entityType: ENTITY_TYPE_COMPANY,
+          entityId: createdCompany.id,
+        })
       }
       const action = (window as any).__companyFormAction || 'exit'
       onClose()

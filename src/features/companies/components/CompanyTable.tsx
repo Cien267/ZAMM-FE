@@ -33,6 +33,13 @@ import { openUpSertCompanyModal } from './UpsertCompany'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '@/contexts/AlertContext'
 import { ErrorState } from '@/components/common/ErrorState'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import {
+  ENTITY_TYPE_COMPANY,
+  ACTION_TYPE_VIEWED,
+  ACTION_TYPE_DELETED,
+} from '@/features/activity-logs/constants'
 
 export const CompanyTable = () => {
   const navigate = useNavigate()
@@ -55,6 +62,8 @@ export const CompanyTable = () => {
   const { useCompaniesList } = useCompanyQueries()
   const { data, isLoading, error, refetch } = useCompaniesList(query)
   const { deleteCompany } = useCompanies()
+  const { createActivityLog } = useActivityLogs()
+  const { user } = useAuth()
 
   const handleFilterChange = (filters: Partial<CompanyQuery>) => {
     setQuery((prev) => ({
@@ -90,10 +99,26 @@ export const CompanyTable = () => {
       onConfirm: () => {
         deleteCompany(company.id)
       },
+      onSuccess: () => {
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_DELETED,
+          entityType: ENTITY_TYPE_COMPANY,
+          entityId: company.id,
+        })
+      },
     })
   }
 
   const handleView = (company: Company) => {
+    createActivityLog({
+      brokerId: user?.id || '',
+      brokerageId: user?.brokerageId || '',
+      actionType: ACTION_TYPE_VIEWED,
+      entityType: ENTITY_TYPE_COMPANY,
+      entityId: company.id,
+    })
     navigate(`/clients/companies/${company.id}`)
   }
 

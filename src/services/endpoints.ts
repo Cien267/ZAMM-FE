@@ -71,6 +71,11 @@ export const API_ENDPOINTS = {
     ALL: '/notes/all',
     DETAIL: (id: string) => `/notes/${id}`,
   },
+  ACTIVITY_LOGS: {
+    BASE: '/activity-logs',
+    ALL: '/activity-logs/all',
+    DETAIL: (id: string) => `/activity-logs/${id}`,
+  },
   DASHBOARD: {
     UPCOMING_EVENTS: '/dashboard/upcoming-events',
     INTEREST_RATES: '/dashboard/interest-rates',

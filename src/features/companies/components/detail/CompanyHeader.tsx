@@ -5,6 +5,12 @@ import { useCompanies } from '../../hooks/useCompanies'
 import { openUpSertCompanyModal } from '../UpsertCompany'
 import type { Company } from '../../types'
 import { useAlert } from '@/contexts/AlertContext'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import {
+  ENTITY_TYPE_COMPANY,
+  ACTION_TYPE_DELETED,
+} from '@/features/activity-logs/constants'
 
 interface CompanyHeaderProps {
   company: Company
@@ -14,6 +20,8 @@ export const CompanyHeader = ({ company }: CompanyHeaderProps) => {
   const navigate = useNavigate()
   const { openAlert } = useAlert()
   const { deleteCompany } = useCompanies()
+  const { createActivityLog } = useActivityLogs()
+  const { user } = useAuth()
 
   const handleEdit = () => {
     openUpSertCompanyModal({ company })
@@ -30,6 +38,15 @@ export const CompanyHeader = ({ company }: CompanyHeaderProps) => {
           onSuccess: () => {
             navigate('/clients/companies')
           },
+        })
+      },
+      onSuccess: () => {
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_DELETED,
+          entityType: ENTITY_TYPE_COMPANY,
+          entityId: company.id,
         })
       },
     })

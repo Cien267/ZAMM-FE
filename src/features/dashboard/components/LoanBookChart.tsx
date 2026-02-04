@@ -75,7 +75,9 @@ export const LoanBookChart = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Cumulative Liability Over Time</CardTitle>
+        <CardTitle className="text-xl font-semibold tracking-tight">
+          Cumulative Liability Over Time
+        </CardTitle>
         <CardDescription>
           Summary of total debt starting from the earliest liability
         </CardDescription>

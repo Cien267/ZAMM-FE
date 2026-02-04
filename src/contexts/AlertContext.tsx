@@ -19,7 +19,7 @@ type AlertOptions = {
   confirmText?: string
   showTimelineCheckbox?: boolean
   onConfirm: () => Promise<void> | void
-  onSuccess?: (reason: string) => Promise<void> | void
+  onSuccess?: (reason?: string) => Promise<void> | void
 }
 
 type AlertContextType = {
@@ -49,7 +49,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
       try {
         await config.onConfirm()
 
-        if (config?.showTimelineCheckbox && addToTimeline && config.onSuccess) {
+        if (config.onSuccess) {
           await config.onSuccess(reason)
         }
         setIsOpen(false)

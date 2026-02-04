@@ -38,6 +38,11 @@ import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
 import { useEvents } from '@/features/events/hooks/useEvents'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { ASSET_DELETE_EVENT } from '@/features/events/constants'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import {
+  ENTITY_TYPE_LIABILITY,
+  ACTION_TYPE_DELETED,
+} from '@/features/activity-logs/constants'
 
 export const LiabilityDetailPage = () => {
   const { liabilityId } = useParams<{ liabilityId: string }>()
@@ -53,6 +58,7 @@ export const LiabilityDetailPage = () => {
 
   const { useLiability } = useLiabilityQueries()
   const { deleteLiability } = useLiabilities()
+  const { createActivityLog } = useActivityLogs()
   const {
     data: liability,
     isLoading,
@@ -97,7 +103,7 @@ export const LiabilityDetailPage = () => {
           },
         })
       },
-      onSuccess: (reason: string) => {
+      onSuccess: (reason?: string) => {
         createEvent({
           title: `Delete Liability ${liability.name}`,
           description: reason,
@@ -116,6 +122,13 @@ export const LiabilityDetailPage = () => {
             liabilityType === 'company' && liability.liabilityCompanies
               ? liability.liabilityCompanies[0].companyId
               : undefined,
+        })
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_DELETED,
+          entityType: ENTITY_TYPE_LIABILITY,
+          entityId: liability.id,
         })
       },
     })

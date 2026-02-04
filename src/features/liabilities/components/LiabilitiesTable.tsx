@@ -31,7 +31,7 @@ import type { LiabilityQuery, Liability } from '../types'
 import { formatCurrency } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import type { Person } from '@/features/people/types'
-import type { Company } from '@/features/company/types'
+import type { Company } from '@/features/companies/types'
 import { openUpSertLiabilityModal } from './UpsertLiability'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '@/contexts/AlertContext'
@@ -39,6 +39,12 @@ import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
 import { useEvents } from '@/features/events/hooks/useEvents'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { ASSET_DELETE_EVENT } from '@/features/events/constants'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import {
+  ACTION_TYPE_VIEWED,
+  ENTITY_TYPE_LIABILITY,
+  ACTION_TYPE_DELETED,
+} from '@/features/activity-logs/constants'
 
 interface LiabilitiesTableProps {
   initialData: Person | Company | null
@@ -74,6 +80,7 @@ export const LiabilitiesTable = ({
   const navigate = useNavigate()
   const { createEvent } = useEvents()
   const { user } = useAuth()
+  const { createActivityLog } = useActivityLogs()
 
   const handleFilterChange = (filters: Partial<LiabilityQuery>) => {
     setQuery((prev) => ({
@@ -117,7 +124,7 @@ export const LiabilitiesTable = ({
       onConfirm: () => {
         deleteLiability(liability.id)
       },
-      onSuccess: (reason: string) => {
+      onSuccess: (reason?: string) => {
         createEvent({
           title: `Delete Liability ${liability.name}`,
           description: reason,
@@ -137,11 +144,25 @@ export const LiabilitiesTable = ({
               ? (initialData as Company).id
               : undefined,
         })
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_DELETED,
+          entityType: ENTITY_TYPE_LIABILITY,
+          entityId: liability.id,
+        })
       },
     })
   }
 
   const handleView = (liability: Liability) => {
+    createActivityLog({
+      brokerId: user?.id || '',
+      brokerageId: user?.brokerageId || '',
+      actionType: ACTION_TYPE_VIEWED,
+      entityType: ENTITY_TYPE_LIABILITY,
+      entityId: liability.id,
+    })
     const params = new URLSearchParams()
     if (personId) params.append('personId', personId)
     if (companyId) params.append('companyId', companyId)

@@ -37,10 +37,19 @@ import { openUpSertPersonModal } from './UpSertPerson'
 import { ErrorState } from '@/components/common/ErrorState'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '@/contexts/AlertContext'
+import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
+import { useAuth } from '@/features/auth/hooks/useAuth'
+import {
+  ACTION_TYPE_DELETED,
+  ACTION_TYPE_VIEWED,
+  ENTITY_TYPE_PERSON,
+} from '@/features/activity-logs/constants'
 
 export const PeopleTable = () => {
   const navigate = useNavigate()
   const { openAlert } = useAlert()
+  const { createActivityLog } = useActivityLogs()
+  const { user } = useAuth()
   const [query, setQuery] = useState<PersonQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -92,10 +101,26 @@ export const PeopleTable = () => {
       onConfirm: () => {
         deletePerson(person.id)
       },
+      onSuccess: () => {
+        createActivityLog({
+          brokerId: user?.id || '',
+          brokerageId: user?.brokerageId || '',
+          actionType: ACTION_TYPE_DELETED,
+          entityType: ENTITY_TYPE_PERSON,
+          entityId: person.id,
+        })
+      },
     })
   }
 
   const handleView = (person: Person) => {
+    createActivityLog({
+      brokerId: user?.id || '',
+      brokerageId: user?.brokerageId || '',
+      actionType: ACTION_TYPE_VIEWED,
+      entityType: ENTITY_TYPE_PERSON,
+      entityId: person.id,
+    })
     navigate(`/clients/people/${person.id}`, {
       state: { label: person.fullName },
     })
