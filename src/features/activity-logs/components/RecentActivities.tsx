@@ -144,7 +144,7 @@ export const RecentActivities = () => {
             {activities.map((activity) => {
               const styles = getActionStyles(activity.actionType)
               const isDeleted = activity.actionType.toLowerCase() === 'deleted'
-              console.log({ styles }, activity.actionType)
+
               return (
                 <div
                   key={activity.id}
