@@ -1,5 +1,11 @@
 import { NavLink, useLocation, Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, LogOut, Menu } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+  Menu,
+  ChevronDown,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -20,7 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useState } from 'react'
-import { navigationItems } from '@/constants/sidebar'
+import { SIDEBAR_MENU } from '@/constants/sidebar'
 import logo from '@/assets/images/logo.png'
 
 export const Sidebar: React.FC = () => {
@@ -29,6 +35,8 @@ export const Sidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('sidebar-collapsed') === 'true'
   })
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({})
+
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   const toggleCollapse = () => {
@@ -37,7 +45,7 @@ export const Sidebar: React.FC = () => {
     localStorage.setItem('sidebar-collapsed', String(newState))
   }
 
-  const filteredMenuItems = navigationItems.filter((item) => {
+  const filteredMenuItems = SIDEBAR_MENU.filter((item) => {
     if (!item.roles?.length) return true
     return (
       user &&
@@ -48,6 +56,7 @@ export const Sidebar: React.FC = () => {
   })
 
   const isActiveRoute = (path: string) => {
+    if (!path) return false
     return (
       location.pathname === path || location.pathname.startsWith(path + '/')
     )
@@ -56,6 +65,13 @@ export const Sidebar: React.FC = () => {
   const getUserInitials = () => {
     if (!user?.fullName) return 'Broker'
     return user.fullName.split(' ')[0].toUpperCase()
+  }
+
+  const toggleMenu = (id: string) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
   }
 
   return (
@@ -111,47 +127,101 @@ export const Sidebar: React.FC = () => {
               <TooltipProvider delayDuration={0}>
                 {filteredMenuItems.map((item) => {
                   const Icon = item.icon
+                  const hasChildren = item.children?.length
+                  const isOpen = openMenus[item.id]
                   const isActive = isActiveRoute(item.path)
 
-                  const navLink = (
-                    <NavLink
-                      to={item.path}
-                      onClick={() => setIsMobileOpen(false)}
-                      className={cn(
-                        'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                        'hover:bg-accent hover:text-accent-foreground',
-                        isActive
-                          ? 'bg-accent text-accent-foreground '
-                          : 'text-muted-foreground',
-                        isCollapsed && 'justify-center'
-                      )}
+                  const baseClasses = cn(
+                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors cursor-pointer',
+                    'hover:bg-accent hover:text-accent-foreground',
+                    isActive
+                      ? 'bg-accent text-accent-foreground'
+                      : 'text-muted-foreground',
+                    isCollapsed && 'justify-center'
+                  )
+
+                  const ParentButton = (
+                    <div
+                      onClick={() => {
+                        if (hasChildren) toggleMenu(item.id)
+                        else setIsMobileOpen(false)
+                      }}
+                      className={baseClasses}
                     >
                       <Icon className="h-5 w-5 shrink-0" />
+
                       {!isCollapsed && (
                         <>
                           <span className="flex-1">{item.label}</span>
+
                           {item.badge && (
-                            <Badge variant="secondary" className="ml-auto">
-                              {item.badge}
-                            </Badge>
+                            <Badge variant="secondary">{item.badge}</Badge>
+                          )}
+
+                          {hasChildren && (
+                            <ChevronDown
+                              className={cn(
+                                'h-4 w-4 transition-transform',
+                                isOpen && 'rotate-180'
+                              )}
+                            />
                           )}
                         </>
                       )}
-                    </NavLink>
+                    </div>
+                  )
+
+                  const ParentContent = (
+                    <div key={item.id}>
+                      {hasChildren ? (
+                        ParentButton
+                      ) : (
+                        <NavLink to={item.path} className="block">
+                          {ParentButton}
+                        </NavLink>
+                      )}
+
+                      {hasChildren && isOpen && !isCollapsed && (
+                        <div className="ml-6 mt-1 space-y-1">
+                          {item.children!.map((child) => {
+                            const ChildIcon = child.icon
+                            const childActive = isActiveRoute(child.path)
+
+                            return (
+                              <NavLink
+                                key={child.id}
+                                to={child.path}
+                                onClick={() => setIsMobileOpen(false)}
+                                className={cn(
+                                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm',
+                                  'hover:bg-accent hover:text-accent-foreground',
+                                  childActive
+                                    ? 'bg-accent text-accent-foreground'
+                                    : 'text-muted-foreground'
+                                )}
+                              >
+                                <ChildIcon className="h-4 w-4 shrink-0" />
+                                <span>{child.label}</span>
+                              </NavLink>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
                   )
 
                   if (isCollapsed) {
                     return (
                       <Tooltip key={item.id}>
-                        <TooltipTrigger asChild>{navLink}</TooltipTrigger>
+                        <TooltipTrigger asChild>{ParentContent}</TooltipTrigger>
                         <TooltipContent side="right">
-                          <p>{item.label}</p>
+                          {item.label}
                         </TooltipContent>
                       </Tooltip>
                     )
                   }
 
-                  return <div key={item.id}>{navLink}</div>
+                  return ParentContent
                 })}
               </TooltipProvider>
             </div>
