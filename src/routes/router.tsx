@@ -48,6 +48,9 @@ const AdminLendersPage = lazy(
 const AdminLenderDetailPage = lazy(
   () => import('@/features/lenders/pages/admin/AdminLenderDetailPage')
 )
+const FirmEmailSettingPage = lazy(
+  () => import('@/features/email/firm-setting/pages/FirmEmailSettingPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -165,6 +168,31 @@ export const router = createBrowserRouter([
                     <ReportsPage />
                   </SuspenseWrapper>
                 ),
+              },
+              {
+                path: '/email',
+                children: [
+                  {
+                    index: true,
+                    element: <Navigate to="/email/history" replace />,
+                  },
+                  // {
+                  //   path: 'history',
+                  //   element: <PeopleTable />,
+                  // },
+                  // {
+                  //   path: 'categories',
+                  //   element: <PersonDetailPage />,
+                  // },
+                  // {
+                  //   path: 'templates',
+                  //   element: <CompanyTable />,
+                  // },
+                  {
+                    path: 'firm-settings',
+                    element: <FirmEmailSettingPage />,
+                  },
+                ],
               },
               {
                 path: '/staffs',

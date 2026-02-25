@@ -88,4 +88,13 @@ export const API_ENDPOINTS = {
     ASSETS: '/report/assets',
     LIABILITIES: '/report/liabilities',
   },
+  EMAIL: {
+    FIRM_SETTING: {
+      BASE: '/firm-email-settings',
+      TEST_CONNECTION: '/firm-email-settings/test-connection',
+      DETAIL: (brokerageId: string) => `/firm-email-settings/${brokerageId}`,
+      DETAIL_BY_BROKERAGE: (brokerageId: string) =>
+        `/firm-email-settings/get-by-brokerage/${brokerageId}`,
+    },
+  },
 } as const
