@@ -60,9 +60,6 @@ export const useFirmEmailSettings = () => {
     mutationFn: (data: TestSmtpConnectionInput) =>
       firmEmailSettingService.testSmtpConnection(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: firmEmailSettingKeys.firmEmailSettings(),
-      })
       toast.success('SMTP connection tested successfully!')
     },
     onError: (error: any) => {

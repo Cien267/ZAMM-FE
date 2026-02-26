@@ -96,5 +96,10 @@ export const API_ENDPOINTS = {
       DETAIL_BY_BROKERAGE: (brokerageId: string) =>
         `/firm-email-settings/get-by-brokerage/${brokerageId}`,
     },
+    CATEGORIES: {
+      BASE: '/email-categories',
+      ALL: '/email-categories/all',
+      DETAIL: (id: string) => `/email-categories/${id}`,
+    },
   },
 } as const

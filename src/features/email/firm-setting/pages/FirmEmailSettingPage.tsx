@@ -19,7 +19,23 @@ export const FirmEmailSettingPage = () => {
   const [isEditing, setIsEditing] = useState(false)
 
   if (isLoading) {
-    return <Skeleton className="h-12 w-full" />
+    return (
+      <>
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold">Firm Email Settings</h1>
+            <p className="text-muted-foreground mt-1">
+              Manage your brokerage firm's email settings
+            </p>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-6 mt-4">
+          <Skeleton className="h-70" />
+          <Skeleton className="h-70" />
+          <Skeleton className="h-70 col-span-2" />
+        </div>
+      </>
+    )
   }
 
   if (error && (error as any).statusCode !== 404) {
