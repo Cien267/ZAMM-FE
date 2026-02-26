@@ -275,7 +275,7 @@ export const UpsertFirmEmailSetting = ({
                     <FormControl>
                       <div className="border rounded-md overflow-hidden">
                         <Editor
-                          height="200px"
+                          height="400px"
                           defaultLanguage="html"
                           value={field.value}
                           onChange={field.onChange}
@@ -304,7 +304,7 @@ export const UpsertFirmEmailSetting = ({
                     <FormControl>
                       <div className="border rounded-md overflow-hidden">
                         <Editor
-                          height="200px"
+                          height="400px"
                           defaultLanguage="html"
                           value={field.value}
                           onChange={field.onChange}
