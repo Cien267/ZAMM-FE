@@ -34,8 +34,8 @@ import {
 import Editor from '@monaco-editor/react'
 import type { editor } from 'monaco-editor'
 import { Separator } from '@/components/ui/separator'
-import { TEMPLATE_VARIABLES } from '../constants'
 import { PreviewBodyTemplate } from './PreviewBodyTemplate'
+import { useEmailTemplateQueries } from '../hooks/useEmailTemplatesQueries'
 
 interface EmailTemplatesFormDialogProps {
   emailTemplate?: EmailTemplate | null
@@ -51,7 +51,8 @@ export const EmailTemplateModalContent = ({
   const isEditing = !!emailTemplate
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const { data: categories = [] } = useAllEmailCategories({ isActive: true })
-
+  const { useEmailTemplateVariables } = useEmailTemplateQueries()
+  const { data: variables = [] } = useEmailTemplateVariables()
   const {
     createEmailTemplateAsync,
     updateEmailTemplateAsync,
@@ -204,7 +205,7 @@ export const EmailTemplateModalContent = ({
           <div className="flex justify-start gap-4">
             <FormLabel>Variables</FormLabel>
             <div className="flex flex-wrap gap-2">
-              {TEMPLATE_VARIABLES.map((v) => (
+              {variables.map((v) => (
                 <Badge
                   key={v}
                   variant="glass"

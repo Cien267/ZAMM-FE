@@ -105,6 +105,7 @@ export const API_ENDPOINTS = {
       BASE: '/email-templates',
       ALL: '/email-templates/all',
       DETAIL: (id: string) => `/email-templates/${id}`,
+      VARIABLES: '/email-templates/variables',
     },
   },
 } as const

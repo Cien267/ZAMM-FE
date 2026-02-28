@@ -26,9 +26,17 @@ export const useEmailTemplateQueries = () => {
     })
   }
 
+  const useEmailTemplateVariables = () => {
+    return useQuery({
+      queryKey: emailTemplateKeys.emailTemplateVariables(),
+      queryFn: () => emailTemplateService.getEmailTemplateVariables(),
+    })
+  }
+
   return {
     useAllEmailTemplates,
     useEmailTemplatesList,
     useEmailTemplate,
+    useEmailTemplateVariables,
   }
 }

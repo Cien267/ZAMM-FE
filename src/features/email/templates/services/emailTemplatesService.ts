@@ -59,4 +59,11 @@ export const emailTemplateService = {
   async deleteEmailTemplate(id: string): Promise<void> {
     await api.delete(API_ENDPOINTS.EMAIL.TEMPLATES.DETAIL(id))
   },
+
+  async getEmailTemplateVariables(): Promise<string[]> {
+    const response = await api.get<ApiResponse<string[]>>(
+      API_ENDPOINTS.EMAIL.TEMPLATES.VARIABLES
+    )
+    return response.data
+  },
 }
