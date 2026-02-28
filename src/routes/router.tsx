@@ -49,10 +49,13 @@ const AdminLenderDetailPage = lazy(
   () => import('@/features/lenders/pages/admin/AdminLenderDetailPage')
 )
 const EmailCategoriesPage = lazy(
-  () => import('@/features/email/category/pages/EmailCategoriesPage')
+  () => import('@/features/email/categories/pages/EmailCategoriesPage')
 )
 const FirmEmailSettingPage = lazy(
-  () => import('@/features/email/firm-setting/pages/FirmEmailSettingPage')
+  () => import('@/features/email/firm-settings/pages/FirmEmailSettingPage')
+)
+const EmailTemplatesPage = lazy(
+  () => import('@/features/email/templates/pages/EmailTemplatesPage')
 )
 
 export const router = createBrowserRouter([
@@ -187,10 +190,10 @@ export const router = createBrowserRouter([
                     path: 'categories',
                     element: <EmailCategoriesPage />,
                   },
-                  // {
-                  //   path: 'templates',
-                  //   element: <CompanyTable />,
-                  // },
+                  {
+                    path: 'templates',
+                    element: <EmailTemplatesPage />,
+                  },
                   {
                     path: 'firm-settings',
                     element: <FirmEmailSettingPage />,

@@ -14,9 +14,11 @@ export const useFirmEmailSettings = () => {
   const createFirmEmailSettingMutation = useMutation({
     mutationFn: (data: CreateFirmEmailSettingInput) =>
       firmEmailSettingService.createFirmEmailSetting(data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: firmEmailSettingKeys.firmEmailSettingDetailByBrokerage(),
+        queryKey: firmEmailSettingKeys.firmEmailSettingDetailByBrokerage(
+          variables.brokerageId
+        ),
       })
       toast.success('Firm Email Setting created successfully!')
     },
@@ -29,9 +31,11 @@ export const useFirmEmailSettings = () => {
   const updateFirmEmailSettingMutation = useMutation({
     mutationFn: (data: UpdateFirmEmailSettingInput) =>
       firmEmailSettingService.updateFirmEmailSetting(data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: firmEmailSettingKeys.firmEmailSettingDetailByBrokerage(),
+        queryKey: firmEmailSettingKeys.firmEmailSettingDetailByBrokerage(
+          variables.brokerageId
+        ),
       })
       toast.success('Firm Email Setting updated successfully!')
     },

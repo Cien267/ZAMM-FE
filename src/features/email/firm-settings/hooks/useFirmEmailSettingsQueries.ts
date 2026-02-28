@@ -8,7 +8,8 @@ export const useFirmEmailSettingsQueries = () => {
     enabled = true
   ) => {
     return useQuery({
-      queryKey: firmEmailSettingKeys.firmEmailSettingDetailByBrokerage(),
+      queryKey:
+        firmEmailSettingKeys.firmEmailSettingDetailByBrokerage(brokerageId),
       queryFn: () =>
         firmEmailSettingService.getFirmEmailSettingByBrokerageId(brokerageId),
       enabled: enabled && !!brokerageId,

@@ -101,5 +101,10 @@ export const API_ENDPOINTS = {
       ALL: '/email-categories/all',
       DETAIL: (id: string) => `/email-categories/${id}`,
     },
+    TEMPLATES: {
+      BASE: '/email-templates',
+      ALL: '/email-templates/all',
+      DETAIL: (id: string) => `/email-templates/${id}`,
+    },
   },
 } as const

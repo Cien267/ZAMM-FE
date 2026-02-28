@@ -6,6 +6,8 @@ import { liabilityService } from '@/features/liabilities/services/liabilityServi
 import { lenderService } from '@/features/lenders/services/lenderService'
 import { loanService } from '@/features/loans/services/loanService'
 import { brokerageService } from '@/features/brokerages/services/brokerageService'
+import { emailCategoryService } from '@/features/email/categories/services/emailCategoriesService'
+import type { EmailCategoryQuery } from '@/features/email/categories/types'
 
 export const sharedKeys = {
   people: ['shared', 'people'] as const,
@@ -24,6 +26,7 @@ export const sharedKeys = {
   loans: ['shared', 'loans'] as const,
   loansByLenderId: (id: string) => ['shared', 'loans-lender', id] as const,
   lendersAssignedToBrokerage: ['shared', 'brokers', 'lenders'] as const,
+  emailCategories: ['shared', 'email-categories'] as const,
 }
 
 export const useAllPeople = () => {
@@ -141,5 +144,13 @@ export const useAllLoansByLenderId = (id: string, enabled = true) => {
     queryFn: () => loanService.getAllLoans({ lenderId: id }),
     staleTime: 5 * 60 * 1000,
     enabled: enabled && !!id,
+  })
+}
+
+export const useAllEmailCategories = (params: EmailCategoryQuery = {}) => {
+  return useQuery({
+    queryKey: sharedKeys.emailCategories,
+    queryFn: () => emailCategoryService.getAllEmailCategories(params),
+    staleTime: 5 * 60 * 1000,
   })
 }

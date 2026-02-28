@@ -21,7 +21,7 @@ import { openUpSertEventModal } from '../components/UpsertEvent'
 import { useEventQueries } from '../hooks/useEventsQueries'
 import { ErrorState } from '@/components/common/ErrorState'
 import { ModificationDiff } from './ModificationDiff'
-import { getEventDate } from '../libs/utils'
+import { getEventDate } from '../lib/utils'
 
 interface EventFormDialogProps {
   id: string

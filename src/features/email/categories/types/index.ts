@@ -11,7 +11,7 @@ export interface EmailCategory extends BaseEntity {
 
 export interface EmailCategoryQuery extends PaginationParams {
   name?: string
-  isActive?: string
+  isActive?: boolean
   brokerId?: string
 }
 
