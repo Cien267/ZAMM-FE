@@ -57,6 +57,9 @@ const FirmEmailSettingPage = lazy(
 const EmailTemplatesPage = lazy(
   () => import('@/features/email/templates/pages/EmailTemplatesPage')
 )
+const SentEmailsPage = lazy(
+  () => import('@/features/email/history/pages/SentEmailsPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -182,10 +185,10 @@ export const router = createBrowserRouter([
                     index: true,
                     element: <Navigate to="/email/history" replace />,
                   },
-                  // {
-                  //   path: 'history',
-                  //   element: <PeopleTable />,
-                  // },
+                  {
+                    path: 'history',
+                    element: <SentEmailsPage />,
+                  },
                   {
                     path: 'categories',
                     element: <EmailCategoriesPage />,

@@ -8,6 +8,8 @@ import { loanService } from '@/features/loans/services/loanService'
 import { brokerageService } from '@/features/brokerages/services/brokerageService'
 import { emailCategoryService } from '@/features/email/categories/services/emailCategoriesService'
 import type { EmailCategoryQuery } from '@/features/email/categories/types'
+import type { EmailTemplateQuery } from '@/features/email/templates/types'
+import { emailTemplateService } from '@/features/email/templates/services/emailTemplatesService'
 
 export const sharedKeys = {
   people: ['shared', 'people'] as const,
@@ -27,6 +29,7 @@ export const sharedKeys = {
   loansByLenderId: (id: string) => ['shared', 'loans-lender', id] as const,
   lendersAssignedToBrokerage: ['shared', 'brokers', 'lenders'] as const,
   emailCategories: ['shared', 'email-categories'] as const,
+  emailTemplates: ['shared', 'email-templates'] as const,
 }
 
 export const useAllPeople = () => {
@@ -151,6 +154,14 @@ export const useAllEmailCategories = (params: EmailCategoryQuery = {}) => {
   return useQuery({
     queryKey: sharedKeys.emailCategories,
     queryFn: () => emailCategoryService.getAllEmailCategories(params),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export const useAllEmailTemplates = (params: EmailTemplateQuery = {}) => {
+  return useQuery({
+    queryKey: sharedKeys.emailTemplates,
+    queryFn: () => emailTemplateService.getAllEmailTemplates(params),
     staleTime: 5 * 60 * 1000,
   })
 }

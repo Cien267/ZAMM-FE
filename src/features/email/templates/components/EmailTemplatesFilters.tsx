@@ -22,7 +22,7 @@ export const EmailTemplatesFilters = ({
   onFilterChange,
   onReset,
 }: EmailTemplatesFiltersProps) => {
-  const { data: categories = [] } = useAllEmailCategories({ isActive: true })
+  const { data: categories = [] } = useAllEmailCategories({})
   const [filters, setFilters] = useState<Partial<EmailTemplateQuery>>({
     name: '',
     isActive: undefined,

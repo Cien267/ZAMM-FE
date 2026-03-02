@@ -14,7 +14,7 @@ export interface EmailTemplate extends BaseEntity {
 
 export interface EmailTemplateQuery extends PaginationParams {
   name?: string
-  isActive?: string
+  isActive?: boolean
   brokerId?: string
   categoryId?: string
 }

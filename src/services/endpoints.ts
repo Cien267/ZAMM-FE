@@ -107,5 +107,11 @@ export const API_ENDPOINTS = {
       DETAIL: (id: string) => `/email-templates/${id}`,
       VARIABLES: '/email-templates/variables',
     },
+    HISTORY: {
+      BASE: '/sent-emails',
+      ANALYTICS: '/sent-emails/analytics',
+      DETAIL: (id: string) => `/sent-emails/${id}`,
+      RESEND: (id: string) => `/sent-emails/${id}/resend`,
+    },
   },
 } as const

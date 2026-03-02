@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { emailTemplateKeys } from '../constants'
+import { sharedKeys } from '@/hooks/useSharedData'
 import { emailTemplateService } from '../services/emailTemplatesService'
 import type {
   CreateEmailTemplateInput,
@@ -16,6 +17,9 @@ export const useEmailTemplates = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: emailTemplateKeys.emailTemplates(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.emailTemplates,
       })
       toast.success('Email Template created successfully!')
     },
@@ -34,6 +38,9 @@ export const useEmailTemplates = () => {
       })
       queryClient.invalidateQueries({
         queryKey: emailTemplateKeys.emailTemplateDetail(variables.id),
+      })
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.emailTemplates,
       })
       toast.success('Email Template updated successfully!')
     },
