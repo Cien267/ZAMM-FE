@@ -137,7 +137,7 @@ export const SentEmailsPage = () => {
                 ) : sentEmails?.data.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={7}
+                      colSpan={9}
                       className="text-center h-64 text-muted-foreground"
                     >
                       No sent email found
