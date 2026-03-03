@@ -60,6 +60,9 @@ const EmailTemplatesPage = lazy(
 const SentEmailsPage = lazy(
   () => import('@/features/email/history/pages/SentEmailsPage')
 )
+const SendEmailWizardPage = lazy(
+  () => import('@/features/email/wizard/pages/SendEmailWizardPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -200,6 +203,10 @@ export const router = createBrowserRouter([
                   {
                     path: 'firm-settings',
                     element: <FirmEmailSettingPage />,
+                  },
+                  {
+                    path: 'wizard',
+                    element: <SendEmailWizardPage />,
                   },
                 ],
               },

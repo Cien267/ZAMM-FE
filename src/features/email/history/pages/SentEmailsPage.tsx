@@ -29,8 +29,10 @@ import { ErrorState } from '@/components/common/ErrorState'
 import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
 import { SENT_EMAIL_STATUS_VARIANT_MAPPING } from '../constants'
+import { useNavigate } from 'react-router-dom'
 
 export const SentEmailsPage = () => {
+  const navigate = useNavigate()
   const [query, setQuery] = useState<SentEmailQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -106,7 +108,7 @@ export const SentEmailsPage = () => {
           />
 
           <div className="flex justify-end">
-            <Button variant={'sky'}>
+            <Button variant={'sky'} onClick={() => navigate('/email/wizard')}>
               <Send className="h-4 w-4" />
               Send Email
             </Button>

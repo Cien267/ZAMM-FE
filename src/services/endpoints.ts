@@ -113,5 +113,10 @@ export const API_ENDPOINTS = {
       DETAIL: (id: string) => `/sent-emails/${id}`,
       RESEND: (id: string) => `/sent-emails/${id}/resend`,
     },
+    PREVIEW_BATCH: {
+      BASE: '/email-preview-batches',
+      DETAIL: (id: string) => `/email-preview-batches/${id}`,
+      APPROVE: (id: string) => `/email-preview-batches/${id}/approve`,
+    },
   },
 } as const
