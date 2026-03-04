@@ -33,6 +33,7 @@ export const CreateEmailPreviewBatchSchema = z.object({
   recipients: z.array(RecipientSchema),
 })
 
+export type CreateRecipientInput = z.infer<typeof RecipientSchema>
 export type CreateEmailPreviewBatchInput = z.infer<
   typeof CreateEmailPreviewBatchSchema
 >
