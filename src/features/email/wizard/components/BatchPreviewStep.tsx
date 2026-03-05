@@ -1,7 +1,25 @@
-export const BatchPreviewStep = ({ batchId, onBack, onConfirm }) => {
-  const { data: batch, isLoading } = useQuery(['preview', batchId], () =>
-    fetchBatch(batchId)
+import { useState } from 'react'
+import { useEmailPreviewBatchQueries } from '../hooks/useEmailPreviewBatchesQueries'
+import { Loader2 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+
+interface BatchPreviewProps {
+  batchId: string
+  onBack: () => void
+  onConfirm: () => void
+}
+export const BatchPreviewStep = ({
+  batchId,
+  onBack,
+  onConfirm,
+}: BatchPreviewProps) => {
+  const { useEmailPreviewBatch } = useEmailPreviewBatchQueries()
+  const { data: batch, isLoading } = useEmailPreviewBatch(
+    batchId || '',
+    !!batchId
   )
+
   const [activeIndex, setActiveIndex] = useState(0)
 
   if (isLoading)
@@ -11,13 +29,13 @@ export const BatchPreviewStep = ({ batchId, onBack, onConfirm }) => {
       </div>
     )
 
-  const currentItem = batch.items[activeIndex]
+  const currentItem = batch?.items[activeIndex]
 
   return (
     <div className="grid grid-cols-12 gap-4 h-full">
       {/* Sidebar: Recipient List */}
       <div className="col-span-3 border rounded-md overflow-y-auto">
-        {batch.items.map((item, idx) => (
+        {batch?.items.map((item, idx) => (
           <div
             key={item.id}
             className={`p-3 cursor-pointer border-b last:border-0 hover:bg-slate-50 ${activeIndex === idx ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''}`}
@@ -36,13 +54,13 @@ export const BatchPreviewStep = ({ batchId, onBack, onConfirm }) => {
           <span>
             Subject:{' '}
             <strong className="text-slate-700">
-              {currentItem.subjectRendered}
+              {currentItem?.subjectRendered}
             </strong>
           </span>
           <Badge variant="outline">Preview Mode</Badge>
         </div>
         <iframe
-          srcDoc={currentItem.bodyHtmlRendered}
+          srcDoc={currentItem?.bodyHtmlRendered}
           className="flex-1 w-full border-none"
           sandbox="allow-popups"
         />

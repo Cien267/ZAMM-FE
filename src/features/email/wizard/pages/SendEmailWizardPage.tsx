@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { CreateRecipientInput } from '../types'
 import { ConfigurationStep } from '../components/ConfigurationStep'
+import { BatchPreviewStep } from '../components/BatchPreviewStep'
 import { Stepper } from '../components/Stepper'
 import { useEmailPreviewBatches } from '../hooks/useEmailPreviewBatches'
 import { useAuth } from '@/features/auth/hooks/useAuth'
@@ -30,15 +31,14 @@ export const SendEmailWizardPage = () => {
     })
 
     setBatchId(response.id)
-    console.log(batchId)
     setStep(2)
   }
 
   // // 2. Logic to final approve
-  // const handleApprove = async () => {
-  //   await api.post(`/api/email-preview-batch/${batchId}/approve`)
-  //   setStep(3)
-  // }
+  const handleApprove = async () => {
+    // await api.post(`/api/email-preview-batch/${batchId}/approve`)
+    setStep(3)
+  }
 
   return (
     <div className="flex-1 overflow-hidden">
@@ -57,7 +57,7 @@ export const SendEmailWizardPage = () => {
         />
       )}
 
-      {/* {step === 2 && (
+      {step === 2 && (
         <BatchPreviewStep
           batchId={batchId!}
           onBack={() => setStep(1)}
@@ -65,7 +65,7 @@ export const SendEmailWizardPage = () => {
         />
       )}
 
-      {step === 3 && (
+      {/*{step === 3 && (
         <div className="flex flex-col items-center justify-center h-full space-y-4">
           <div className="rounded-full bg-green-100 p-3 text-green-600">
             <CheckCircle2 size={48} />

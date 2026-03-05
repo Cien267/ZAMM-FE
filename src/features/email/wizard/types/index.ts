@@ -10,7 +10,12 @@ export interface EmailPreviewItem {
   recipientEmail: string
   recipientType: RecipientType
   subjectRendered: string
+  bodyHtmlRendered: string
+  footerHtmlSnapshot: string
   firmNameSnapshot: string
+  fromEmailSnapshot: string
+  fromNameSnapshot: string
+  logoUrlSnapshot: string
 }
 
 export interface EmailPreviewBatch extends BaseEntity {
