@@ -58,11 +58,7 @@ export const SendEmailWizardPage = () => {
       )}
 
       {step === 2 && (
-        <BatchPreviewStep
-          batchId={batchId!}
-          onBack={() => setStep(1)}
-          onConfirm={handleApprove}
-        />
+        <BatchPreviewStep batchId={batchId!} onConfirm={handleApprove} />
       )}
 
       {/*{step === 3 && (
