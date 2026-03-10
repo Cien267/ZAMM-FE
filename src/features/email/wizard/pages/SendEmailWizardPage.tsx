@@ -2,12 +2,15 @@ import { useState } from 'react'
 import type { CreateRecipientInput } from '../types'
 import { ConfigurationStep } from '../components/ConfigurationStep'
 import { BatchPreviewStep } from '../components/BatchPreviewStep'
+import { CompletionStep } from '../components/CompletionStep'
 import { Stepper } from '../components/Stepper'
 import { useEmailPreviewBatches } from '../hooks/useEmailPreviewBatches'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useFirmEmailSettingsQueries } from '@/features/email/firm-settings/hooks/useFirmEmailSettingsQueries'
+import { useNavigate } from 'react-router-dom'
 
 export const SendEmailWizardPage = () => {
+  const navigate = useNavigate()
   const [step, setStep] = useState(1)
   const [batchId, setBatchId] = useState<string | null>(null)
   const [selectedTemplate, setSelectedTemplate] = useState<string>('')
@@ -15,7 +18,11 @@ export const SendEmailWizardPage = () => {
     CreateRecipientInput[]
   >([])
 
-  const { createEmailPreviewBatchAsync } = useEmailPreviewBatches()
+  const {
+    createEmailPreviewBatchAsync,
+    deleteEmailPreviewBatchAsync,
+    approveEmailPreviewBatchAsync,
+  } = useEmailPreviewBatches()
   const { useFirmEmailSettingByBrokerageId } = useFirmEmailSettingsQueries()
   const { user } = useAuth()
   const { data: firmEmailSetting } = useFirmEmailSettingByBrokerageId(
@@ -24,20 +31,36 @@ export const SendEmailWizardPage = () => {
   )
 
   const handleGeneratePreview = async () => {
-    const response = await createEmailPreviewBatchAsync({
-      templateId: selectedTemplate,
-      firmId: firmEmailSetting?.id || '',
-      recipients: selectedRecipients,
-    })
+    try {
+      const response = await createEmailPreviewBatchAsync({
+        templateId: selectedTemplate,
+        firmId: firmEmailSetting?.id || '',
+        recipients: selectedRecipients,
+      })
 
-    setBatchId(response.id)
-    setStep(2)
+      setBatchId(response.id)
+      setStep(2)
+    } catch (error) {
+      console.error('Error generating email preview:', error)
+    }
   }
 
-  // // 2. Logic to final approve
+  const handleCancel = async () => {
+    try {
+      await deleteEmailPreviewBatchAsync(batchId!)
+      navigate('/email/history')
+    } catch (error) {
+      console.error('Error canceling email preview:', error)
+    }
+  }
+
   const handleApprove = async () => {
-    // await api.post(`/api/email-preview-batch/${batchId}/approve`)
-    setStep(3)
+    try {
+      await approveEmailPreviewBatchAsync(batchId!)
+      setStep(3)
+    } catch (error) {
+      console.error('Error approving email preview:', error)
+    }
   }
 
   return (
@@ -58,22 +81,14 @@ export const SendEmailWizardPage = () => {
       )}
 
       {step === 2 && (
-        <BatchPreviewStep batchId={batchId!} onConfirm={handleApprove} />
+        <BatchPreviewStep
+          batchId={batchId!}
+          onCancel={handleCancel}
+          onConfirm={handleApprove}
+        />
       )}
 
-      {/*{step === 3 && (
-        <div className="flex flex-col items-center justify-center h-full space-y-4">
-          <div className="rounded-full bg-green-100 p-3 text-green-600">
-            <CheckCircle2 size={48} />
-          </div>
-          <h3 className="text-xl font-bold">Campaign Queued!</h3>
-          <p className="text-muted-foreground text-center">
-            Your emails are being processed in the background. <br />
-            You can monitor the status in the History table.
-          </p>
-          <Button onClick={() => onOpenChange(false)}>Close Wizard</Button>
-        </div>
-      )} */}
+      {step === 3 && <CompletionStep />}
     </div>
   )
 }

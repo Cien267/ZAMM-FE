@@ -86,6 +86,10 @@ export const SentEmailsPage = () => {
     await resendEmailAsync(sentEmail.id)
   }
 
+  const handleViewDetails = (sentEmail: SentEmail) => {
+    navigate(`/email/history/${sentEmail.id}`)
+  }
+
   if (error) {
     return <ErrorState message={error.message} onRetry={refetch} />
   }
@@ -176,7 +180,9 @@ export const SentEmailsPage = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleViewDetails(sentEmail)}
+                            >
                               <Eye className="h-4 w-4 mr-2" />
                               View Details
                             </DropdownMenuItem>

@@ -63,6 +63,9 @@ const SentEmailsPage = lazy(
 const SendEmailWizardPage = lazy(
   () => import('@/features/email/wizard/pages/SendEmailWizardPage')
 )
+const SentEmailDetailPage = lazy(
+  () => import('@/features/email/history/pages/SentEmailDetailPage')
+)
 
 export const router = createBrowserRouter([
   {
@@ -191,6 +194,10 @@ export const router = createBrowserRouter([
                   {
                     path: 'history',
                     element: <SentEmailsPage />,
+                  },
+                  {
+                    path: '/email/history/:id',
+                    element: <SentEmailDetailPage />,
                   },
                   {
                     path: 'categories',

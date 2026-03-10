@@ -2,14 +2,17 @@ import { useState } from 'react'
 import { useEmailPreviewBatchQueries } from '../hooks/useEmailPreviewBatchesQueries'
 import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useNavigate } from 'react-router-dom'
 
 interface BatchPreviewProps {
   batchId: string
+  onCancel: () => void
   onConfirm: () => void
 }
-export const BatchPreviewStep = ({ batchId, onConfirm }: BatchPreviewProps) => {
-  const navigate = useNavigate()
+export const BatchPreviewStep = ({
+  batchId,
+  onCancel,
+  onConfirm,
+}: BatchPreviewProps) => {
   const { useEmailPreviewBatch } = useEmailPreviewBatchQueries()
   const { data: batch, isLoading } = useEmailPreviewBatch(
     batchId || '',
@@ -70,12 +73,7 @@ export const BatchPreviewStep = ({ batchId, onConfirm }: BatchPreviewProps) => {
         </div>
       </div>
       <div className="p-4 flex justify-end gap-2 col-span-12">
-        <Button
-          variant="ghost"
-          onClick={() => {
-            navigate('/email/history')
-          }}
-        >
+        <Button variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
         <Button onClick={onConfirm} variant="sky">
