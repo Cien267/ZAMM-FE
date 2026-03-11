@@ -17,10 +17,10 @@ export const useEmailPreviewBatches = () => {
       queryClient.invalidateQueries({
         queryKey: emailPreviewBatchKeys.emailPreviewBatches(),
       })
-      toast.success('Email preview batch created successfully!')
+      toast.success('Email preview created successfully!')
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to create email preview batch')
+      toast.error(error.message || 'Failed to create email preview')
       console.error('Create email preview batch error:', error)
     },
   })
@@ -54,11 +54,11 @@ export const useEmailPreviewBatches = () => {
       queryClient.invalidateQueries({
         queryKey: emailPreviewBatchKeys.emailPreviewBatches(),
       })
-      toast.success('Email preview batch approved successfully!')
+      toast.success('Email preview approved!')
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to approve email preview batch')
-      console.error('Approve email preview batch error:', error)
+      toast.error(error.message || 'Failed to approve email preview')
+      console.error('Approve email preview error:', error)
     },
   })
 
@@ -69,13 +69,10 @@ export const useEmailPreviewBatches = () => {
       queryClient.invalidateQueries({
         queryKey: emailPreviewBatchKeys.emailPreviewBatches(),
       })
-      toast.success('Email preview batch deleted successfully!')
+      toast.success('Email preview deleted!')
     },
     onError: (error: any) => {
-      toast.error(
-        error.message ||
-          'Failed to toggleDismissEmailPreviewBatch email preview batch'
-      )
+      toast.error(error.message || 'Failed to delete email preview')
       console.error('Delete email preview batch error:', error)
     },
   })
