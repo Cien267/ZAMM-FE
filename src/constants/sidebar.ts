@@ -4,11 +4,11 @@ import {
   FileText,
   SquareUserRound,
   Landmark,
-  Mail,
-  History,
-  Settings2,
-  LayoutTemplate,
-  FolderTree,
+  // Mail,
+  // History,
+  // Settings2,
+  // LayoutTemplate,
+  // FolderTree,
 } from 'lucide-react'
 
 interface MenuItem {
@@ -46,38 +46,38 @@ export const SIDEBAR_MENU: MenuItem[] = [
     icon: Landmark,
     path: '/lenders',
   },
-  {
-    id: 'email',
-    label: 'Email',
-    icon: Mail,
-    path: '',
-    children: [
-      {
-        id: 'email-history',
-        label: 'Email History',
-        icon: History,
-        path: '/email/history',
-      },
-      {
-        id: 'email-categories',
-        label: 'Email Categories',
-        icon: FolderTree,
-        path: '/email/categories',
-      },
-      {
-        id: 'email-templates',
-        label: 'Email Templates',
-        icon: LayoutTemplate,
-        path: '/email/templates',
-      },
-      {
-        id: 'email-firm-settings',
-        label: 'Firm Email Settings',
-        icon: Settings2,
-        path: '/email/firm-settings',
-      },
-    ],
-  },
+  // {
+  //   id: 'email',
+  //   label: 'Email',
+  //   icon: Mail,
+  //   path: '',
+  //   children: [
+  //     {
+  //       id: 'email-history',
+  //       label: 'Email History',
+  //       icon: History,
+  //       path: '/email/history',
+  //     },
+  //     {
+  //       id: 'email-categories',
+  //       label: 'Email Categories',
+  //       icon: FolderTree,
+  //       path: '/email/categories',
+  //     },
+  //     {
+  //       id: 'email-templates',
+  //       label: 'Email Templates',
+  //       icon: LayoutTemplate,
+  //       path: '/email/templates',
+  //     },
+  //     {
+  //       id: 'email-firm-settings',
+  //       label: 'Firm Email Settings',
+  //       icon: Settings2,
+  //       path: '/email/firm-settings',
+  //     },
+  //   ],
+  // },
   {
     id: 'staffs',
     label: 'Staffs',
