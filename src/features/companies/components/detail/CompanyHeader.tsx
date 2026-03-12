@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Pencil, Trash2, Building2 } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, Building2, Mail, Phone } from 'lucide-react'
 import { useCompanies } from '../../hooks/useCompanies'
 import { openUpSertCompanyModal } from '../UpsertCompany'
 import type { Company } from '../../types'
@@ -101,7 +101,19 @@ export const CompanyHeader = ({ company }: CompanyHeaderProps) => {
               </span>
             )}
           </div>
-          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+          <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
+            {company.email && (
+              <div className="flex items-center gap-1">
+                <Mail className="h-4" />
+                <span>{company.email}</span>
+              </div>
+            )}
+            {company.phoneWork && (
+              <div className="flex items-center gap-1">
+                <Phone className="h-4" />
+                <span>{company.phoneWork}</span>
+              </div>
+            )}
             {company.type && (
               <div className="flex items-center gap-1">
                 <Building2 className="h-4 w-4" />
@@ -125,6 +137,8 @@ export const CompanyHeader = ({ company }: CompanyHeaderProps) => {
                 </span>
               </div>
             )}
+          </div>
+          <div className="text-sm text-muted-foreground mt-2 ml-1">
             {company.brokerName && (
               <div className="flex items-center gap-1">
                 <span className="font-medium">Broker:</span>

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeft, Pencil, Trash2, Mail, Phone, Cake } from 'lucide-react'
 import { usePeople } from '../../hooks/usePeople'
 import { openUpSertPersonModal } from '../UpSertPerson'
 import type { Person } from '../../types'
@@ -11,6 +11,7 @@ import {
   ACTION_TYPE_DELETED,
   ENTITY_TYPE_PERSON,
 } from '@/features/activity-logs/constants'
+import { formatDate } from '@/lib/utils'
 
 interface PersonHeaderProps {
   person: Person
@@ -90,19 +91,27 @@ export const PersonHeader = ({ person }: PersonHeaderProps) => {
 
         <div className="flex-1">
           <h1 className="text-3xl font-bold mb-2">{person.fullName}</h1>
-          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+          <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
             {person.email && (
               <div className="flex items-center gap-1">
-                <span className="font-medium">Email:</span>
+                <Mail className="h-4" />
                 <span>{person.email}</span>
               </div>
             )}
             {person.phoneMobile && (
               <div className="flex items-center gap-1">
-                <span className="font-medium">Phone:</span>
+                <Phone className="h-4" />
                 <span>{person.phoneMobile}</span>
               </div>
             )}
+            {person.dateOfBirth && (
+              <div className="flex items-center gap-1">
+                <Cake className="h-4" />
+                <span>{formatDate(person.dateOfBirth)}</span>
+              </div>
+            )}
+          </div>
+          <div className="text-sm text-muted-foreground mt-2 ml-1">
             {person.brokerName && (
               <div className="flex items-center gap-1">
                 <span className="font-medium">Broker:</span>

@@ -50,7 +50,7 @@ export const UpcomingEventFilters = ({
     dateFrom: now,
     dateTo: dateOptions[0].date,
     isDismissed: false,
-    addedByUserId: undefined,
+    addedByUserId: user?.id ?? '',
   })
 
   useEffect(() => {
