@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Download, Loader2 } from 'lucide-react'
-import { addDays, format } from 'date-fns'
+import { subMonths, format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { type DateRange } from 'react-day-picker'
 import { Calendar } from '@/components/ui/calendar'
@@ -41,8 +41,8 @@ export const ExportModal = ({
   const [isExporting, setIsExporting] = useState(false)
   const [fileName, setFileName] = useState(defaultFileName)
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(new Date().getFullYear(), 0, 20),
-    to: addDays(new Date(new Date().getFullYear(), 0, 20), 20),
+    from: subMonths(new Date(), 6),
+    to: new Date(),
   })
 
   const handleExport = async () => {

@@ -29,6 +29,7 @@ import {
   ENTITY_TYPE_PERSON,
 } from '../constants'
 import type { ActivityLog } from '../types'
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 
 const getEntityIcon = (type: string) => {
   switch (type) {
@@ -74,13 +75,15 @@ const getActionStyles = (action: string) => {
 
 export const RecentActivities = () => {
   const { user } = useAuth()
-  const { useAllActivityLogs } = useActivityLogQueries()
+  const { useActivityLogList } = useActivityLogQueries()
   const {
-    data: activities = [],
+    data: activities,
     isLoading,
     error,
     refetch,
-  } = useAllActivityLogs({
+  } = useActivityLogList({
+    pageNumber: 1,
+    pageSize: DEFAULT_PAGE_SIZE,
     brokerId: user?.id || '',
     sortBy: 'CreatedAt',
     sortDescending: true,
@@ -141,7 +144,7 @@ export const RecentActivities = () => {
       <CardContent>
         <ScrollArea className="h-125 pr-4">
           <div className="space-y-6 relative before:absolute before:inset-0 before:left-6 before:w-px before:bg-border">
-            {activities.map((activity) => {
+            {(activities?.data || []).map((activity) => {
               const styles = getActionStyles(activity.actionType)
               const isDeleted = activity.actionType.toLowerCase() === 'deleted'
 

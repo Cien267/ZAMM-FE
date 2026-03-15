@@ -6,11 +6,22 @@ import type {
   ActivityLogQuery,
   CreateActivityLogInput,
 } from '../types'
+import type { PaginatedResponse } from '@/types'
 
 export const activityLogService = {
   async getAllActivityLogs(query: ActivityLogQuery): Promise<ActivityLog[]> {
     const response = await api.get<ApiResponse<ActivityLog[]>>(
       API_ENDPOINTS.ACTIVITY_LOGS.ALL,
+      { params: query }
+    )
+    return response.data
+  },
+
+  async getListActivityLogs(
+    query: ActivityLogQuery
+  ): Promise<PaginatedResponse<ActivityLog>> {
+    const response = await api.get<ApiResponse<PaginatedResponse<ActivityLog>>>(
+      API_ENDPOINTS.ACTIVITY_LOGS.BASE,
       { params: query }
     )
     return response.data

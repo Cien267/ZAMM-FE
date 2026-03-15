@@ -10,7 +10,16 @@ export const useActivityLogQueries = () => {
       queryFn: () => activityLogService.getAllActivityLogs(query),
     })
   }
+
+  const useActivityLogList = (query: ActivityLogQuery) => {
+    return useQuery({
+      queryKey: activityLogKeys.activityLogsList(query),
+      queryFn: () => activityLogService.getListActivityLogs(query),
+    })
+  }
+
   return {
     useAllActivityLogs,
+    useActivityLogList,
   }
 }
