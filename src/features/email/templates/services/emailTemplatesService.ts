@@ -6,6 +6,7 @@ import type {
   EmailTemplateQuery,
   CreateEmailTemplateInput,
   UpdateEmailTemplateInput,
+  TemplateVariableType,
 } from '../types'
 import type { PaginatedResponse } from '@/types'
 
@@ -60,8 +61,8 @@ export const emailTemplateService = {
     await api.delete(API_ENDPOINTS.EMAIL.TEMPLATES.DETAIL(id))
   },
 
-  async getEmailTemplateVariables(): Promise<string[]> {
-    const response = await api.get<ApiResponse<string[]>>(
+  async getEmailTemplateVariables(): Promise<TemplateVariableType> {
+    const response = await api.get<ApiResponse<TemplateVariableType>>(
       API_ENDPOINTS.EMAIL.TEMPLATES.VARIABLES
     )
     return response.data

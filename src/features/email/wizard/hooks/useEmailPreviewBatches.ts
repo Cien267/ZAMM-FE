@@ -5,6 +5,7 @@ import type {
   EmailPreviewBatchStatusType,
 } from '../types'
 import { emailPreviewBatchKeys } from '../constants'
+import { sentEmailKeys } from '@/features/email/history/constants'
 import { emailPreviewBatchService } from '../services/emailPreviewBatchService'
 
 export const useEmailPreviewBatches = () => {
@@ -53,6 +54,9 @@ export const useEmailPreviewBatches = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: emailPreviewBatchKeys.emailPreviewBatches(),
+      })
+      queryClient.invalidateQueries({
+        queryKey: sentEmailKeys.sentEmails(),
       })
       toast.success('Email preview approved!')
     },

@@ -33,3 +33,8 @@ export const UpdateEmailTemplateSchema = CreateEmailTemplateSchema.extend({
 
 export type CreateEmailTemplateInput = z.infer<typeof CreateEmailTemplateSchema>
 export type UpdateEmailTemplateInput = z.infer<typeof UpdateEmailTemplateSchema>
+
+export type TemplateVariableType = {
+  Subject: string[]
+  Body: string[]
+}

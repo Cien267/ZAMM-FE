@@ -52,7 +52,7 @@ export const EmailTemplateModalContent = ({
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
   const { data: categories = [] } = useAllEmailCategories({ isActive: true })
   const { useEmailTemplateVariables } = useEmailTemplateQueries()
-  const { data: variables = [] } = useEmailTemplateVariables()
+  const { data: variables } = useEmailTemplateVariables()
   const {
     createEmailTemplateAsync,
     updateEmailTemplateAsync,
@@ -79,7 +79,7 @@ export const EmailTemplateModalContent = ({
   })
   const [bodyHtml] = watchedValues
 
-  const insertVariable = (variable: string) => {
+  const insertVariableBody = (variable: string) => {
     const editor: any = editorRef.current
     if (editor) {
       const selection = editor.getSelection()
@@ -87,6 +87,15 @@ export const EmailTemplateModalContent = ({
       const op = { range: selection, text: text, forceMoveMarkers: true }
       editor.executeEdits('my-source', [op])
     }
+  }
+
+  const insertVariableSubject = (variable: string) => {
+    const text = ` {{${variable}}}`
+    const current = form.getValues('subject') || ''
+    form.setValue('subject', current + text, {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
   }
 
   const onSubmit = async (
@@ -142,10 +151,27 @@ export const EmailTemplateModalContent = ({
               control={form.control}
               name="subject"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="col-span-2">
                   <FormLabel>
                     Subject <span className="text-destructive">*</span>
                   </FormLabel>
+                  <div className="flex justify-start gap-4">
+                    <FormLabel className="font-normal italic">
+                      Variables:
+                    </FormLabel>
+                    <div className="flex flex-wrap gap-2">
+                      {variables?.Subject.map((v) => (
+                        <Badge
+                          key={v}
+                          variant="glass"
+                          className="cursor-pointer hover:bg-sky-100 p-2"
+                          onClick={() => insertVariableSubject(v)}
+                        >
+                          {`{{${v}}}`}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                   <FormControl>
                     <Input {...field} placeholder="Enter subject" />
                   </FormControl>
@@ -202,21 +228,7 @@ export const EmailTemplateModalContent = ({
             />
           </div>
           <Separator />
-          <div className="flex justify-start gap-4">
-            <FormLabel>Variables</FormLabel>
-            <div className="flex flex-wrap gap-2">
-              {variables.map((v) => (
-                <Badge
-                  key={v}
-                  variant="glass"
-                  className="cursor-pointer hover:bg-sky-100 p-2"
-                  onClick={() => insertVariable(v)}
-                >
-                  {`{{${v}}}`}
-                </Badge>
-              ))}
-            </div>
-          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-4">
               <FormField
@@ -227,6 +239,23 @@ export const EmailTemplateModalContent = ({
                     <FormLabel>
                       Body <span className="text-destructive">*</span>
                     </FormLabel>
+                    <div className="flex justify-start gap-4">
+                      <FormLabel className="font-normal italic">
+                        Variables:
+                      </FormLabel>
+                      <div className="flex flex-wrap gap-2">
+                        {variables?.Body.map((v) => (
+                          <Badge
+                            key={v}
+                            variant="glass"
+                            className="cursor-pointer hover:bg-sky-100 p-2"
+                            onClick={() => insertVariableBody(v)}
+                          >
+                            {`{{${v}}}`}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
                     <FormControl>
                       <div className="border rounded-md overflow-hidden">
                         <Editor
