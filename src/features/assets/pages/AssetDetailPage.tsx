@@ -50,7 +50,7 @@ export const AssetDetailPage = () => {
   const setLabel = useBreadcrumbStore((state) => state.setLabel)
 
   const { useAsset } = useAssetQueries()
-  const { deleteAsset } = useAssets()
+  const { deleteAssetAsync } = useAssets()
   const {
     data: asset,
     isLoading,
@@ -87,8 +87,8 @@ export const AssetDetailPage = () => {
                 data.`,
       confirmText: 'Delete',
       showTimelineCheckbox: true,
-      onConfirm: () => {
-        deleteAsset(asset.id, {
+      onConfirm: async () => {
+        await deleteAssetAsync(asset.id, {
           onSuccess: () => {
             navigate(-1)
           },

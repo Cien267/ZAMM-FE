@@ -76,7 +76,7 @@ export const LiabilitiesTable = ({
 
   const { useLiabilitiesList } = useLiabilityQueries()
   const { data, isLoading, error, refetch } = useLiabilitiesList(query)
-  const { deleteLiability } = useLiabilities()
+  const { deleteLiabilityAsync } = useLiabilities()
   const navigate = useNavigate()
   const { createEvent } = useEvents()
   const { user } = useAuth()
@@ -121,8 +121,8 @@ export const LiabilitiesTable = ({
               data.`,
       confirmText: 'Delete',
       showTimelineCheckbox: true,
-      onConfirm: () => {
-        deleteLiability(liability.id)
+      onConfirm: async () => {
+        await deleteLiabilityAsync(liability.id)
       },
       onSuccess: (reason?: string) => {
         createEvent({

@@ -57,7 +57,7 @@ export const LiabilityDetailPage = () => {
   const companyId = searchParams.get('companyId')
 
   const { useLiability } = useLiabilityQueries()
-  const { deleteLiability } = useLiabilities()
+  const { deleteLiabilityAsync } = useLiabilities()
   const { createActivityLog } = useActivityLogs()
   const {
     data: liability,
@@ -96,8 +96,8 @@ export const LiabilityDetailPage = () => {
                data.`,
       confirmText: 'Delete',
       showTimelineCheckbox: true,
-      onConfirm: () => {
-        deleteLiability(liability.id, {
+      onConfirm: async () => {
+        await deleteLiabilityAsync(liability.id, {
           onSuccess: () => {
             navigate(-1)
           },

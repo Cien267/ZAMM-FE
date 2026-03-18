@@ -75,7 +75,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
 
   const { useAssetsList } = useAssetQueries()
   const { data, isLoading, error, refetch } = useAssetsList(query)
-  const { deleteAsset } = useAssets()
+  const { deleteAssetAsync } = useAssets()
   const navigate = useNavigate()
 
   const handleFilterChange = (filters: Partial<AssetQuery>) => {
@@ -122,8 +122,8 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
               data.`,
       confirmText: 'Delete',
       showTimelineCheckbox: true,
-      onConfirm: () => {
-        deleteAsset(asset.id)
+      onConfirm: async () => {
+        await deleteAssetAsync(asset.id)
       },
       onSuccess: (reason?: string) => {
         createEvent({
