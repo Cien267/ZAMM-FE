@@ -132,7 +132,7 @@ export const LiabilitiesTable = ({
           date: new Date(),
           isSystem: false,
           isRepeating: false,
-          isDismissed: false,
+          isDismissed: true,
           repeatingDateDismissed: undefined,
           addedByUserId: user?.id || '',
           personId:
