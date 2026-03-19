@@ -101,7 +101,8 @@ export const EventTimeline = ({
   }
 
   const sortedEvents = [...(eventsData || [])].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) =>
+      new Date(getEventDate(b)).getTime() - new Date(getEventDate(a)).getTime()
   )
 
   const onToggleDismiss = async (event: Event) => {
