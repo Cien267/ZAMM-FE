@@ -49,6 +49,12 @@ import {
   ACTION_TYPE_UPDATED,
   ENTITY_TYPE_PERSON,
 } from '@/features/activity-logs/constants'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 interface PeopleFormDialogProps {
   person?: Person | null
@@ -156,7 +162,7 @@ export const PersonModalContent = ({
               control={form.control}
               name="title"
               render={({ field }) => (
-                <FormItem className="col-span-2">
+                <FormItem>
                   <FormLabel>Title</FormLabel>
                   <RadioGroup
                     value={field.value || ''}
@@ -168,6 +174,31 @@ export const PersonModalContent = ({
                       <RadioGroupItem key={title} value={title} id={title}>
                         <Label htmlFor={title} className="cursor-pointer">
                           {title}
+                        </Label>
+                      </RadioGroupItem>
+                    ))}
+                  </RadioGroup>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gender</FormLabel>
+                  <RadioGroup
+                    value={field.value || ''}
+                    onValueChange={field.onChange}
+                    defaultValue="Male"
+                    className="flex justify-start items-center gap-2"
+                  >
+                    {GENDER_OPTIONS.map((gender) => (
+                      <RadioGroupItem key={gender} value={gender} id={gender}>
+                        <Label htmlFor={gender} className="cursor-pointer">
+                          {gender}
                         </Label>
                       </RadioGroupItem>
                     ))}
@@ -232,95 +263,6 @@ export const PersonModalContent = ({
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date Of Birth</FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      placeholder="Pick a date"
-                      disableFutureDates
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="notifyOfBirthday"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center pt-5 space-x-1 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel className="cursor-pointer">
-                      Notify of birthday
-                    </FormLabel>
-                  </div>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="gender"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Gender</FormLabel>
-                  <RadioGroup
-                    value={field.value || ''}
-                    onValueChange={field.onChange}
-                    defaultValue="Male"
-                    className="flex justify-start items-center gap-2"
-                  >
-                    {GENDER_OPTIONS.map((gender) => (
-                      <RadioGroupItem key={gender} value={gender} id={gender}>
-                        <Label htmlFor={gender} className="cursor-pointer">
-                          {gender}
-                        </Label>
-                      </RadioGroupItem>
-                    ))}
-                  </RadioGroup>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="maritalStatus"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Marital Status</FormLabel>
-                  <RadioGroup
-                    value={field.value || ''}
-                    onValueChange={field.onChange}
-                    defaultValue="Single"
-                    className="flex justify-start items-center gap-2"
-                  >
-                    {MARITAL_STATUS_OPTIONS.map((status) => (
-                      <RadioGroupItem key={status} value={status} id={status}>
-                        <Label htmlFor={status} className="cursor-pointer">
-                          {status}
-                        </Label>
-                      </RadioGroupItem>
-                    ))}
-                  </RadioGroup>
                   <FormMessage />
                 </FormItem>
               )}
@@ -463,8 +405,91 @@ export const PersonModalContent = ({
             />
           </div>
         </div>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionContent>
+              <div className="space-y-4 mt-6">
+                <h3 className="text-lg font-semibold">
+                  Additional Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="dateOfBirth"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Date Of Birth</FormLabel>
+                        <FormControl>
+                          <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                            placeholder="Pick a date"
+                            disableFutureDates
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-        <DependentFields control={form.control} />
+                  <FormField
+                    control={form.control}
+                    name="notifyOfBirthday"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center pt-5 space-x-1 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="cursor-pointer">
+                            Notify of birthday
+                          </FormLabel>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="maritalStatus"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Marital Status</FormLabel>
+                        <RadioGroup
+                          value={field.value || ''}
+                          onValueChange={field.onChange}
+                          defaultValue="Single"
+                          className="flex justify-start items-center gap-2"
+                        >
+                          {MARITAL_STATUS_OPTIONS.map((status) => (
+                            <RadioGroupItem
+                              key={status}
+                              value={status}
+                              id={status}
+                            >
+                              <Label
+                                htmlFor={status}
+                                className="cursor-pointer"
+                              >
+                                {status}
+                              </Label>
+                            </RadioGroupItem>
+                          ))}
+                        </RadioGroup>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <DependentFields control={form.control} />
+              </div>
+            </AccordionContent>
+            <AccordionTrigger className="justify-center" />
+          </AccordionItem>
+        </Accordion>
       </form>
     </Form>
   )
