@@ -45,6 +45,12 @@ import {
   ACTION_TYPE_UPDATED,
   ENTITY_TYPE_COMPANY,
 } from '@/features/activity-logs/constants'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 interface CompanyFormDialogProps {
   company?: Company | null
@@ -123,6 +129,15 @@ export const CompanyModalContent = ({
   const actingOnTrust = form.watch('actingOnTrust')
   const isContactExistingPerson = form.watch('isContactExistingPerson')
 
+  useEffect(() => {
+    if (isContactExistingPerson) {
+      form.setValue('externalContactName', '')
+      form.setValue('externalContactEmail', '')
+      form.setValue('externalContactPhone', '')
+      form.setValue('contactPersonId', null)
+    }
+  }, [isContactExistingPerson, form])
+
   const onSubmit = async (data: CreateCompanyInput) => {
     try {
       let createdCompany = null
@@ -191,20 +206,6 @@ export const CompanyModalContent = ({
 
             <FormField
               control={form.control}
-              name="tradingName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Trading Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Enter trading name" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="type"
               render={({ field }) => (
                 <FormItem>
@@ -226,152 +227,6 @@ export const CompanyModalContent = ({
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="industry"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Industry</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value || ''}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select industry" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {INDUSTRIES.map((industry) => (
-                        <SelectItem key={industry} value={industry}>
-                          {industry}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="abn"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>ABN</FormLabel>
-                  <FormControl>
-                    <InputNumber
-                      {...field}
-                      placeholder="11 digits"
-                      maxLength={11}
-                      allowDecimal={false}
-                      allowNegative={false}
-                      returnString={true}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="acn"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>ACN</FormLabel>
-                  <FormControl>
-                    <InputNumber
-                      {...field}
-                      placeholder="9 digits"
-                      maxLength={9}
-                      allowDecimal={false}
-                      allowNegative={false}
-                      returnString={true}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="registrationDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Registration Date</FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      placeholder="Pick a date"
-                      disableFutureDates
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Contact Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      {...field}
-                      placeholder="company@example.com"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phoneWork"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <InputNumber
-                      {...field}
-                      placeholder="Enter phone"
-                      allowDecimal={false}
-                      allowNegative={false}
-                      returnString={true}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="website"
-              render={({ field }) => (
-                <FormItem className="col-span-2">
-                  <FormLabel>Website</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="https://example.com" />
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -410,7 +265,7 @@ export const CompanyModalContent = ({
         <AddressFields />
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Contact Person</h3>
+          <h3 className="text-lg font-semibold">Point Of Contact</h3>
 
           <FormField
             control={form.control}
@@ -537,71 +392,55 @@ export const CompanyModalContent = ({
         </div>
 
         <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Contact Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="actingOnTrust"
+              name="email"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center pt-5 space-x-1 space-y-0">
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
+                    <Input
+                      type="email"
+                      {...field}
+                      placeholder="company@example.com"
                     />
                   </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel className="cursor-pointer">
-                      Acting on Trust
-                    </FormLabel>
-                  </div>
+                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            {actingOnTrust && (
-              <FormField
-                control={form.control}
-                name="trustName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Trust Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Enter trust name" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Referrer</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="referrerId"
+              name="phoneWork"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Referred By</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value || ''}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select person" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {people.map((person) => (
-                        <SelectItem key={person.id} value={person.id}>
-                          {person.fullName}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <InputNumber
+                      {...field}
+                      placeholder="Enter phone"
+                      allowDecimal={false}
+                      allowNegative={false}
+                      returnString={true}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="website"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>Website</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="https://example.com" />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -609,8 +448,205 @@ export const CompanyModalContent = ({
           </div>
         </div>
 
-        {/* Associated People */}
-        <CompanyPeopleFields control={form.control} />
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionContent>
+              <div className="space-y-4 mt-6">
+                <h3 className="text-lg font-semibold">
+                  Additional Information
+                </h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="tradingName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Trading Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Enter trading name"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="industry"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Industry</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value || ''}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select industry" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {INDUSTRIES.map((industry) => (
+                                <SelectItem key={industry} value={industry}>
+                                  {industry}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="abn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ABN</FormLabel>
+                          <FormControl>
+                            <InputNumber
+                              {...field}
+                              placeholder="11 digits"
+                              maxLength={11}
+                              allowDecimal={false}
+                              allowNegative={false}
+                              returnString={true}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="acn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ACN</FormLabel>
+                          <FormControl>
+                            <InputNumber
+                              {...field}
+                              placeholder="9 digits"
+                              maxLength={9}
+                              allowDecimal={false}
+                              allowNegative={false}
+                              returnString={true}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="registrationDate"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Registration Date</FormLabel>
+                          <FormControl>
+                            <DatePicker
+                              value={field.value}
+                              onChange={field.onChange}
+                              placeholder="Pick a date"
+                              disableFutureDates
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="actingOnTrust"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center pt-5 space-x-1 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="cursor-pointer">
+                              Acting on Trust
+                            </FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    {actingOnTrust && (
+                      <FormField
+                        control={form.control}
+                        name="trustName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Trust Name</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Enter trust name"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Referrer</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="referrerId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Referred By</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value || ''}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select person" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {people.map((person) => (
+                                <SelectItem key={person.id} value={person.id}>
+                                  {person.fullName}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <CompanyPeopleFields control={form.control} />
+              </div>
+            </AccordionContent>
+            <AccordionTrigger className="justify-center" />
+          </AccordionItem>
+        </Accordion>
       </form>
     </Form>
   )
