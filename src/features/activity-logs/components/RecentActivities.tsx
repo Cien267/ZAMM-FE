@@ -189,7 +189,7 @@ export const RecentActivities = () => {
                       ) : (
                         <div
                           onClick={() => handleNavigateToEntity(activity)}
-                          className="cursor-pointer text-muted-foreground hover:text-primary transition-colors hover:underline decoration-primary/30 underline-offset-4"
+                          className="cursor-pointer text-sky-600 hover:text-sky-500 transition-colors hover:underline decoration-sky-500/30 underline-offset-4"
                         >
                           {activity.description}
                         </div>
