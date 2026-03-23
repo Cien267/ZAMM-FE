@@ -14,10 +14,12 @@ import { useAllBrokers } from '@/hooks/useSharedData'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 
 interface UpcomingEventFiltersProps {
+  parentFilters: Partial<EventQuery>
   onFilterChange: (filters: Partial<EventQuery>) => void
 }
 
 export const UpcomingEventFilters = ({
+  parentFilters,
   onFilterChange,
 }: UpcomingEventFiltersProps) => {
   const { user } = useAuth()
@@ -47,10 +49,10 @@ export const UpcomingEventFilters = ({
   )
 
   const [filters, setFilters] = useState<Partial<EventQuery>>({
-    dateFrom: now,
-    dateTo: dateOptions[0].date,
-    isDismissed: false,
-    addedByUserId: user?.id ?? '',
+    dateFrom: parentFilters.dateFrom,
+    dateTo: parentFilters.dateTo,
+    isDismissed: parentFilters.isDismissed,
+    addedByUserId: parentFilters.addedByUserId,
   })
 
   useEffect(() => {

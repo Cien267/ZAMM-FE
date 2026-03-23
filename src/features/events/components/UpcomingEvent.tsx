@@ -12,22 +12,24 @@ import { ErrorState } from '@/components/common/ErrorState'
 import { format, formatDistanceToNow } from 'date-fns'
 import { openDetailEventModal } from '@/features/events/components/DetailEvent'
 import { Calendar, User, UserCheck, Clock } from 'lucide-react'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 export const UpcomingEvent = () => {
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [query, setQuery] = useState<EventQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
     sortBy: 'Date',
     sortDescending: false,
+    addedByUserId: user?.id ?? undefined,
     title: '',
     type: '',
-    dateFrom: undefined,
-    dateTo: undefined,
+    dateFrom: new Date(),
+    dateTo: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
     isSystem: undefined,
     isRepeating: undefined,
     isDismissed: false,
-    addedByUserId: undefined,
     liabilityId: undefined,
     personId: undefined,
     companyId: undefined,
@@ -91,7 +93,10 @@ export const UpcomingEvent = () => {
             You have {data?.totalCount || 0} events scheduled
           </p>
         </div>
-        <UpcomingEventFilters onFilterChange={handleFilterChange} />
+        <UpcomingEventFilters
+          parentFilters={query}
+          onFilterChange={handleFilterChange}
+        />
       </CardHeader>
 
       <CardContent className="space-y-4">
