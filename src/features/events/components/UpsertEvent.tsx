@@ -235,7 +235,7 @@ export const EventModalContent = ({
               )}
             />
 
-            {event?.type === CUSTOM_EVENT && (
+            {(event?.type === CUSTOM_EVENT || !event) && (
               <div className="col-span-2 flex justify-start items-center gap-4">
                 <FormField
                   control={form.control}

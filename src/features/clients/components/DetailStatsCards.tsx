@@ -1,19 +1,19 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { TrendingUp, TrendingDown, Building2, CreditCard } from 'lucide-react'
+import { Briefcase, Receipt, Building2, CreditCard } from 'lucide-react'
 
-interface PersonStatsCardsProps {
+interface DetailStatsCardsProps {
   assetsCount: number
   liabilitiesCount: number
   totalAssetValue?: number
   totalLiabilityBalance?: number
 }
 
-export const PersonStatsCards = ({
+export const DetailStatsCards = ({
   assetsCount,
   liabilitiesCount,
   totalAssetValue,
   totalLiabilityBalance,
-}: PersonStatsCardsProps) => {
+}: DetailStatsCardsProps) => {
   const formatCurrency = (value?: number) => {
     if (!value) return '$0'
     return new Intl.NumberFormat('en-AU', {
@@ -43,7 +43,7 @@ export const PersonStatsCards = ({
               </p>
             </div>
             <div className="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-              <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
+              <Briefcase className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
           </div>
         </CardContent>
@@ -64,7 +64,7 @@ export const PersonStatsCards = ({
               </p>
             </div>
             <div className="h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
-              <TrendingDown className="h-6 w-6 text-red-600 dark:text-red-400" />
+              <Receipt className="h-6 w-6 text-red-600 dark:text-red-400" />
             </div>
           </div>
         </CardContent>

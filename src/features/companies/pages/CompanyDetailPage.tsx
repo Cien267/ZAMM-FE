@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2 } from 'lucide-react'
 import { useCompanyQueries } from '../hooks/useCompaniesQueries'
 import { CompanyHeader } from '../components/detail/CompanyHeader'
-import { PersonStatsCards } from '@/features/people/components/detail/PersonStatsCards'
+import { DetailStatsCards } from '@/features/clients/components/DetailStatsCards'
 import { CompanyOverviewTab } from '../components/detail/CompanyOverviewTab'
 import { AssetsTable } from '@/features/assets/components/AssetsTable'
 import { LiabilitiesTable } from '@/features/liabilities/components/LiabilitiesTable'
@@ -72,7 +72,7 @@ export const CompanyDetailPage = () => {
     <div className="mx-auto space-y-6">
       <CompanyHeader company={company} />
 
-      <PersonStatsCards
+      <DetailStatsCards
         assetsCount={companyAssets.length}
         liabilitiesCount={companyLiabilities.length}
         totalAssetValue={totalAssetValue}
