@@ -258,6 +258,7 @@ export const openDetailEventModal = ({
   const updateFooter = () => {
     Modal.open({
       title: event.title,
+      description: 'Event detail information',
       content: (
         <DetailEventModalContent
           id={event.id}

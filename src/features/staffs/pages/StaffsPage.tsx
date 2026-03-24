@@ -177,6 +177,7 @@ export const StaffsTable = () => {
                           ? staff.roles.map((role) => {
                               return (
                                 <Badge
+                                  key={role}
                                   variant={
                                     role === ROLES_LABEL.ADMIN
                                       ? 'info'
