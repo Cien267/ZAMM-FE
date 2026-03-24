@@ -1,35 +1,30 @@
-import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2 } from 'lucide-react'
-import { useCompanyQueries } from '../hooks/useCompaniesQueries'
 import { CompanyHeader } from '../components/detail/CompanyHeader'
 import { DetailStatsCards } from '@/features/clients/components/DetailStatsCards'
 import { CompanyOverviewTab } from '../components/detail/CompanyOverviewTab'
 import { AssetsTable } from '@/features/assets/components/AssetsTable'
 import { LiabilitiesTable } from '@/features/liabilities/components/LiabilitiesTable'
-import {
-  useAllAssetsByCompanyId,
-  useAllLiabilitiesByCompanyId,
-} from '@/hooks/useSharedData'
 import { useBreadcrumbStore } from '@/store/breadcrumbStore'
 import { ErrorState } from '@/components/common/ErrorState'
+import {
+  CompanyDetailProvider,
+  useCompanyDetail,
+} from '../context/CompanyDetailContext'
 
-export const CompanyDetailPage = () => {
-  const { id } = useParams<{ id: string }>()
-  const { useCompany } = useCompanyQueries()
-  const setLabel = useBreadcrumbStore((state) => state.setLabel)
-
+export const CompanyDetailContent = () => {
   const {
-    data: company,
-    isLoading: isLoadingCompany,
+    company,
+    id,
+    assets,
+    liabilities,
+    totals,
+    isLoading,
     error,
     refetch,
-  } = useCompany(id || '', !!id)
-
-  const { data: assetsData } = useAllAssetsByCompanyId(id || '')
-
-  const { data: liabilitiesData } = useAllLiabilitiesByCompanyId(id || '')
+  } = useCompanyDetail()
+  const setLabel = useBreadcrumbStore((state) => state.setLabel)
 
   useEffect(() => {
     if (company?.name && id) {
@@ -37,26 +32,7 @@ export const CompanyDetailPage = () => {
     }
   }, [company, id, setLabel])
 
-  const companyAssets = assetsData || []
-  const companyLiabilities = liabilitiesData || []
-
-  const totalAssetValue = companyAssets.reduce((sum, asset) => {
-    const ownership = asset.assetCompanies?.find((ac) => ac.companyId === id)
-    const ownershipPercent = ownership?.percent || 0
-    return sum + (Number(asset.value || 0) * ownershipPercent) / 100
-  }, 0)
-
-  const totalLiabilityBalance = companyLiabilities.reduce((sum, liability) => {
-    const ownership = liability.liabilityCompanies?.find(
-      (lc) => lc.companyId === id
-    )
-    const ownershipPercent = ownership?.percent || 0
-    return (
-      sum + (Number(liability.initialBalance || 0) * ownershipPercent) / 100
-    )
-  }, 0)
-
-  if (isLoadingCompany) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -73,10 +49,10 @@ export const CompanyDetailPage = () => {
       <CompanyHeader company={company} />
 
       <DetailStatsCards
-        assetsCount={companyAssets.length}
-        liabilitiesCount={companyLiabilities.length}
-        totalAssetValue={totalAssetValue}
-        totalLiabilityBalance={totalLiabilityBalance}
+        assetsCount={assets.length}
+        liabilitiesCount={liabilities.length}
+        totalAssetValue={totals.assets}
+        totalLiabilityBalance={totals.liabilities}
       />
 
       <Tabs defaultValue="overview" className="space-y-6">
@@ -84,17 +60,17 @@ export const CompanyDetailPage = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="assets">
             Assets
-            {companyAssets.length > 0 && (
+            {assets.length > 0 && (
               <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
-                {companyAssets.length}
+                {assets.length}
               </span>
             )}
           </TabsTrigger>
           <TabsTrigger value="liabilities">
             Liabilities
-            {companyLiabilities.length > 0 && (
+            {liabilities.length > 0 && (
               <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
-                {companyLiabilities.length}
+                {liabilities.length}
               </span>
             )}
           </TabsTrigger>
@@ -116,4 +92,11 @@ export const CompanyDetailPage = () => {
   )
 }
 
+export const CompanyDetailPage = () => {
+  return (
+    <CompanyDetailProvider>
+      <CompanyDetailContent />
+    </CompanyDetailProvider>
+  )
+}
 export default CompanyDetailPage
