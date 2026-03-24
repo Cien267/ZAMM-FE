@@ -1,35 +1,22 @@
 import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2 } from 'lucide-react'
-import { usePeopleQueries } from '../hooks/usePeopleQueries'
 import { PersonHeader } from '../components/detail/PersonHeader'
 import { DetailStatsCards } from '@/features/clients/components/DetailStatsCards'
 import { PersonOverviewTab } from '../components/detail/PersonOverviewTab'
 import { AssetsTable } from '@/features/assets/components/AssetsTable'
 import { LiabilitiesTable } from '@/features/liabilities/components/LiabilitiesTable'
-import {
-  useAllAssetsByPersonId,
-  useAllLiabilitiesByPersonId,
-} from '@/hooks/useSharedData'
 import { useBreadcrumbStore } from '@/store/breadcrumbStore'
 import { ErrorState } from '@/components/common/ErrorState'
+import {
+  PersonDetailProvider,
+  usePersonDetail,
+} from '../context/PersonDetailContext'
 
-export const PersonDetailPage = () => {
-  const { id } = useParams<{ id: string }>()
-  const { usePerson } = usePeopleQueries()
+export const PersonDetailContent = () => {
+  const { person, id, assets, liabilities, totals, isLoading, error, refetch } =
+    usePersonDetail()
   const setLabel = useBreadcrumbStore((state) => state.setLabel)
-
-  const {
-    data: person,
-    isLoading: isLoadingPerson,
-    error,
-    refetch,
-  } = usePerson(id || '', !!id)
-
-  const { data: assetsData } = useAllAssetsByPersonId(id || '', !!id)
-
-  const { data: liabilitiesData } = useAllLiabilitiesByPersonId(id || '', !!id)
 
   useEffect(() => {
     if (person?.fullName && id) {
@@ -37,26 +24,7 @@ export const PersonDetailPage = () => {
     }
   }, [person, id, setLabel])
 
-  const personAssets = assetsData || []
-  const personLiabilities = liabilitiesData || []
-
-  const totalAssetValue = personAssets.reduce((sum, asset) => {
-    const ownership = asset.assetPeople?.find((ap) => ap.personId === id)
-    const ownershipPercent = ownership?.percent || 0
-    return sum + (Number(asset.value || 0) * ownershipPercent) / 100
-  }, 0)
-
-  const totalLiabilityBalance = personLiabilities.reduce((sum, liability) => {
-    const ownership = liability.liabilityPeople?.find(
-      (lp) => lp.personId === id
-    )
-    const ownershipPercent = ownership?.percent || 0
-    return (
-      sum + (Number(liability.initialBalance || 0) * ownershipPercent) / 100
-    )
-  }, 0)
-
-  if (isLoadingPerson) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -73,10 +41,10 @@ export const PersonDetailPage = () => {
       <PersonHeader person={person} />
 
       <DetailStatsCards
-        assetsCount={personAssets.length}
-        liabilitiesCount={personLiabilities.length}
-        totalAssetValue={totalAssetValue}
-        totalLiabilityBalance={totalLiabilityBalance}
+        assetsCount={assets.length}
+        liabilitiesCount={liabilities.length}
+        totalAssetValue={totals.assets}
+        totalLiabilityBalance={totals.liabilities}
       />
 
       <Tabs defaultValue="overview" className="space-y-6">
@@ -84,17 +52,17 @@ export const PersonDetailPage = () => {
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="assets">
             Assets
-            {personAssets.length > 0 && (
+            {assets.length > 0 && (
               <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
-                {personAssets.length}
+                {assets.length}
               </span>
             )}
           </TabsTrigger>
           <TabsTrigger value="liabilities">
             Liabilities
-            {personLiabilities.length > 0 && (
+            {liabilities.length > 0 && (
               <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
-                {personLiabilities.length}
+                {liabilities.length}
               </span>
             )}
           </TabsTrigger>
@@ -113,6 +81,14 @@ export const PersonDetailPage = () => {
         </TabsContent>
       </Tabs>
     </div>
+  )
+}
+
+export const PersonDetailPage = () => {
+  return (
+    <PersonDetailProvider>
+      <PersonDetailContent />
+    </PersonDetailProvider>
   )
 }
 
