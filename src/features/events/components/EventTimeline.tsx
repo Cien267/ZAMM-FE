@@ -34,6 +34,7 @@ import { pdf } from '@react-pdf/renderer'
 import { TimelinePDF } from './TimelinePDF'
 import { FileDown } from 'lucide-react'
 import { ExportModal } from './ExportModal'
+import { EventFilters } from './EventFilters'
 import { eventService } from '../services/eventService'
 
 const TimelineSkeleton = () => {
@@ -80,7 +81,7 @@ export const EventTimeline = ({
   const { deleteEvent, toggleDismissEvent } = useEvents()
   const { useAllEvents } = useEventQueries()
   const [exportModalOpen, setExportModalOpen] = useState(false)
-  const query: EventQuery = {
+  const [query, setQuery] = useState<EventQuery>({
     sortBy: 'CreatedAt',
     sortDescending: true,
     personId: personId || undefined,
@@ -88,7 +89,7 @@ export const EventTimeline = ({
     liabilityId: liabilityId || undefined,
     dateFrom: undefined,
     dateTo: undefined,
-  }
+  })
 
   const { data: eventsData, isLoading, error, refetch } = useAllEvents(query)
 
@@ -107,6 +108,13 @@ export const EventTimeline = ({
 
   const onToggleDismiss = async (event: Event) => {
     await toggleDismissEvent(event.id)
+  }
+
+  const handleFilterChange = (filters: Partial<EventQuery>) => {
+    setQuery((prev) => ({
+      ...prev,
+      ...filters,
+    }))
   }
 
   const onDeleteConfirm = (event: Event) => {
@@ -218,6 +226,13 @@ export const EventTimeline = ({
               </Button>
             </div>
           </div>
+          {type !== 'liability' && (
+            <EventFilters
+              type={type}
+              parentFilters={query}
+              onFilterChange={handleFilterChange}
+            />
+          )}
           <ScrollArea className={`flex-1 pr-4 ${height}`}>
             <div className="relative space-y-0 ml-4 border-l-2 border-accent-foreground/20 min-h-150">
               {sortedEvents.map((event) => (
