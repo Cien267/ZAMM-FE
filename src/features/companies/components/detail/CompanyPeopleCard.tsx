@@ -2,12 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, Mail, Phone } from 'lucide-react'
 import type { Company } from '../../types'
 import { useAllPeopleByCompanyId } from '@/hooks/useSharedData'
+import { useNavigate } from 'react-router-dom'
 
 interface CompanyPeopleCardProps {
   company: Company
 }
 
 export const CompanyPeopleCard = ({ company }: CompanyPeopleCardProps) => {
+  const navigate = useNavigate()
   const companyPeople = company.companyPeople || []
 
   const { data: people } = useAllPeopleByCompanyId(company.id)
@@ -46,7 +48,8 @@ export const CompanyPeopleCard = ({ company }: CompanyPeopleCardProps) => {
             return (
               <div
                 key={person.id}
-                className="p-4 border rounded-lg hover:border-primary transition-colors"
+                className="p-4 border rounded-lg hover:bg-accent/50 cursor-pointer"
+                onClick={() => navigate(`/clients/people/${person.id}`)}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div>
