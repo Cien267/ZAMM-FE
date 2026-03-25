@@ -67,9 +67,17 @@ export const LenderHeader = ({ lender }: LenderHeaderProps) => {
       </div>
 
       <div className="flex items-center gap-6 mb-8">
-        <div className="h-24 w-24 rounded-full bg-linear-to-br from-primary to-primary/60 flex items-center justify-center text-2xl font-bold text-primary-foreground shrink-0">
-          {getInitials()}
-        </div>
+        {lender.logoUrl ? (
+          <img
+            src={lender.logoUrl}
+            alt={lender.name}
+            className="h-24 w-24 object-contain rounded-full"
+          />
+        ) : (
+          <div className="h-24 w-24 rounded-full bg-linear-to-br from-primary to-primary/60 flex items-center justify-center text-2xl font-bold text-primary-foreground shrink-0">
+            {getInitials()}
+          </div>
+        )}
         <div className="flex-1">
           <h1 className="text-3xl font-bold">{lender.name}</h1>
         </div>

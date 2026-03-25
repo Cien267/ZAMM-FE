@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLoansQueries } from '../hooks/useLoansQueries'
 import { useLoans } from '../hooks/useLoans'
-import { LoansFilters } from '../components/LoansFilters'
+// import { LoansFilters } from '../components/LoansFilters'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -19,14 +19,13 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Plus, MoreHorizontal, Pencil, Trash2, Loader2 } from 'lucide-react'
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
-import type { LoanQuery, Loan } from '../types'
+import type { LoanQuery, Loan, InterestRate, InterestRateType } from '../types'
 import { Pagination } from '@/components/common/Pagination'
 import { openUpdateLoanModal } from './UpdateLoan'
 import { openCreateLoanModal } from './CreateLoan'
 import { ErrorState } from '@/components/common/ErrorState'
 import { useAlert } from '@/contexts/AlertContext'
 import type { Lender } from '@/features/lenders/types'
-import { INTEREST_RATE_TYPES } from '../constants'
 
 interface LoansTableProps {
   lender: Lender
@@ -48,24 +47,24 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
 
   const { deleteLoan } = useLoans()
 
-  const handleFilterChange = (filters: Partial<LoanQuery>) => {
-    setQuery((prev) => ({
-      ...prev,
-      ...filters,
-      pageNumber: 1,
-    }))
-  }
+  // const handleFilterChange = (filters: Partial<LoanQuery>) => {
+  //   setQuery((prev) => ({
+  //     ...prev,
+  //     ...filters,
+  //     pageNumber: 1,
+  //   }))
+  // }
 
-  const handleResetFilters = () => {
-    setQuery({
-      pageNumber: 1,
-      pageSize: DEFAULT_PAGE_SIZE,
-      sortBy: 'CreatedAt',
-      sortDescending: true,
-      name: '',
-      lenderId: lender.id,
-    })
-  }
+  // const handleResetFilters = () => {
+  //   setQuery({
+  //     pageNumber: 1,
+  //     pageSize: DEFAULT_PAGE_SIZE,
+  //     sortBy: 'CreatedAt',
+  //     sortDescending: true,
+  //     name: '',
+  //     lenderId: lender.id,
+  //   })
+  // }
 
   const handlePageChange = (newPage: number) => {
     setQuery((prev) => ({ ...prev, pageNumber: newPage }))
@@ -87,26 +86,28 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
     })
   }
 
+  const getRate = (
+    rates: InterestRate[] | undefined,
+    type: InterestRateType
+  ) => {
+    if (!rates) return 0
+    const rate = rates.find((r) => r.rateType === type)
+    return rate ? rate.rate : 0
+  }
+
   if (error) {
     return <ErrorState message={error.message} onRetry={refetch} />
   }
 
   return (
     <div className="space-y-4">
-      <LoansFilters
+      <h2 className="text-lg font-semibold">{lender.name}'s Loans</h2>
+      {/* <LoansFilters
         lender={lender}
         onFilterChange={handleFilterChange}
         onReset={handleResetFilters}
-      />
-
-      <div className="flex justify-between">
-        <div className="flex gap-2 justify-between items-center italic text-sm text-sky-500">
-          {INTEREST_RATE_TYPES.map((type) => (
-            <div className="border-t-0 border-l-0 border-b-0 border-r border-sky-300 pr-2 last:border-none">
-              <span className="font-bold">{type.value}</span>: {type.label}
-            </div>
-          ))}
-        </div>
+      /> */}
+      <div className="flex justify-end">
         <Button
           variant={'sky'}
           onClick={() => {
@@ -117,13 +118,15 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
           Add Loan
         </Button>
       </div>
-
       <div className="border rounded-lg">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Interest Rates</TableHead>
+              <TableHead>Current Rate OO-P&I (%)</TableHead>
+              <TableHead>Current Rate OO-IO (%)</TableHead>
+              <TableHead>Current Rate INV-P&I (%)</TableHead>
+              <TableHead>Current Rate INV-IO (%)</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -147,16 +150,10 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
               loans?.data.map((loan) => (
                 <TableRow key={loan.id}>
                   <TableCell className="font-medium">{loan.name}</TableCell>
-                  <TableCell className="font-medium flex flex-col justify-start items-start gap-2">
-                    {(loan?.interestRates || []).map((interestRate) => (
-                      <div key={interestRate.id}>
-                        <span className="text-accent-foreground font-normal mr-2">
-                          🔹 {interestRate.rateType}:{' '}
-                        </span>{' '}
-                        {interestRate.rate}%
-                      </div>
-                    ))}
-                  </TableCell>
+                  <TableCell>{getRate(loan?.interestRates, 'OOPI')}</TableCell>
+                  <TableCell>{getRate(loan?.interestRates, 'OOIO')}</TableCell>
+                  <TableCell>{getRate(loan?.interestRates, 'IVPI')}</TableCell>
+                  <TableCell>{getRate(loan?.interestRates, 'IVIO')}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -189,7 +186,6 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
           </TableBody>
         </Table>
       </div>
-
       {loans && loans.totalCount > 0 && (
         <Pagination
           currentPage={loans.pageNumber}

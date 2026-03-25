@@ -17,8 +17,10 @@ export interface LoanQuery extends PaginationParams {
 }
 
 // Interest Rate types
+export type InterestRateType = 'OOPI' | 'OOIO' | 'IVPI' | 'IVIO'
+
 export interface InterestRate extends BaseEntity {
-  rateType: string
+  rateType: InterestRateType
   rate: number
   loanId: string
 }

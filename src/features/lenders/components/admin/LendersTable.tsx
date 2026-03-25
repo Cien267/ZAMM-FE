@@ -121,6 +121,7 @@ export const LendersTable = () => {
             <TableRow>
               <TableHead>Logo</TableHead>
               <TableHead>Name</TableHead>
+              <TableHead>Loan Products</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -157,6 +158,15 @@ export const LendersTable = () => {
                     )}
                   </TableCell>
                   <TableCell className="font-medium">{lender.name}</TableCell>
+                  <TableCell className="">
+                    {(lender?.loans || []).slice(0, 4).map((loan) => (
+                      <div key={loan.id}>🔹 {loan.name}</div>
+                    ))}
+
+                    {(lender?.loans || []).length > 4 && (
+                      <div className="ml-5">. . . . .</div>
+                    )}
+                  </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
