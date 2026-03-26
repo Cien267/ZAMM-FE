@@ -79,6 +79,12 @@ export const SIDEBAR_MENU: MenuItem[] = [
   //   ],
   // },
   {
+    id: 'lenders-management',
+    label: 'Lenders Management',
+    icon: Landmark,
+    path: '/lenders-management',
+  },
+  {
     id: 'staffs',
     label: 'Staffs',
     icon: SquareUserRound,

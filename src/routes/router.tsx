@@ -234,7 +234,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: '/admin/lenders',
+                path: '/lenders-management',
                 element: (
                   <SuspenseWrapper>
                     <AdminLendersPage />
@@ -242,7 +242,7 @@ export const router = createBrowserRouter([
                 ),
               },
               {
-                path: '/admin/lenders/:id',
+                path: '/lenders-management/:id',
                 element: (
                   <SuspenseWrapper>
                     <AdminLenderDetailPage />

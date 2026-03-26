@@ -67,7 +67,7 @@ export const LendersTable = () => {
   }
 
   const handleView = (lender: Lender) => {
-    navigate(`/admin/lenders/${lender.id}`, {
+    navigate(`/lenders-management/${lender.id}`, {
       state: { label: lender.name },
     })
   }
