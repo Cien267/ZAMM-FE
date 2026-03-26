@@ -26,6 +26,7 @@ import { openCreateLoanModal } from './CreateLoan'
 import { ErrorState } from '@/components/common/ErrorState'
 import { useAlert } from '@/contexts/AlertContext'
 import type { Lender } from '@/features/lenders/types'
+import { formatDate } from '@/lib/utils'
 
 interface LoansTableProps {
   lender: Lender
@@ -127,6 +128,7 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
               <TableHead>Current Rate OO-IO (%)</TableHead>
               <TableHead>Current Rate INV-P&I (%)</TableHead>
               <TableHead>Current Rate INV-IO (%)</TableHead>
+              <TableHead>Updated At</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -154,6 +156,7 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
                   <TableCell>{getRate(loan?.interestRates, 'OOIO')}</TableCell>
                   <TableCell>{getRate(loan?.interestRates, 'IVPI')}</TableCell>
                   <TableCell>{getRate(loan?.interestRates, 'IVIO')}</TableCell>
+                  <TableCell>{formatDate(new Date(loan.updatedAt))}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
