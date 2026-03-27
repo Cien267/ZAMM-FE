@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import { useDebounce } from '@/hooks/useDebounce'
-import type { SentEmailQuery } from '../types'
+import type { SentEmailQuery, SentEmailStatusType } from '../types'
 import {
   Select,
   SelectContent,
@@ -18,11 +18,13 @@ import { Label } from '@/components/ui/label'
 import { SENT_EMAIL_STATUS_OPTIONS } from '../constants'
 
 interface SentEmailsFiltersProps {
+  parentFilters: Partial<SentEmailQuery> | null
   onFilterChange: (filters: Partial<SentEmailQuery>) => void
   onReset: () => void
 }
 
 export const SentEmailsFilters = ({
+  parentFilters,
   onFilterChange,
   onReset,
 }: SentEmailsFiltersProps) => {
@@ -31,13 +33,13 @@ export const SentEmailsFilters = ({
   const { data: templates = [] } = useAllEmailTemplates({})
 
   const [filters, setFilters] = useState<Partial<SentEmailQuery>>({
-    recipientEmail: '',
-    subject: '',
-    status: undefined,
-    fromSentAt: undefined,
-    toSentAt: undefined,
-    templateId: '',
-    brokerId: '',
+    recipientEmail: parentFilters?.recipientEmail ?? '',
+    subject: parentFilters?.subject ?? '',
+    status: parentFilters?.status ?? undefined,
+    fromSentAt: parentFilters?.fromSentAt ?? undefined,
+    toSentAt: parentFilters?.toSentAt ?? undefined,
+    templateId: parentFilters?.templateId ?? '',
+    brokerId: parentFilters?.brokerId ?? '',
   })
 
   const debouncedFilters = useDebounce(filters, 500)
@@ -47,7 +49,10 @@ export const SentEmailsFilters = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilters])
 
-  const handleChange = (field: keyof SentEmailQuery, value: any) => {
+  const handleChange = <K extends keyof SentEmailQuery>(
+    field: K,
+    value: SentEmailQuery[K]
+  ) => {
     setFilters((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -111,7 +116,9 @@ export const SentEmailsFilters = ({
         <div className="space-y-2">
           <label className="text-sm font-medium">Status</label>
           <Select
-            onValueChange={(e) => handleChange('status', e)}
+            onValueChange={(e) =>
+              handleChange('status', e as SentEmailStatusType)
+            }
             value={filters.status ?? ''}
           >
             <SelectTrigger className="w-full">
@@ -149,14 +156,17 @@ export const SentEmailsFilters = ({
         <div className="space-y-2">
           <label className="text-sm font-medium">Broker</label>
           <Select
-            onValueChange={(e) => handleChange('brokerId', e)}
-            value={filters.brokerId}
+            onValueChange={(e) =>
+              handleChange('brokerId', e === 'all' ? undefined : e)
+            }
+            value={filters.brokerId || 'all'}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select broker" />
             </SelectTrigger>
             <SelectContent className="w-full">
-              {brokers.map((broker) => (
+              <SelectItem value="all">All Brokers</SelectItem>
+              {(brokers || []).map((broker) => (
                 <SelectItem key={broker.id} value={broker.id}>
                   {broker.fullName}
                 </SelectItem>

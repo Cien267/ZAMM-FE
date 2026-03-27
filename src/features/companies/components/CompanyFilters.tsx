@@ -17,11 +17,13 @@ import { useAllBrokers } from '@/hooks/useSharedData'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 
 interface CompanyFiltersProps {
+  parentFilters: Partial<CompanyQuery> | null
   onFilterChange: (filters: Partial<CompanyQuery>) => void
   onReset: () => void
 }
 
 export const CompanyFilters = ({
+  parentFilters,
   onFilterChange,
   onReset,
 }: CompanyFiltersProps) => {
@@ -29,14 +31,14 @@ export const CompanyFilters = ({
   const { data: brokers } = useAllBrokers(user?.brokerageId || '')
 
   const [filters, setFilters] = useState<Partial<CompanyQuery>>({
-    name: '',
-    tradingName: '',
-    type: '',
-    abn: '',
-    acn: '',
-    email: '',
-    industry: '',
-    brokerId: '',
+    name: parentFilters?.name ?? '',
+    tradingName: parentFilters?.tradingName ?? '',
+    type: parentFilters?.type ?? '',
+    abn: parentFilters?.abn ?? '',
+    acn: parentFilters?.acn ?? '',
+    email: parentFilters?.email ?? '',
+    industry: parentFilters?.industry ?? '',
+    brokerId: parentFilters?.brokerId ?? '',
   })
 
   const debouncedFilters = useDebounce(filters, 500)
@@ -46,7 +48,10 @@ export const CompanyFilters = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilters])
 
-  const handleChange = (field: keyof CompanyQuery, value: any) => {
+  const handleChange = <K extends keyof CompanyQuery>(
+    field: K,
+    value: CompanyQuery[K]
+  ) => {
     setFilters((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -157,13 +162,16 @@ export const CompanyFilters = ({
         <div className="space-y-2">
           <label className="text-sm font-medium">Broker</label>
           <Select
-            onValueChange={(e) => handleChange('brokerId', e)}
-            value={filters.brokerId}
+            onValueChange={(e) =>
+              handleChange('brokerId', e === 'all' ? undefined : e)
+            }
+            value={filters.brokerId || 'all'}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select broker" />
             </SelectTrigger>
             <SelectContent className="w-full">
+              <SelectItem value="all">All Brokers</SelectItem>
               {(brokers || []).map((broker) => (
                 <SelectItem key={broker.id} value={broker.id}>
                   {broker.fullName}

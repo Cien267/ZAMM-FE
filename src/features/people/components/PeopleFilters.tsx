@@ -15,11 +15,13 @@ import { useAllBrokers } from '@/hooks/useSharedData'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 
 interface PeopleFiltersProps {
+  parentFilters: Partial<PersonQuery> | null
   onFilterChange: (filters: Partial<PersonQuery>) => void
   onReset: () => void
 }
 
 export const PeopleFilters = ({
+  parentFilters,
   onFilterChange,
   onReset,
 }: PeopleFiltersProps) => {
@@ -27,11 +29,11 @@ export const PeopleFilters = ({
   const { data: brokers } = useAllBrokers(user?.brokerageId || '')
 
   const [filters, setFilters] = useState<Partial<PersonQuery>>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    brokerId: '',
+    firstName: parentFilters?.firstName ?? '',
+    lastName: parentFilters?.lastName ?? '',
+    email: parentFilters?.email ?? '',
+    phone: parentFilters?.phone ?? '',
+    brokerId: parentFilters?.brokerId ?? '',
   })
 
   const debouncedFilters = useDebounce(filters, 500)
@@ -41,7 +43,10 @@ export const PeopleFilters = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilters])
 
-  const handleChange = (field: keyof PersonQuery, value: string) => {
+  const handleChange = <K extends keyof PersonQuery>(
+    field: K,
+    value: PersonQuery[K]
+  ) => {
     setFilters((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -100,13 +105,16 @@ export const PeopleFilters = ({
         <div className="space-y-2">
           <label className="text-sm font-medium">Broker</label>
           <Select
-            onValueChange={(e) => handleChange('brokerId', e)}
-            value={filters.brokerId}
+            onValueChange={(e) =>
+              handleChange('brokerId', e === 'all' ? undefined : e)
+            }
+            value={filters.brokerId || 'all'}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select broker" />
             </SelectTrigger>
             <SelectContent className="w-full">
+              <SelectItem value="all">All Brokers</SelectItem>
               {(brokers || []).map((broker) => (
                 <SelectItem key={broker.id} value={broker.id}>
                   {broker.fullName}

@@ -30,9 +30,11 @@ import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
 import { SENT_EMAIL_STATUS_VARIANT_MAPPING } from '../constants'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/features/auth/hooks/useAuth'
 
 export const SentEmailsPage = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [query, setQuery] = useState<SentEmailQuery>({
     pageNumber: 1,
     pageSize: DEFAULT_PAGE_SIZE,
@@ -43,8 +45,8 @@ export const SentEmailsPage = () => {
     status: undefined,
     fromSentAt: undefined,
     toSentAt: undefined,
-    templateId: undefined,
-    brokerId: undefined,
+    templateId: '',
+    brokerId: user?.id || '',
   })
 
   const { useSentEmailsList } = useSentEmailQueries()
@@ -71,6 +73,13 @@ export const SentEmailsPage = () => {
       pageSize: DEFAULT_PAGE_SIZE,
       sortBy: 'CreatedAt',
       sortDescending: true,
+      recipientEmail: '',
+      subject: '',
+      status: undefined,
+      fromSentAt: undefined,
+      toSentAt: undefined,
+      templateId: '',
+      brokerId: '',
     })
   }
 
@@ -107,6 +116,7 @@ export const SentEmailsPage = () => {
       <div className="mt-6">
         <div className="space-y-4">
           <SentEmailsFilters
+            parentFilters={query}
             onFilterChange={handleFilterChange}
             onReset={handleResetFilters}
           />

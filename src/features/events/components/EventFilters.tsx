@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label'
 
 interface EventFiltersProps {
   type: 'person' | 'company' | 'liability'
-  parentFilters: Partial<EventQuery>
+  parentFilters: Partial<EventQuery> | null
   onFilterChange: (filters: Partial<EventQuery>) => void
 }
 
@@ -42,10 +42,10 @@ export const EventFilters = ({
   }, [liabilitiesDataByPersonId, liabilitiesDataByCompanyId, type])
 
   const [filters, setFilters] = useState<Partial<EventQuery>>({
-    dateFrom: parentFilters.dateFrom,
-    dateTo: parentFilters.dateTo,
-    isDismissed: parentFilters.isDismissed,
-    liabilityId: parentFilters.liabilityId,
+    dateFrom: parentFilters?.dateFrom ?? undefined,
+    dateTo: parentFilters?.dateTo ?? undefined,
+    isDismissed: parentFilters?.isDismissed ?? false,
+    liabilityId: parentFilters?.liabilityId ?? '',
   })
 
   useEffect(() => {

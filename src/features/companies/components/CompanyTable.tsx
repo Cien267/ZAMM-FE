@@ -43,6 +43,7 @@ import {
 
 export const CompanyTable = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const { openAlert } = useAlert()
   const [query, setQuery] = useState<CompanyQuery>({
     pageNumber: 1,
@@ -56,14 +57,13 @@ export const CompanyTable = () => {
     acn: '',
     email: '',
     industry: '',
-    brokerId: '',
+    brokerId: user?.id ?? '',
   })
 
   const { useCompaniesList } = useCompanyQueries()
   const { data, isLoading, error, refetch } = useCompaniesList(query)
   const { deleteCompany } = useCompanies()
   const { createActivityLog } = useActivityLogs()
-  const { user } = useAuth()
 
   const handleFilterChange = (filters: Partial<CompanyQuery>) => {
     setQuery((prev) => ({
@@ -79,6 +79,14 @@ export const CompanyTable = () => {
       pageSize: DEFAULT_PAGE_SIZE,
       sortBy: 'CreatedAt',
       sortDescending: true,
+      name: '',
+      tradingName: '',
+      type: '',
+      abn: '',
+      acn: '',
+      email: '',
+      industry: '',
+      brokerId: '',
     })
   }
 
@@ -149,6 +157,7 @@ export const CompanyTable = () => {
   return (
     <div className="space-y-4">
       <CompanyFilters
+        parentFilters={query}
         onFilterChange={handleFilterChange}
         onReset={handleResetFilters}
       />

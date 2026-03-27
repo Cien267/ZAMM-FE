@@ -59,7 +59,7 @@ export const PeopleTable = () => {
     lastName: '',
     email: '',
     phone: '',
-    brokerId: '',
+    brokerId: user?.id ?? '',
   })
 
   const { usePeopleList } = usePeopleQueries()
@@ -81,6 +81,11 @@ export const PeopleTable = () => {
       pageSize: DEFAULT_PAGE_SIZE,
       sortBy: 'CreatedAt',
       sortDescending: true,
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      brokerId: '',
     })
   }
 
@@ -133,6 +138,7 @@ export const PeopleTable = () => {
   return (
     <div className="space-y-4">
       <PeopleFilters
+        parentFilters={query}
         onFilterChange={handleFilterChange}
         onReset={handleResetFilters}
       />
