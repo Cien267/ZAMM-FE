@@ -9,6 +9,7 @@ import {
   Eye,
   Trash2,
   Clock,
+  History,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -142,65 +143,79 @@ export const RecentActivities = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-125 pr-4">
-          <div className="space-y-6 relative before:absolute before:inset-0 before:left-6 before:w-px before:bg-border">
-            {(activities?.data || []).map((activity) => {
-              const styles = getActionStyles(activity.actionType)
-              const isDeleted = activity.actionType.toLowerCase() === 'deleted'
-
-              return (
-                <div
-                  key={activity.id}
-                  className="relative flex gap-4 pl-1 group"
-                >
-                  <div
-                    className={cn(
-                      'relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border bg-background shadow-sm transition-colors group-hover:border-sky-500',
-                      styles.color
-                    )}
-                  >
-                    {getEntityIcon(activity.entityType)}
-                  </div>
-
-                  <div className="flex flex-col gap-1 pb-4">
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          'text-[10px] uppercase font-bold px-1.5 py-0 h-5 gap-1',
-                          styles.color
-                        )}
-                      >
-                        {styles.icon}
-                        {activity.actionType}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground font-medium">
-                        {formatDistanceToNow(new Date(activity.createdAt), {
-                          addSuffix: true,
-                        })}
-                      </span>
-                    </div>
-
-                    <div className="text-sm">
-                      {isDeleted ? (
-                        <span className="text-muted-foreground italic">
-                          {activity.description}
-                        </span>
-                      ) : (
-                        <div
-                          onClick={() => handleNavigateToEntity(activity)}
-                          className="cursor-pointer text-sky-600 hover:text-sky-500 transition-colors hover:underline decoration-sky-500/30 underline-offset-4"
-                        >
-                          {activity.description}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
+        {(activities?.data || []).length == 0 ? (
+          <div className="h-125 flex flex-col items-center justify-center text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+              <History className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <h3 className="mt-4 text-lg font-semibold">No activity yet</h3>
+            <p className="mb-4 mt-2 text-sm text-muted-foreground">
+              When you start interacting with the platform, your history will
+              appear here.
+            </p>
           </div>
-        </ScrollArea>
+        ) : (
+          <ScrollArea className="h-125 pr-4">
+            <div className="space-y-6 relative before:absolute before:inset-0 before:left-6 before:w-px before:bg-border">
+              {(activities?.data || []).map((activity) => {
+                const styles = getActionStyles(activity.actionType)
+                const isDeleted =
+                  activity.actionType.toLowerCase() === 'deleted'
+
+                return (
+                  <div
+                    key={activity.id}
+                    className="relative flex gap-4 pl-1 group"
+                  >
+                    <div
+                      className={cn(
+                        'relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border bg-background shadow-sm transition-colors group-hover:border-sky-500',
+                        styles.color
+                      )}
+                    >
+                      {getEntityIcon(activity.entityType)}
+                    </div>
+
+                    <div className="flex flex-col gap-1 pb-4">
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            'text-[10px] uppercase font-bold px-1.5 py-0 h-5 gap-1',
+                            styles.color
+                          )}
+                        >
+                          {styles.icon}
+                          {activity.actionType}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground font-medium">
+                          {formatDistanceToNow(new Date(activity.createdAt), {
+                            addSuffix: true,
+                          })}
+                        </span>
+                      </div>
+
+                      <div className="text-sm">
+                        {isDeleted ? (
+                          <span className="text-muted-foreground italic">
+                            {activity.description}
+                          </span>
+                        ) : (
+                          <div
+                            onClick={() => handleNavigateToEntity(activity)}
+                            className="cursor-pointer text-sky-600 hover:text-sky-500 transition-colors hover:underline decoration-sky-500/30 underline-offset-4"
+                          >
+                            {activity.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </ScrollArea>
+        )}
       </CardContent>
     </Card>
   )
