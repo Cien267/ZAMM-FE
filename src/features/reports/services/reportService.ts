@@ -12,7 +12,6 @@ import type { Person } from '@/features/people/types'
 import type { Company } from '@/features/companies/types'
 import type { Asset } from '@/features/assets/types'
 import type { Liability } from '@/features/liabilities/types'
-import type { PaginatedResponse } from '@/types'
 
 export const reportService = {
   async getReportSummary(): Promise<IReportSummary> {
@@ -22,40 +21,32 @@ export const reportService = {
     return response.data
   },
 
-  async getPeopleReport(
-    query: PeopleReportQuery
-  ): Promise<PaginatedResponse<Person>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Person>>>(
+  async getPeopleReport(query: PeopleReportQuery): Promise<Person[]> {
+    const response = await api.get<ApiResponse<Person[]>>(
       API_ENDPOINTS.REPORTS.PEOPLE,
       { params: query }
     )
     return response.data
   },
 
-  async getCompanyReport(
-    query: CompanyReportQuery
-  ): Promise<PaginatedResponse<Company>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Company>>>(
+  async getCompanyReport(query: CompanyReportQuery): Promise<Company[]> {
+    const response = await api.get<ApiResponse<Company[]>>(
       API_ENDPOINTS.REPORTS.COMPANIES,
       { params: query }
     )
     return response.data
   },
 
-  async getAssetReport(
-    query: AssetReportQuery
-  ): Promise<PaginatedResponse<Asset>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Asset>>>(
+  async getAssetReport(query: AssetReportQuery): Promise<Asset[]> {
+    const response = await api.get<ApiResponse<Asset[]>>(
       API_ENDPOINTS.REPORTS.ASSETS,
       { params: query }
     )
     return response.data
   },
 
-  async getLiabilityReport(
-    query: LiabilityReportQuery
-  ): Promise<PaginatedResponse<Liability>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Liability>>>(
+  async getLiabilityReport(query: LiabilityReportQuery): Promise<Liability[]> {
+    const response = await api.get<ApiResponse<Liability[]>>(
       API_ENDPOINTS.REPORTS.LIABILITIES,
       { params: query }
     )
