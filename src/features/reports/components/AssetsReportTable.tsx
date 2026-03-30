@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TrendingUp, MapPin } from 'lucide-react'
-import { useReports } from '../hooks/useReports'
+import { useAssetQueries } from '@/features/assets/hooks/useAssetQueries'
 import type { AssetReportQuery } from '../types'
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import { formatCurrency, formatDate, formatAddress } from '@/lib/utils'
@@ -32,13 +32,8 @@ export const AssetsReportTable = () => {
     propertyType: '',
   })
 
-  const { useAssetReport } = useReports()
-  const {
-    data: assetsReport,
-    isLoading,
-    error,
-    refetch,
-  } = useAssetReport(query)
+  const { useAssetsList } = useAssetQueries()
+  const { data: assetsReport, isLoading, error, refetch } = useAssetsList(query)
 
   const handlePageChange = (newPage: number) => {
     setQuery((prev) => ({ ...prev, pageNumber: newPage }))

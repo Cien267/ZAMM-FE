@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useReports } from '../hooks/useReports'
+import { usePeopleQueries } from '@/features/people/hooks/usePeopleQueries'
 import type { PeopleReportQuery } from '../types'
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import {
@@ -34,13 +34,8 @@ export const PeopleReportTable = () => {
     email: '',
   })
 
-  const { usePeopleReport } = useReports()
-  const {
-    data: peopleReport,
-    isLoading,
-    error,
-    refetch,
-  } = usePeopleReport(query)
+  const { usePeopleList } = usePeopleQueries()
+  const { data: peopleReport, isLoading, error, refetch } = usePeopleList(query)
 
   const handlePageChange = (newPage: number) => {
     setQuery((prev) => ({ ...prev, pageNumber: newPage }))

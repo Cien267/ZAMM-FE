@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Building2, Mail, Globe } from 'lucide-react'
-import { useReports } from '../hooks/useReports'
+import { useCompanyQueries } from '@/features/companies/hooks/useCompaniesQueries'
 import type { CompanyReportQuery } from '../types'
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import { formatDate } from '@/lib/utils'
@@ -31,13 +31,13 @@ export const CompaniesReportTable = () => {
     industry: '',
   })
 
-  const { useCompanyReport } = useReports()
+  const { useCompaniesList } = useCompanyQueries()
   const {
     data: companiesReport,
     isLoading,
     error,
     refetch,
-  } = useCompanyReport(query)
+  } = useCompaniesList(query)
 
   const handlePageChange = (newPage: number) => {
     setQuery((prev) => ({ ...prev, pageNumber: newPage }))

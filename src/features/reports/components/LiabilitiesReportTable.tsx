@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TrendingDown } from 'lucide-react'
-import { useReports } from '../hooks/useReports'
+import { useLiabilityQueries } from '@/features/liabilities/hooks/useLiabilityQueries'
 import type { LiabilityReportQuery } from '../types'
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import { formatCurrency, formatDate } from '@/lib/utils'
@@ -43,13 +43,13 @@ export const LiabilitiesReportTable = () => {
     fixedRateEndOperator: 'before',
   })
 
-  const { useLiabilityReport } = useReports()
+  const { useLiabilitiesList } = useLiabilityQueries()
   const {
     data: liabilitiesReport,
     isLoading,
     error,
     refetch,
-  } = useLiabilityReport(query)
+  } = useLiabilitiesList(query)
 
   const handleFilterChange = (filters: Partial<LiabilityReportQuery>) => {
     setQuery((prev) => ({
