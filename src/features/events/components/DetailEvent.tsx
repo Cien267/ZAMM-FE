@@ -65,7 +65,12 @@ export const DetailEventModalContent = ({
   const isLiabilityModified = event.type === LIABILITY_MODIFIED_EVENT
 
   const onToggleDismiss = async (event: Event) => {
-    await toggleDismissEvent(event.id)
+    try {
+      await toggleDismissEvent(event.id)
+      onClose()
+    } catch (error) {
+      console.error('Error toggling dismiss event:', error)
+    }
   }
 
   const onDeleteConfirm = (event: Event) => {
