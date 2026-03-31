@@ -37,12 +37,12 @@ export const InterestRateChart = () => {
   } = useAllLenders()
 
   const lenders = useMemo(() => lenderData || [], [lenderData])
-  const [selectedLenders, setSelectedLenders] = useState<string[]>([])
+  const [selectedLenders, setSelectedLenders] = useState<Set<string>>(new Set())
   const [sortBy, setSortBy] = useState('highest')
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSelectedLenders(lenders.map((l) => l.id))
+    setSelectedLenders(new Set(lenders.map((l) => l.id)))
   }, [lenders])
 
   const colors = useMemo(
@@ -74,7 +74,7 @@ export const InterestRateChart = () => {
 
   const chartData = useMemo(() => {
     const flattened = lenders
-      .filter((lender) => selectedLenders.includes(lender.id))
+      .filter((lender) => selectedLenders.has(lender.id))
       .flatMap((lender, lIndex) =>
         (lender.loans || []).flatMap((loan) =>
           (loan.interestRates || []).map((rate) => ({
@@ -103,6 +103,14 @@ export const InterestRateChart = () => {
 
   const chartHeight = Math.max(400, chartData.length * 35)
 
+  const selectAllLenders = () => {
+    setSelectedLenders(new Set(lenders.map((l) => l.id)))
+  }
+
+  const deselectAllLenders = () => {
+    setSelectedLenders(new Set())
+  }
+
   if (isLoadingLenders) {
     return <Skeleton className="h-94 w-full" />
   }
@@ -123,16 +131,26 @@ export const InterestRateChart = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-45 mb-6">
-            <SelectValue placeholder="Sort by" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="highest">Highest to lowest</SelectItem>
-            <SelectItem value="lowest">Lowest to highest</SelectItem>
-            <SelectItem value="alphabetical">Lender (A-Z)</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex justify-between items-start w-full">
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-45 mb-6">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="highest">Highest to lowest</SelectItem>
+              <SelectItem value="lowest">Lowest to highest</SelectItem>
+              <SelectItem value="alphabetical">Lender (A-Z)</SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={selectAllLenders}>
+              Select All
+            </Button>
+            <Button variant="outline" size="sm" onClick={deselectAllLenders}>
+              Deselect All
+            </Button>
+          </div>
+        </div>
         <div className="mb-5 flex gap-3 flex-wrap">
           {lenders.map((l) => (
             <Button
@@ -141,13 +159,13 @@ export const InterestRateChart = () => {
               size="sm"
               onClick={() =>
                 setSelectedLenders((prev) =>
-                  prev.includes(l.id)
-                    ? prev.filter((id) => id !== l.id)
-                    : [...prev, l.id]
+                  prev.has(l.id)
+                    ? new Set([...prev].filter((id) => id !== l.id))
+                    : new Set([...prev, l.id])
                 )
               }
               className={`h-9 rounded-full border px-4 transition-all ${
-                selectedLenders.includes(l.id)
+                selectedLenders.has(l.id)
                   ? 'border-sky-500 bg-sky-50 text-sky-700 shadow-sm'
                   : 'hover:bg-gray-50'
               }`}
