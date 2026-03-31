@@ -44,8 +44,8 @@ export const EventFilters = ({
   const [filters, setFilters] = useState<Partial<EventQuery>>({
     dateFrom: parentFilters?.dateFrom ?? undefined,
     dateTo: parentFilters?.dateTo ?? undefined,
-    isDismissed: parentFilters?.isDismissed ?? false,
-    liabilityId: parentFilters?.liabilityId ?? '',
+    isDismissed: parentFilters?.isDismissed ?? undefined,
+    liabilityId: parentFilters?.liabilityId ?? undefined,
   })
 
   useEffect(() => {
