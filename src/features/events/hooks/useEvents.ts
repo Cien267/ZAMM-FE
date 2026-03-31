@@ -48,9 +48,9 @@ export const useEvents = () => {
 
   const toggleDismissEventMutation = useMutation({
     mutationFn: (id: string) => eventService.toggleDismissEvent(id),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: eventKeys.events() })
-      toast.success('Dismiss/Un-dismiss event successfully!')
+      toast.success(`Event ${data.isDismissed ? 'dismissed' : 'un-dismissed'}!`)
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to dismiss/un-dismiss')

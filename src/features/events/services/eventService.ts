@@ -55,7 +55,10 @@ export const eventService = {
     await api.delete(API_ENDPOINTS.EVENT.DETAIL(id))
   },
 
-  async toggleDismissEvent(id: string): Promise<void> {
-    await api.post(API_ENDPOINTS.EVENT.DISMISS(id))
+  async toggleDismissEvent(id: string): Promise<Event> {
+    const response = await api.post<ApiResponse<Event>>(
+      API_ENDPOINTS.EVENT.DISMISS(id)
+    )
+    return response.data
   },
 }
