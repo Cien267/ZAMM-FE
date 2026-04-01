@@ -206,42 +206,46 @@ export const DetailEventModalContent = ({
           </div>
         )}
       </div>
-      <div className="flex justify-end gap-3 pt-10">
-        <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => onToggleDismiss(event)}
-        >
-          {event.isDismissed ? 'Un-dismiss' : 'Dismiss'}
-        </Button>
-        <Button
-          variant="sky"
-          type="button"
-          onClick={() => {
-            onClose()
-            openUpSertEventModal({
-              event,
-              type: type,
-              personId: personId,
-              companyId: companyId,
-              liabilityId: liabilityId,
-            })
-          }}
-        >
-          Edit
-        </Button>
-        {!isLiabilityModified && (
+      <div className="flex justify-between items-center gap-3 pt-10">
+        <div className="flex gap-2">
+          <Button type="button" variant="outline" onClick={onClose}>
+            Cancel
+          </Button>
           <Button
             type="button"
-            variant="destructive"
-            onClick={() => onDeleteConfirm(event)}
+            variant="secondary"
+            onClick={() => onToggleDismiss(event)}
           >
-            Delete
+            {event.isDismissed ? 'Un-dismiss' : 'Dismiss'}
           </Button>
-        )}
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="warn"
+            type="button"
+            onClick={() => {
+              onClose()
+              openUpSertEventModal({
+                event,
+                type: type,
+                personId: personId,
+                companyId: companyId,
+                liabilityId: liabilityId,
+              })
+            }}
+          >
+            Edit
+          </Button>
+          {!isLiabilityModified && (
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => onDeleteConfirm(event)}
+            >
+              Delete
+            </Button>
+          )}
+        </div>
       </div>
     </>
   )

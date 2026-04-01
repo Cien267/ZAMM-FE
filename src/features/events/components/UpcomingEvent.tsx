@@ -103,7 +103,7 @@ export const UpcomingEvent = () => {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center h-64 gap-3">
             <Loader2 className="h-8 w-8 animate-spin text-sky-500" />
-            <p className="text-sm text-muted-foreground">Loading schedule...</p>
+            <p className="text-sm text-muted-foreground">Loading events...</p>
           </div>
         ) : data?.data.length === 0 ? (
           <div className="text-center py-12 border-2 border-dashed rounded-2xl">
