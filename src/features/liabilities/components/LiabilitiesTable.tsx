@@ -124,26 +124,28 @@ export const LiabilitiesTable = ({
       onConfirm: async () => {
         await deleteLiabilityAsync(liability.id)
       },
-      onSuccess: (reason?: string) => {
-        createEvent({
-          title: `Delete Liability ${liability.name}`,
-          description: reason,
-          type: ASSET_DELETE_EVENT,
-          date: new Date(),
-          isSystem: false,
-          isRepeating: false,
-          isDismissed: true,
-          repeatingDateDismissed: undefined,
-          addedByUserId: user?.id || '',
-          personId:
-            type === 'person' && initialData
-              ? (initialData as Person).id
-              : undefined,
-          companyId:
-            type === 'company' && initialData
-              ? (initialData as Company).id
-              : undefined,
-        })
+      onSuccess: (reason?: string, addToTimeline: boolean = false) => {
+        if (addToTimeline) {
+          createEvent({
+            title: `Delete Liability ${liability.name}`,
+            description: reason,
+            type: ASSET_DELETE_EVENT,
+            date: new Date(),
+            isSystem: false,
+            isRepeating: false,
+            isDismissed: true,
+            repeatingDateDismissed: undefined,
+            addedByUserId: user?.id || '',
+            personId:
+              type === 'person' && initialData
+                ? (initialData as Person).id
+                : undefined,
+            companyId:
+              type === 'company' && initialData
+                ? (initialData as Company).id
+                : undefined,
+          })
+        }
         createActivityLog({
           brokerId: user?.id || '',
           brokerageId: user?.brokerageId || '',

@@ -94,26 +94,28 @@ export const AssetDetailPage = () => {
           },
         })
       },
-      onSuccess: (reason?: string) => {
-        createEvent({
-          title: `Delete Asset ${asset.name}`,
-          description: reason,
-          type: ASSET_DELETE_EVENT,
-          date: new Date(),
-          isSystem: false,
-          isRepeating: false,
-          isDismissed: true,
-          repeatingDateDismissed: undefined,
-          addedByUserId: user?.id || '',
-          personId:
-            assetType === 'person' && asset.assetPeople
-              ? asset.assetPeople[0].personId
-              : undefined,
-          companyId:
-            assetType === 'company' && asset.assetCompanies
-              ? asset.assetCompanies[0].companyId
-              : undefined,
-        })
+      onSuccess: (reason?: string, addToTimeline: boolean = false) => {
+        if (addToTimeline) {
+          createEvent({
+            title: `Delete Asset ${asset.name}`,
+            description: reason,
+            type: ASSET_DELETE_EVENT,
+            date: new Date(),
+            isSystem: false,
+            isRepeating: false,
+            isDismissed: true,
+            repeatingDateDismissed: undefined,
+            addedByUserId: user?.id || '',
+            personId:
+              assetType === 'person' && asset.assetPeople
+                ? asset.assetPeople[0].personId
+                : undefined,
+            companyId:
+              assetType === 'company' && asset.assetCompanies
+                ? asset.assetCompanies[0].companyId
+                : undefined,
+          })
+        }
         createActivityLog({
           brokerId: user?.id || '',
           brokerageId: user?.brokerageId || '',

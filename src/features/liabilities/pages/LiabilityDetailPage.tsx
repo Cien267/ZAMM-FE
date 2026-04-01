@@ -103,26 +103,28 @@ export const LiabilityDetailPage = () => {
           },
         })
       },
-      onSuccess: (reason?: string) => {
-        createEvent({
-          title: `Delete Liability ${liability.name}`,
-          description: reason,
-          type: ASSET_DELETE_EVENT,
-          date: new Date(),
-          isSystem: false,
-          isRepeating: false,
-          isDismissed: true,
-          repeatingDateDismissed: undefined,
-          addedByUserId: user?.id || '',
-          personId:
-            liabilityType === 'person' && liability.liabilityPeople
-              ? liability.liabilityPeople[0].personId
-              : undefined,
-          companyId:
-            liabilityType === 'company' && liability.liabilityCompanies
-              ? liability.liabilityCompanies[0].companyId
-              : undefined,
-        })
+      onSuccess: (reason?: string, addToTimeline: boolean = false) => {
+        if (addToTimeline) {
+          createEvent({
+            title: `Delete Liability ${liability.name}`,
+            description: reason,
+            type: ASSET_DELETE_EVENT,
+            date: new Date(),
+            isSystem: false,
+            isRepeating: false,
+            isDismissed: true,
+            repeatingDateDismissed: undefined,
+            addedByUserId: user?.id || '',
+            personId:
+              liabilityType === 'person' && liability.liabilityPeople
+                ? liability.liabilityPeople[0].personId
+                : undefined,
+            companyId:
+              liabilityType === 'company' && liability.liabilityCompanies
+                ? liability.liabilityCompanies[0].companyId
+                : undefined,
+          })
+        }
         createActivityLog({
           brokerId: user?.id || '',
           brokerageId: user?.brokerageId || '',
