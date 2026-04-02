@@ -32,6 +32,7 @@ import { Pagination } from '@/components/common/Pagination'
 import {
   GENDER_VARIANT_MAPPING,
   MARITAL_STATUS_VARIANT_MAPPING,
+  PHONE_PREFERENCE_WORK,
 } from '../constants'
 import { openUpSertPersonModal } from './UpSertPerson'
 import { ErrorState } from '@/components/common/ErrorState'
@@ -65,7 +66,7 @@ export const PeopleTable = () => {
   const { usePeopleList } = usePeopleQueries()
   const { data: people, isLoading, error, refetch } = usePeopleList(query)
 
-  const { deletePerson } = usePeople()
+  const { deletePersonAsync } = usePeople()
 
   const handleFilterChange = (filters: Partial<PersonQuery>) => {
     setQuery((prev) => ({
@@ -103,8 +104,8 @@ export const PeopleTable = () => {
       description: `This action cannot be undone. This will permanently delete ${person.fullName} and all associated
               data.`,
       confirmText: 'Delete',
-      onConfirm: () => {
-        deletePerson(person.id)
+      onConfirm: async () => {
+        await deletePersonAsync(person.id)
       },
       onSuccess: () => {
         createActivityLog({
@@ -194,7 +195,9 @@ export const PeopleTable = () => {
                   </TableCell>
                   <TableCell>{person.email || '-'}</TableCell>
                   <TableCell>
-                    {person.phoneMobile || person.phoneWork || '-'}
+                    {person.phonePreference === PHONE_PREFERENCE_WORK
+                      ? person.phoneWork
+                      : person.phoneMobile || '-'}
                   </TableCell>
                   <TableCell>
                     {person.gender ? (

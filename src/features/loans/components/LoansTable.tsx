@@ -46,7 +46,7 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
   const { useLoansList } = useLoansQueries()
   const { data: loans, isLoading, error, refetch } = useLoansList(query)
 
-  const { deleteLoan } = useLoans()
+  const { deleteLoanAsync } = useLoans()
 
   // const handleFilterChange = (filters: Partial<LoanQuery>) => {
   //   setQuery((prev) => ({
@@ -81,8 +81,8 @@ export const LoansTable = ({ lender }: LoansTableProps) => {
       description: `This action cannot be undone. This will permanently delete ${loan.name} and all associated
               data.`,
       confirmText: 'Delete',
-      onConfirm: () => {
-        deleteLoan(loan.id)
+      onConfirm: async () => {
+        await deleteLoanAsync(loan.id)
       },
     })
   }

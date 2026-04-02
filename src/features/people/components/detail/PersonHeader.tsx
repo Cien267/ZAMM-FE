@@ -20,7 +20,7 @@ interface PersonHeaderProps {
 export const PersonHeader = ({ person }: PersonHeaderProps) => {
   const navigate = useNavigate()
   const { openAlert } = useAlert()
-  const { deletePerson } = usePeople()
+  const { deletePersonAsync } = usePeople()
   const { createActivityLog } = useActivityLogs()
   const { user } = useAuth()
 
@@ -34,8 +34,8 @@ export const PersonHeader = ({ person }: PersonHeaderProps) => {
       description: `This action cannot be undone. This will permanently delete ${person.fullName} and all associated
               data.`,
       confirmText: 'Delete',
-      onConfirm: () => {
-        deletePerson(person.id, {
+      onConfirm: async () => {
+        await deletePersonAsync(person.id, {
           onSuccess: () => {
             navigate('/clients/people')
           },

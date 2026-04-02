@@ -54,7 +54,7 @@ export const StaffsTable = () => {
   const { useStaffsList } = useStaffsQueries()
   const { data: staffs, isLoading, error, refetch } = useStaffsList(query)
 
-  const { deleteStaff } = useStaffs()
+  const { deleteStaffAsync } = useStaffs()
 
   const handleFilterChange = (filters: Partial<StaffQuery>) => {
     setQuery((prev) => ({
@@ -87,8 +87,8 @@ export const StaffsTable = () => {
       description: `This action cannot be undone. This will permanently delete ${staff.fullName} and all associated
               data.`,
       confirmText: 'Delete',
-      onConfirm: () => {
-        deleteStaff(staff.id)
+      onConfirm: async () => {
+        await deleteStaffAsync(staff.id)
       },
     })
   }

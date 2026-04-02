@@ -61,7 +61,12 @@ export const MARITAL_STATUS_VARIANT_MAPPING: Record<string, any> = {
   Widowed: 'outline',
 }
 
-export const PHONE_PREFERENCE_OPTIONS = ['Work', 'Mobile']
+export const PHONE_PREFERENCE_WORK = 'Work'
+export const PHONE_PREFERENCE_MOBILE = 'Mobile'
+export const PHONE_PREFERENCE_OPTIONS = [
+  PHONE_PREFERENCE_WORK,
+  PHONE_PREFERENCE_MOBILE,
+]
 
 export const AUSTRALIAN_STATES = [
   'NSW',

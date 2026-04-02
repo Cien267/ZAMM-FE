@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Users, GraduationCap, Pencil } from 'lucide-react'
+import { Users, GraduationCap } from 'lucide-react'
 import type { Person } from '../../types'
 
 interface PersonDependentsCardProps {
@@ -82,7 +82,6 @@ export const PersonDependentsCard = ({ person }: PersonDependentsCardProps) => {
 
                 {dependent.notes && (
                   <div className="pt-4 border-t mt-4 flex items-center gap-2">
-                    <Pencil className="h-5 w-5 text-yellow-600" />
                     <p className="text-sm text-muted-foreground">
                       {dependent.notes}
                     </p>

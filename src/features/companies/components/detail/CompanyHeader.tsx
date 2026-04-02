@@ -19,7 +19,7 @@ interface CompanyHeaderProps {
 export const CompanyHeader = ({ company }: CompanyHeaderProps) => {
   const navigate = useNavigate()
   const { openAlert } = useAlert()
-  const { deleteCompany } = useCompanies()
+  const { deleteCompanyAsync } = useCompanies()
   const { createActivityLog } = useActivityLogs()
   const { user } = useAuth()
 
@@ -33,8 +33,8 @@ export const CompanyHeader = ({ company }: CompanyHeaderProps) => {
       description: `This action cannot be undone. This will permanently delete ${company.name} and all associated
               data.`,
       confirmText: 'Delete',
-      onConfirm: () => {
-        deleteCompany(company.id, {
+      onConfirm: async () => {
+        await deleteCompanyAsync(company.id, {
           onSuccess: () => {
             navigate('/clients/companies')
           },

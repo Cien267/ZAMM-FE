@@ -62,7 +62,7 @@ export const CompanyTable = () => {
 
   const { useCompaniesList } = useCompanyQueries()
   const { data, isLoading, error, refetch } = useCompaniesList(query)
-  const { deleteCompany } = useCompanies()
+  const { deleteCompanyAsync } = useCompanies()
   const { createActivityLog } = useActivityLogs()
 
   const handleFilterChange = (filters: Partial<CompanyQuery>) => {
@@ -104,8 +104,8 @@ export const CompanyTable = () => {
       description: `This action cannot be undone. This will permanently delete ${company.name} and all associated
               data.`,
       confirmText: 'Delete',
-      onConfirm: () => {
-        deleteCompany(company.id)
+      onConfirm: async () => {
+        await deleteCompanyAsync(company.id)
       },
       onSuccess: () => {
         createActivityLog({

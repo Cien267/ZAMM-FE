@@ -56,7 +56,7 @@ export const EmailTemplatesPage = () => {
     refetch,
   } = useEmailTemplatesList(query)
 
-  const { deleteEmailTemplate } = useEmailTemplates()
+  const { deleteEmailTemplateAsync } = useEmailTemplates()
 
   const handleFilterChange = (filters: Partial<EmailTemplateQuery>) => {
     setQuery((prev) => ({
@@ -89,8 +89,8 @@ export const EmailTemplatesPage = () => {
       description: `This action cannot be undone. This will permanently delete ${emailTemplate.name} and all associated
               data.`,
       confirmText: 'Delete',
-      onConfirm: () => {
-        deleteEmailTemplate(emailTemplate.id)
+      onConfirm: async () => {
+        await deleteEmailTemplateAsync(emailTemplate.id)
       },
     })
   }

@@ -47,7 +47,7 @@ export const EmailCategoriesPage = () => {
     refetch,
   } = useEmailCategoriesList(query)
 
-  const { deleteEmailCategory } = useEmailCategories()
+  const { deleteEmailCategoryAsync } = useEmailCategories()
 
   const handleFilterChange = (filters: Partial<EmailCategoryQuery>) => {
     setQuery((prev) => ({
@@ -80,8 +80,8 @@ export const EmailCategoriesPage = () => {
       description: `This action cannot be undone. This will permanently delete ${emailCategory.name} and all associated
               data.`,
       confirmText: 'Delete',
-      onConfirm: () => {
-        deleteEmailCategory(emailCategory.id)
+      onConfirm: async () => {
+        await deleteEmailCategoryAsync(emailCategory.id)
       },
     })
   }

@@ -13,7 +13,7 @@ interface LenderHeaderProps {
 export const LenderHeader = ({ lender }: LenderHeaderProps) => {
   const navigate = useNavigate()
   const { openAlert } = useAlert()
-  const { deleteLender } = useLenders()
+  const { deleteLenderAsync } = useLenders()
 
   const handleEdit = () => {
     openUpSertLenderModal({ lender })
@@ -25,8 +25,8 @@ export const LenderHeader = ({ lender }: LenderHeaderProps) => {
       description: `This action cannot be undone. This will permanently delete ${lender.name} and all associated
               data.`,
       confirmText: 'Delete',
-      onConfirm: () => {
-        deleteLender(lender.id, {
+      onConfirm: async () => {
+        await deleteLenderAsync(lender.id, {
           onSuccess: () => {
             navigate('/admin/lenders')
           },
