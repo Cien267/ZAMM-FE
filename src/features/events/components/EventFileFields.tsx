@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { type Control, useController } from 'react-hook-form'
-import { X, Paperclip, UploadCloud } from 'lucide-react'
+import { X, Paperclip, UploadCloud, ArrowDownToLine } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   FormControl,
@@ -9,18 +9,19 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-interface EventFieldFieldsProps {
+interface EventFileFieldsProps {
   control: Control<any>
   name: string
   label?: string
 }
 
-export const EventFieldFields = ({
+export const EventFileFields = ({
   control,
   name,
   label,
-}: EventFieldFieldsProps) => {
+}: EventFileFieldsProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
 
   const {
     field: { value, onChange },
@@ -34,6 +35,30 @@ export const EventFieldFields = ({
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const droppedFiles = Array.from(e.dataTransfer.files)
+      onChange([...files, ...droppedFiles])
+      e.dataTransfer.clearData()
+    }
+  }
+
   const removeFile = (index: number) => {
     const updatedFiles = files.filter((_, i) => i !== index)
     onChange(updatedFiles)
@@ -45,12 +70,28 @@ export const EventFieldFields = ({
         {label && <FormLabel>{label}</FormLabel>}
         <FormControl>
           <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 hover:bg-accent/50 cursor-pointer transition-colors flex flex-col items-center justify-center gap-2"
+            className={`
+              border-2 border-dashed rounded-lg p-6 transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer
+              ${
+                isDragging
+                  ? 'border-primary/25 bg-accent/50'
+                  : 'border-muted-foreground/25 hover:bg-accent/50'
+              }
+            `}
           >
-            <UploadCloud className="h-8 w-8 text-muted-foreground" />
+            {isDragging ? (
+              <ArrowDownToLine className="h-8 w-8 text-muted-foreground animate-pulse" />
+            ) : (
+              <UploadCloud className="h-8 w-8 text-muted-foreground" />
+            )}
             <p className="text-sm text-muted-foreground">
-              Click to upload or drag and drop
+              {isDragging
+                ? 'Drop files here'
+                : 'Click to upload or drag and drop'}
             </p>
             <input
               type="file"

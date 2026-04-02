@@ -41,7 +41,7 @@ import {
   useAllLiabilitiesByPersonId,
 } from '@/hooks/useSharedData'
 import type { Liability } from '@/features/liabilities/types'
-import { EventFieldFields } from '@/features/events/components/EventFileFields'
+import { EventFileFields } from '@/features/events/components/EventFileFields'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 
 interface EventFormDialogProps {
@@ -339,7 +339,7 @@ export const EventModalContent = ({
           />
         </div>
 
-        <EventFieldFields
+        <EventFileFields
           control={form.control}
           name="files"
           label="Event Attachments"
