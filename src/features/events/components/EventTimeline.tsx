@@ -247,7 +247,7 @@ export const EventTimeline = ({
                         <h3 className="font-semibold">
                           {getEventTitle(event)}
                         </h3>
-                        <div className="flex items-center text-sm text-muted-foreground gap-3">
+                        <div className="flex items-center flex-wrap text-sm text-muted-foreground gap-3">
                           <span className="flex items-center gap-1">
                             <Calendar className="h-3.5 w-3.5" />
                             {format(
