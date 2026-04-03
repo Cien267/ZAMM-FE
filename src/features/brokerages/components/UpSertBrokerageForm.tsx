@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { slugify } from '@/lib/utils'
@@ -46,13 +46,16 @@ export const UpSertBrokerageForm = ({
       name: brokerage?.name || '',
       slug: brokerage?.slug || '',
       authorisedDomain: brokerage?.authorisedDomain || '',
-      isMasterAccount: brokerage?.isMasterAccount || false,
+      isMasterAccount: brokerage?.isMasterAccount ?? false,
       logos: brokerage?.logos || [],
       ...(isEditing && brokerage ? { id: brokerage.id } : {}),
     },
   })
 
-  const nameValue = form.watch('name')
+  const nameValue = useWatch({
+    control: form.control,
+    name: 'name',
+  })
 
   useEffect(() => {
     if (nameValue) {

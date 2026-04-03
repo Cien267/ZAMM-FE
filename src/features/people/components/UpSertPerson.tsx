@@ -91,14 +91,14 @@ export const PersonModalContent = ({
       dateOfBirth: person?.dateOfBirth
         ? new Date(person.dateOfBirth)
         : undefined,
-      notifyOfBirthday: person?.notifyOfBirthday || false,
+      notifyOfBirthday: person?.notifyOfBirthday ?? false,
       gender: person?.gender || GENDER_OPTIONS[0],
       maritalStatus: person?.maritalStatus || MARITAL_STATUS_OPTIONS[0],
       email: person?.email || '',
       phoneWork: person?.phoneWork || '',
       phoneMobile: person?.phoneMobile || '',
       phonePreference: person?.phonePreference || PHONE_PREFERENCE_OPTIONS[0],
-      actingOnTrust: person?.actingOnTrust || false,
+      actingOnTrust: person?.actingOnTrust ?? false,
       trustName: person?.trustName || '',
       spouseId: person?.spouseId || null,
       brokerId: person?.brokerId || user?.id || '',

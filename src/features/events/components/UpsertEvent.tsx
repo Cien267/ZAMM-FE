@@ -163,7 +163,7 @@ export const EventModalContent = ({
             <FormField
               control={form.control}
               name="title"
-              disabled={event?.isSystem || false}
+              disabled={event?.isSystem ?? false}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
@@ -181,12 +181,12 @@ export const EventModalContent = ({
               <FormField
                 control={form.control}
                 name="liabilityId"
-                disabled={event?.isSystem || false}
+                disabled={event?.isSystem ?? false}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Liability</FormLabel>
                     <Select
-                      disabled={event?.isSystem || false}
+                      disabled={event?.isSystem ?? false}
                       onValueChange={field.onChange}
                       value={field.value || ''}
                     >
@@ -216,7 +216,7 @@ export const EventModalContent = ({
             <FormField
               control={form.control}
               name="date"
-              disabled={event?.isSystem || false}
+              disabled={event?.isSystem ?? false}
               render={({ field }) => (
                 <FormItem className="flex flex-col col-span-2">
                   <FormLabel>
@@ -226,7 +226,7 @@ export const EventModalContent = ({
                     <DatePicker
                       value={field.value}
                       onChange={field.onChange}
-                      disabled={event?.isSystem || false}
+                      disabled={event?.isSystem ?? false}
                       placeholder="Pick a date"
                     />
                   </FormControl>
@@ -240,7 +240,7 @@ export const EventModalContent = ({
                 <FormField
                   control={form.control}
                   name="isRepeating"
-                  disabled={event?.isSystem || false}
+                  disabled={event?.isSystem ?? false}
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center pt-5 space-x-1 space-y-0">
                       <FormControl>
@@ -263,7 +263,7 @@ export const EventModalContent = ({
                     <FormField
                       control={form.control}
                       name="repeatNumber"
-                      disabled={event?.isSystem || false}
+                      disabled={event?.isSystem ?? false}
                       render={({ field }) => (
                         <FormItem className="w-1/3">
                           <FormLabel>Repeat Number</FormLabel>
@@ -283,12 +283,12 @@ export const EventModalContent = ({
                     <FormField
                       control={form.control}
                       name="repeatUnit"
-                      disabled={event?.isSystem || false}
+                      disabled={event?.isSystem ?? false}
                       render={({ field }) => (
                         <FormItem className="w-1/3">
                           <FormLabel>Repeat Unit</FormLabel>
                           <Select
-                            disabled={event?.isSystem || false}
+                            disabled={event?.isSystem ?? false}
                             onValueChange={field.onChange}
                             value={field.value || ''}
                           >
