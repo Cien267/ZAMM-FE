@@ -178,6 +178,7 @@ export const CompanyTable = () => {
             <TableRow className="bg-muted/50">
               <TableHead className="font-semibold">Name</TableHead>
               <TableHead className="font-semibold">Trading Name</TableHead>
+              <TableHead className="font-semibold">Email</TableHead>
               <TableHead className="font-semibold">Type</TableHead>
               <TableHead className="font-semibold">ABN/ACN</TableHead>
               <TableHead className="font-semibold">Industry</TableHead>
@@ -208,6 +209,7 @@ export const CompanyTable = () => {
                 <TableRow key={company.id}>
                   <TableCell className="font-medium">{company.name}</TableCell>
                   <TableCell>{company.tradingName || '-'}</TableCell>
+                  <TableCell>{company.email || '-'}</TableCell>
                   <TableCell>
                     {company.type ? (
                       <Badge variant="outline" className="font-normal">

@@ -99,9 +99,9 @@ export const CompanyModalContent = ({
       website: company?.website || '',
       email: company?.email || '',
       industry: company?.industry || INDUSTRIES[0],
-      actingOnTrust: company?.actingOnTrust || false,
+      actingOnTrust: company?.actingOnTrust ?? false,
       trustName: company?.trustName || '',
-      isContactExistingPerson: company?.isContactExistingPerson || true,
+      isContactExistingPerson: company?.isContactExistingPerson ?? true,
       contactPersonId: company?.contactPersonId || null,
       externalContactName: company?.externalContactName || '',
       externalContactEmail: company?.externalContactEmail || '',
@@ -134,6 +134,7 @@ export const CompanyModalContent = ({
       form.setValue('externalContactName', '')
       form.setValue('externalContactEmail', '')
       form.setValue('externalContactPhone', '')
+    } else {
       form.setValue('contactPersonId', null)
     }
   }, [isContactExistingPerson, form])
@@ -555,7 +556,6 @@ export const CompanyModalContent = ({
                               value={field.value}
                               onChange={field.onChange}
                               placeholder="Pick a date"
-                              disableFutureDates
                             />
                           </FormControl>
                           <FormMessage />
