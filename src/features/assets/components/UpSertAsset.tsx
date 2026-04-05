@@ -317,7 +317,6 @@ export const AssetModalContent = ({
                       value={field.value}
                       onChange={field.onChange}
                       placeholder="Pick a date"
-                      disableFutureDates
                     />
                   </FormControl>
                   <FormMessage />

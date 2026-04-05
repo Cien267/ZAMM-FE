@@ -30,7 +30,7 @@ import {
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import type { AssetQuery, Asset } from '../types'
 import { openUpSertAssetModal } from './UpSertAsset'
-import { formatCurrency, formatAddress } from '@/lib/utils'
+import { formatCurrency } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import type { Person } from '@/features/people/types'
 import type { Company } from '@/features/companies/types'
@@ -227,7 +227,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
           <TableHeader>
             <TableRow className="bg-muted/50">
               <TableHead className="font-semibold">Name</TableHead>
-              <TableHead className="font-semibold">Address</TableHead>
+              <TableHead className="font-semibold">Zoning Type</TableHead>
               <TableHead className="font-semibold">Type</TableHead>
               <TableHead className="font-semibold">Value</TableHead>
               <TableHead className="font-semibold">Investment</TableHead>
@@ -258,7 +258,7 @@ export const AssetsTable = ({ initialData, type }: AssetsTableProps) => {
                 <TableRow key={asset.id}>
                   <TableCell className="font-medium">{asset.name}</TableCell>
                   <TableCell className="max-w-xs truncate">
-                    {formatAddress(asset.address)}
+                    {asset.zoningType}
                   </TableCell>
                   <TableCell>
                     {asset.propertyType ? (
