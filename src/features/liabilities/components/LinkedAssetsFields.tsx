@@ -17,13 +17,26 @@ import {
 import { Plus, X } from 'lucide-react'
 import type { CreateLiabilityInput, UpdateLiabilityInput } from '../types'
 import { useAllAssets } from '@/hooks/useSharedData'
+import type { Company } from '@/features/companies/types'
+import type { Person } from '@/features/people/types'
 
 interface LinkedAssetsFieldsProps {
   control: Control<CreateLiabilityInput | UpdateLiabilityInput>
+  type: 'person' | 'company'
+  initialPerson: Person | null
+  initialCompany: Company | null
 }
 
-export const LinkedAssetsFields = ({ control }: LinkedAssetsFieldsProps) => {
-  const { data: assetsData = [] } = useAllAssets()
+export const LinkedAssetsFields = ({
+  control,
+  type,
+  initialPerson,
+  initialCompany,
+}: LinkedAssetsFieldsProps) => {
+  const { data: assetsData = [] } = useAllAssets({
+    personId: (type === 'person' && initialPerson?.id) || undefined,
+    companyId: (type === 'company' && initialCompany?.id) || undefined,
+  })
 
   const { fields, append, remove } = useFieldArray({
     control,

@@ -815,7 +815,12 @@ export const LiabilityModalContent = ({
           </div>
         </div>
         <FixedRatePeriodsFields control={form.control} />
-        <LinkedAssetsFields control={form.control} />
+        <LinkedAssetsFields
+          control={form.control}
+          type={type}
+          initialPerson={initialPerson}
+          initialCompany={initialCompany}
+        />
         <LiabilityOwnershipFields
           control={form.control}
           type={type}

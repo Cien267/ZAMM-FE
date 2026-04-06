@@ -10,32 +10,41 @@ import { emailCategoryService } from '@/features/email/categories/services/email
 import type { EmailCategoryQuery } from '@/features/email/categories/types'
 import type { EmailTemplateQuery } from '@/features/email/templates/types'
 import { emailTemplateService } from '@/features/email/templates/services/emailTemplatesService'
+import type { LiabilityQuery } from '@/features/liabilities/types'
+import type { AssetQuery } from '@/features/assets/types'
+import type { CompanyQuery } from '@/features/companies/types'
+import type { PersonQuery } from '@/features/people/types'
+import type { LenderQuery } from '@/features/lenders/types'
+import type { LoanQuery } from '@/features/loans/types'
 
 export const sharedKeys = {
-  people: ['shared', 'people'] as const,
+  people: (query: PersonQuery) => ['shared', 'people', query] as const,
   peopleByCompanyId: (id: string) => ['shared', 'people-company', id] as const,
-  companies: ['shared', 'companies'] as const,
-  assets: ['shared', 'assets'] as const,
+  companies: (query: CompanyQuery) => ['shared', 'companies', query] as const,
+  assets: (query: AssetQuery) => ['shared', 'assets', query] as const,
   assetsByPersonId: (id: string) => ['shared', 'assets-person', id] as const,
   assetsByCompanyId: (id: string) => ['shared', 'assets-company', id] as const,
-  liabilities: ['shared', 'liabilities'] as const,
+  liabilities: (query: LiabilityQuery) =>
+    ['shared', 'liabilities', query] as const,
   liabilitiesByPersonId: (id: string) =>
     ['shared', 'liabilities-person', id] as const,
   liabilitiesByCompanyId: (id: string) =>
     ['shared', 'liabilities-company', id] as const,
   brokers: ['shared', 'brokers'] as const,
-  lenders: ['shared', 'lenders'] as const,
-  loans: ['shared', 'loans'] as const,
+  lenders: (query: LenderQuery) => ['shared', 'lenders', query] as const,
+  loans: (query: LoanQuery) => ['shared', 'loans', query] as const,
   loansByLenderId: (id: string) => ['shared', 'loans-lender', id] as const,
   lendersAssignedToBrokerage: ['shared', 'brokers', 'lenders'] as const,
-  emailCategories: ['shared', 'email-categories'] as const,
-  emailTemplates: ['shared', 'email-templates'] as const,
+  emailCategories: (query: EmailCategoryQuery) =>
+    ['shared', 'email-categories', query] as const,
+  emailTemplates: (query: EmailTemplateQuery) =>
+    ['shared', 'email-templates', query] as const,
 }
 
-export const useAllPeople = () => {
+export const useAllPeople = (query: PersonQuery) => {
   return useQuery({
-    queryKey: sharedKeys.people,
-    queryFn: () => peopleService.getAllPeople({}),
+    queryKey: sharedKeys.people(query),
+    queryFn: () => peopleService.getAllPeople(query),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -49,18 +58,18 @@ export const useAllPeopleByCompanyId = (id: string, enabled = true) => {
   })
 }
 
-export const useAllCompanies = () => {
+export const useAllCompanies = (query: CompanyQuery = {}) => {
   return useQuery({
-    queryKey: sharedKeys.companies,
-    queryFn: () => companyService.getAllCompanies({}),
+    queryKey: sharedKeys.companies(query),
+    queryFn: () => companyService.getAllCompanies(query),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export const useAllAssets = () => {
+export const useAllAssets = (query: AssetQuery = {}) => {
   return useQuery({
-    queryKey: sharedKeys.assets,
-    queryFn: () => assetService.getAllAssets({}),
+    queryKey: sharedKeys.assets(query),
+    queryFn: () => assetService.getAllAssets(query),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -83,10 +92,10 @@ export const useAllAssetsByCompanyId = (id: string, enabled = true) => {
   })
 }
 
-export const useAllLiabilities = () => {
+export const useAllLiabilities = (params: LiabilityQuery = {}) => {
   return useQuery({
-    queryKey: sharedKeys.liabilities,
-    queryFn: () => liabilityService.getAllLiabilities({}),
+    queryKey: sharedKeys.liabilities(params),
+    queryFn: () => liabilityService.getAllLiabilities(params),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -125,18 +134,18 @@ export const useLendersAssignedToBrokerage = (brokerageId: string) => {
   })
 }
 
-export const useAllLenders = () => {
+export const useAllLenders = (query: LenderQuery = {}) => {
   return useQuery({
-    queryKey: sharedKeys.lenders,
-    queryFn: () => lenderService.getAllLenders({}),
+    queryKey: sharedKeys.lenders(query),
+    queryFn: () => lenderService.getAllLenders(query),
     staleTime: 5 * 60 * 1000,
   })
 }
 
-export const useAllLoans = () => {
+export const useAllLoans = (query: LoanQuery = {}) => {
   return useQuery({
-    queryKey: sharedKeys.loans,
-    queryFn: () => loanService.getAllLoans({}),
+    queryKey: sharedKeys.loans(query),
+    queryFn: () => loanService.getAllLoans(query),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -152,7 +161,7 @@ export const useAllLoansByLenderId = (id: string, enabled = true) => {
 
 export const useAllEmailCategories = (params: EmailCategoryQuery = {}) => {
   return useQuery({
-    queryKey: sharedKeys.emailCategories,
+    queryKey: sharedKeys.emailCategories(params),
     queryFn: () => emailCategoryService.getAllEmailCategories(params),
     staleTime: 5 * 60 * 1000,
   })
@@ -160,7 +169,7 @@ export const useAllEmailCategories = (params: EmailCategoryQuery = {}) => {
 
 export const useAllEmailTemplates = (params: EmailTemplateQuery = {}) => {
   return useQuery({
-    queryKey: sharedKeys.emailTemplates,
+    queryKey: sharedKeys.emailTemplates(params),
     queryFn: () => emailTemplateService.getAllEmailTemplates(params),
     staleTime: 5 * 60 * 1000,
   })

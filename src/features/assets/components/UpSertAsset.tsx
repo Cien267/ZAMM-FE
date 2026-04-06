@@ -426,7 +426,12 @@ export const AssetModalContent = ({
         </div>
 
         <AddressFields toggleName="addressOffPlan" />
-        <LinkedLiabilitiesFields control={form.control} />
+        <LinkedLiabilitiesFields
+          control={form.control}
+          type={type}
+          initialPerson={initialPerson}
+          initialCompany={initialCompany}
+        />
         <AssetOwnershipFields
           control={form.control}
           type={type}
