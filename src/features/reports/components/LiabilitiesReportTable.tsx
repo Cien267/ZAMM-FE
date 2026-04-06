@@ -19,7 +19,7 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import { Pagination } from '@/components/common/Pagination'
 import type { Liability } from '@/features/liabilities/types'
-import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
+import { calculateEffectiveInterestRate } from '@/features/liabilities/lib/liabilitySupport'
 import { LiabilitiesReportFilters } from './LiabilitiesReportFilters'
 
 export const LiabilitiesReportTable = () => {

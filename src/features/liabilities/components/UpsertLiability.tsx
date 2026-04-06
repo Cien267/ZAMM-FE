@@ -42,7 +42,7 @@ import { useLendersAssignedToBrokerage } from '@/hooks/useSharedData'
 import type { Asset } from '@/features/assets/types'
 import { format } from 'date-fns'
 import { useAuth } from '@/features/auth/hooks/useAuth'
-import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
+import { calculateEffectiveInterestRate } from '../lib/liabilitySupport'
 import { useActivityLogs } from '@/features/activity-logs/hooks/useActivityLogs'
 import {
   ACTION_TYPE_CREATED,
@@ -500,72 +500,50 @@ export const LiabilityModalContent = ({
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="interestOnlyTerm"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Interest-Only Term (Years)</FormLabel>
-                  <FormControl>
-                    <InputNumber
-                      placeholder="Years"
-                      {...field}
-                      allowNegative={false}
-                      allowDecimal={false}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="discountPercent"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Interest Rate Discount</FormLabel>
-                  <FormControl>
-                    <div className="relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="interestOnlyTerm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Interest-Only Term (Years)</FormLabel>
+                    <FormControl>
                       <InputNumber
-                        placeholder="0.00"
-                        className="pr-8"
+                        placeholder="Years"
                         {...field}
-                        allowDecimal={true}
-                        maxDecimals={2}
+                        allowNegative={false}
+                        allowDecimal={false}
                       />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                        %
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormItem>
-              <FormLabel>Effective Interest Rate</FormLabel>
-              <div className="h-10 px-3 py-2 border rounded-md bg-muted text-muted-foreground flex items-center">
-                {Number(effectiveRate).toFixed(2)}%
-              </div>
-            </FormItem>
-            <span className="text-amber-500 text-sm col-span-2">
-              {effectiveRateMessage && (
-                <>
-                  <TriangleAlert className="h-4 w-4 inline" />{' '}
-                  {effectiveRateMessage}
-                </>
-              )}
-            </span>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="discountPercent"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Interest Rate Discount</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <InputNumber
+                          placeholder="0.00"
+                          className="pr-8"
+                          {...field}
+                          allowDecimal={true}
+                          maxDecimals={2}
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                          %
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
         </div>
 
@@ -601,7 +579,7 @@ export const LiabilityModalContent = ({
                 name="introRateYears"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Intro Rate</FormLabel>
+                    <FormLabel>Intro Rate (Years)</FormLabel>
                     <FormControl>
                       <InputNumber
                         placeholder="Years"
@@ -640,6 +618,24 @@ export const LiabilityModalContent = ({
                 )}
               />
             </div>
+          </div>
+        </div>
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormItem>
+              <FormLabel>Effective Interest Rate</FormLabel>
+              <div className="h-10 px-3 py-2 border rounded-md bg-muted text-muted-foreground flex items-center">
+                {Number(effectiveRate).toFixed(2)}%
+              </div>
+            </FormItem>
+            <span className="text-amber-500 text-sm col-span-2">
+              {effectiveRateMessage && (
+                <>
+                  <TriangleAlert className="h-4 w-4 inline" />{' '}
+                  {effectiveRateMessage}
+                </>
+              )}
+            </span>
           </div>
         </div>
 

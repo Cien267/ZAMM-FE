@@ -10,7 +10,7 @@ import { TrendingDown, Building2 } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 import type { Liability } from '@/features/liabilities/types'
 import { useNavigate } from 'react-router-dom'
-import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
+import { calculateEffectiveInterestRate } from '@/features/liabilities/lib/liabilitySupport'
 
 interface TopLiabilitiesProps {
   liabilities: Liability[]

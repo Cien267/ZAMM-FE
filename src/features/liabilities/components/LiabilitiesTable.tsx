@@ -18,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Badge } from '@/components/ui/badge'
 import {
   Plus,
   MoreHorizontal,
@@ -28,14 +29,14 @@ import {
 } from 'lucide-react'
 import { DEFAULT_PAGE_SIZE } from '@/constants/pagination'
 import type { LiabilityQuery, Liability } from '../types'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, formatDate } from '@/lib/utils'
 import { ErrorState } from '@/components/common/ErrorState'
 import type { Person } from '@/features/people/types'
 import type { Company } from '@/features/companies/types'
 import { openUpSertLiabilityModal } from './UpsertLiability'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '@/contexts/AlertContext'
-import { calculateEffectiveInterestRate } from '@/lib/liabilitySupport'
+import { calculateEffectiveInterestRate } from '../lib/liabilitySupport'
 import { useEvents } from '@/features/events/hooks/useEvents'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import { ASSET_DELETE_EVENT } from '@/features/events/constants'
@@ -208,8 +209,10 @@ export const LiabilitiesTable = ({
               <TableHead className="font-semibold">Name</TableHead>
               <TableHead className="font-semibold">Lender</TableHead>
               <TableHead className="font-semibold">Loan</TableHead>
+              <TableHead className="font-semibold">Finance Purpose</TableHead>
               <TableHead className="font-semibold">Amount</TableHead>
               <TableHead className="font-semibold">Effective Rate</TableHead>
+              <TableHead className="font-semibold">Commencement Date</TableHead>
               <TableHead className="text-right font-semibold">
                 Actions
               </TableHead>
@@ -234,16 +237,15 @@ export const LiabilitiesTable = ({
             ) : (
               data?.data.map((liability) => (
                 <TableRow key={liability.id}>
-                  <TableCell className="font-medium">
-                    {liability.name}
+                  <TableCell>{liability.name}</TableCell>
+                  <TableCell>{liability.lenderName}</TableCell>
+                  <TableCell>{liability.loan.name}</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className="text-sm">
+                      {liability.financePurpose}
+                    </Badge>
                   </TableCell>
-                  <TableCell className="font-medium">
-                    {liability.lenderName}
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {liability.loan.name}
-                  </TableCell>
-                  <TableCell className="font-medium">
+                  <TableCell>
                     {formatCurrency(Number(liability.amount || 0))}
                   </TableCell>
                   <TableCell className="font-medium">
@@ -261,6 +263,11 @@ export const LiabilitiesTable = ({
                       fixedRatePeriods: liability.fixedRatePeriods,
                     })?.rate || 0}
                     %
+                  </TableCell>
+                  <TableCell>
+                    {liability.startDate
+                      ? formatDate(new Date(liability.startDate))
+                      : '-'}
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
