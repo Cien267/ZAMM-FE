@@ -36,14 +36,14 @@ export const RoleModalContent = ({
   const form = useForm<UpdateRolesInput>({
     resolver: zodResolver(UpdateRolesSchema),
     defaultValues: {
-      id: staff.id,
+      assignerId: user?.id ?? '',
       roles: staff.roles || [],
     },
   })
 
   const onSubmit = async (data: UpdateRolesInput) => {
     try {
-      await updateRolesAsync({ id: user?.id || '', data })
+      await updateRolesAsync({ assignerId: staff?.id ?? '', data })
       onClose()
       form.reset()
     } catch (error) {

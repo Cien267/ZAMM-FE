@@ -18,7 +18,9 @@ export const useStaffs = () => {
       toast.success('Staff created successfully!')
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to create staff')
+      if (error.statusCode !== 403) {
+        toast.error(error.message || 'Failed to create staff')
+      }
       console.error('Create staff error:', error)
     },
   })
@@ -30,7 +32,9 @@ export const useStaffs = () => {
       toast.success('Staff updated successfully!')
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to update staff')
+      if (error.statusCode !== 403) {
+        toast.error(error.message || 'Failed to update staff')
+      }
       console.error('Update staff error:', error)
     },
   })
@@ -42,20 +46,29 @@ export const useStaffs = () => {
       toast.success('Staff deleted successfully!')
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to delete staff')
+      if (error.statusCode !== 403) {
+        toast.error(error.message || 'Failed to delete staff')
+      }
       console.error('Delete staff error:', error)
     },
   })
 
   const updateRolesMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateRolesInput }) =>
-      staffService.updateRoles(id, data),
+    mutationFn: ({
+      assignerId,
+      data,
+    }: {
+      assignerId: string
+      data: UpdateRolesInput
+    }) => staffService.updateRoles(assignerId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: staffsKeys.staffs() })
       toast.success('Roles updated successfully!')
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to update roles')
+      if (error.statusCode !== 403) {
+        toast.error(error.message || 'Failed to update roles')
+      }
       console.error('Update roles error:', error)
     },
   })

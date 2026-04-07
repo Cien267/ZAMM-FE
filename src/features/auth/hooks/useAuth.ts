@@ -10,6 +10,7 @@ import type {
 } from '../types/auth.types'
 import useAuthStore from '@/store/authStore'
 import { toast } from 'sonner'
+import { staffsKeys } from '@/features/staffs/constants'
 
 export const authKeys = {
   all: ['auth'] as const,
@@ -72,6 +73,7 @@ export const useAuth = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authKeys.me() })
+      queryClient.invalidateQueries({ queryKey: staffsKeys.staffs() })
       toast.success('Profile updated successfully!')
     },
     onError: (error: any) => {

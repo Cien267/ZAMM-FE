@@ -26,7 +26,7 @@ export const CreateStaffSchema = z
 
 export const UpdateStaffSchema = z
   .object({
-    id: z.string().uuid(),
+    id: z.string(),
     userName: z.string().min(2, 'Username must be at least 2 characters'),
     fullName: z.string().min(2, 'Name must be at least 2 characters'),
     email: z.string().email('Invalid email'),
@@ -69,7 +69,7 @@ export type CreateStaffInput = z.infer<typeof CreateStaffSchema>
 export type UpdateStaffInput = z.infer<typeof UpdateStaffSchema>
 
 export const UpdateRolesSchema = z.object({
-  id: z.string().uuid(),
+  assignerId: z.string(),
   roles: z.array(z.string()).min(1, 'Select at least one role'),
 })
 
