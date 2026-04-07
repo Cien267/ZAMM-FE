@@ -94,7 +94,6 @@ export const AssetsReportTable = () => {
                 <TableHead>Property Type</TableHead>
                 <TableHead>Value</TableHead>
                 <TableHead>Valuation Date</TableHead>
-                <TableHead>Type</TableHead>
                 <TableHead>Owners</TableHead>
                 <TableHead>Address</TableHead>
                 <TableHead>Created</TableHead>
@@ -144,23 +143,6 @@ export const AssetsReportTable = () => {
                       {asset.valuationDate
                         ? formatDate(new Date(asset.valuationDate))
                         : '-'}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        {asset.isInvestment && (
-                          <Badge variant="default" className="w-fit">
-                            Investment
-                          </Badge>
-                        )}
-                        {asset.isUnencumbered && (
-                          <Badge variant="secondary" className="w-fit">
-                            Unencumbered
-                          </Badge>
-                        )}
-                        {!asset.isInvestment && !asset.isUnencumbered && (
-                          <span className="text-muted-foreground">-</span>
-                        )}
-                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="text-sm text-muted-foreground max-w-50] truncate">
