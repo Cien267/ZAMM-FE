@@ -50,6 +50,7 @@ export const StaffsTable = () => {
     phoneNumber: '',
   })
   const { user } = useAuth()
+  const isAdmin = user?.roles.includes('Administrator')
 
   const { useStaffsList } = useStaffsQueries()
   const { data: staffs, isLoading, error, refetch } = useStaffsList(query)
@@ -113,20 +114,21 @@ export const StaffsTable = () => {
             onFilterChange={handleFilterChange}
             onReset={handleResetFilters}
           />
-
-          <div className="flex justify-end">
-            <Button
-              variant={'sky'}
-              onClick={() =>
-                openUpSertStaffModal({
-                  staff: null,
-                })
-              }
-            >
-              <Plus className="h-4 w-4" />
-              Add Staff
-            </Button>
-          </div>
+          {isAdmin && (
+            <div className="flex justify-end">
+              <Button
+                variant={'sky'}
+                onClick={() =>
+                  openUpSertStaffModal({
+                    staff: null,
+                  })
+                }
+              >
+                <Plus className="h-4 w-4" />
+                Add Staff
+              </Button>
+            </div>
+          )}
 
           <div className="border rounded-lg">
             <Table>
@@ -137,7 +139,9 @@ export const StaffsTable = () => {
                   <TableHead>Phone</TableHead>
                   <TableHead>DOB</TableHead>
                   <TableHead>Roles</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  {isAdmin && (
+                    <TableHead className="text-right">Actions</TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -191,44 +195,46 @@ export const StaffsTable = () => {
                             })
                           : '-'}
                       </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() =>
-                                openUpSertRolesModal({
-                                  staff,
-                                })
-                              }
-                            >
-                              <User2 className="h-4 w-4 mr-2" />
-                              Update Roles
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                openUpSertStaffModal({
-                                  staff,
-                                })
-                              }
-                            >
-                              <Pencil className="h-4 w-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(staff)}
-                              className="text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+                      {isAdmin && (
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  openUpSertRolesModal({
+                                    staff,
+                                  })
+                                }
+                              >
+                                <User2 className="h-4 w-4 mr-2" />
+                                Update Roles
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  openUpSertStaffModal({
+                                    staff,
+                                  })
+                                }
+                              >
+                                <Pencil className="h-4 w-4 mr-2" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(staff)}
+                                className="text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 )}
