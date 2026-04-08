@@ -126,8 +126,10 @@ export const UpcomingEvent = () => {
                     liabilityId: event.liabilityId || null,
                   })
                 }
-                className={`group relative flex items-center justify-between p-4 rounded-xl border transition-all hover:shadow-md hover:border-sky-200 hover:bg-sky-50 dark:hover:border-sky-800 cursor-pointer ${
-                  event.isDismissed ? 'opacity-60 bg-slate-50' : 'bg-card'
+                className={`group relative flex items-center justify-between p-4 rounded-xl border transition-all hover:shadow-md hover:border-sky-200 hover:bg-sky-50 dark:hover:bg-accent dark:hover:border-sky-800 cursor-pointer ${
+                  event.isDismissed
+                    ? 'opacity-60 bg-slate-50 dark:bg-accent'
+                    : 'bg-card'
                 }`}
               >
                 <div className="flex items-center gap-4">
@@ -173,7 +175,7 @@ export const UpcomingEvent = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div className="hidden md:flex items-center gap-1 text-xs font-medium text-slate-400 bg-slate-50 px-2 py-1 rounded-full border">
+                  <div className="hidden md:flex items-center gap-1 text-xs font-medium text-slate-400 dark:text-slate-600 bg-slate-50 px-2 py-1 rounded-full border">
                     <Clock className="h-3 w-3" />
                     {formatDistanceToNow(new Date(event.date), {
                       addSuffix: true,

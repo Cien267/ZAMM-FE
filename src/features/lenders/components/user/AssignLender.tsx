@@ -82,8 +82,8 @@ export const AssignLender = () => {
               'relative group cursor-pointer rounded-xl border-2 p-6 transition-all duration-200 bg-background text-foreground',
               'hover:shadow-md hover:-translate-y-1',
               isSelected
-                ? 'border-sky-500 bg-sky-50'
-                : 'border-slate-200 hover:border-slate-300'
+                ? 'border-sky-500 bg-sky-50 dark:bg-accent'
+                : 'border-slate-200 dark:border-accent hover:border-slate-300'
             )}
           >
             {isSelected && (
@@ -102,7 +102,7 @@ export const AssignLender = () => {
               </div>
 
               <div className="text-center">
-                <h3 className="font-semibold text-slate-800 text-lg group-hover:text-primary transition-colors">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-200 text-lg group-hover:text-primary transition-colors">
                   {lender.name}
                 </h3>
                 <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-medium">

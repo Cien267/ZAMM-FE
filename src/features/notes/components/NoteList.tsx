@@ -202,7 +202,7 @@ export const NoteList = ({
               {sortedNotes.map((note) => (
                 <div
                   key={note.id}
-                  className="relative transition-all bg-amber-100 hover:bg-amber-50 p-5 rounded-xl border border-amber-100 shadow-md mb-4"
+                  className="relative transition-all bg-amber-100 hover:bg-amber-50 dark:text-accent p-5 rounded-xl border border-amber-100 shadow-md mb-4"
                 >
                   {editingNoteId === note.id ? (
                     <Form {...editForm}>
@@ -215,6 +215,7 @@ export const NoteList = ({
                           <Button
                             size="sm"
                             variant="outline"
+                            className="hover:dark:text-accent/50"
                             onClick={() => setEditingNoteId(null)}
                           >
                             Cancel
@@ -228,7 +229,7 @@ export const NoteList = ({
                   ) : (
                     <div className="flex justify-between items-start gap-4">
                       <div className="flex-1 space-y-3">
-                        <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap">
+                        <p className="text-sm leading-relaxed text-foreground/90 dark:text-accent whitespace-pre-wrap">
                           {note.text}
                         </p>
 
@@ -258,7 +259,7 @@ export const NoteList = ({
                             size="sm"
                             className="h-8 w-8 p-0"
                           >
-                            <MoreVertical className="h-4 w-4" />
+                            <MoreVertical className="h-4 w-4 dark:text-accent" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">

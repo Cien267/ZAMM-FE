@@ -6,8 +6,8 @@ export const WelcomeHeader: React.FC = () => {
 
   return (
     <div className="mb-6">
-      <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-        Welcome,{' '}
+      <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">
+        <span className="dark:text-gray-100">Welcome, </span>
         <span className="font-extrabold text-yellow-500">{userName}</span>
       </h1>
       <p className="text-muted-foreground mt-1">
