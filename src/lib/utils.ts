@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const formatCurrency = (value?: number) => {
-  if (!value) return '-'
+  if (!value) return '0'
   return new Intl.NumberFormat('en-AU', {
     style: 'currency',
     currency: 'AUD',

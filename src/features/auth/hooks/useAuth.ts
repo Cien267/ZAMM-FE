@@ -45,7 +45,9 @@ export const useAuth = () => {
     mutationFn: (userData: RegisterInput) => authService.register(userData),
     onSuccess: () => {
       toast.success('Register successfully!')
-      navigate('/login')
+      setTimeout(() => {
+        navigate('/login')
+      }, 1000)
     },
     onError: (error: any) => {
       console.error('Registration error:', error)

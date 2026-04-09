@@ -25,6 +25,7 @@ import { useAuth } from '../hooks/useAuth'
 import { RegisterSchema, type RegisterInput } from '../types/auth.types'
 import logo from '@/assets/images/logo.png'
 import { usePageTitle } from '@/hooks/usePageTitle'
+import { Toaster } from 'sonner'
 
 export const RegisterPage = () => {
   usePageTitle('Register')
@@ -176,6 +177,16 @@ export const RegisterPage = () => {
           </Form>
         </CardContent>
       </Card>
+      <Toaster
+        toastOptions={{
+          classNames: {
+            error: 'bg-red-50! border-red-200! text-red-900!',
+            success: 'bg-green-50! border-green-200! text-green-900!',
+            warning: 'bg-yellow-50! border-yellow-200! text-yellow-900!',
+            info: 'bg-blue-50! border-blue-200! text-blue-900!',
+          },
+        }}
+      />
     </div>
   )
 }
