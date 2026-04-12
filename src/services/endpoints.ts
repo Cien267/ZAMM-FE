@@ -87,6 +87,7 @@ export const API_ENDPOINTS = {
     COMPANIES: '/report/companies',
     ASSETS: '/report/assets',
     LIABILITIES: '/report/liabilities',
+    EXPORT: '/report/export',
   },
   EMAIL: {
     FIRM_SETTING: {
