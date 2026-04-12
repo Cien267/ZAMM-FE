@@ -19,7 +19,7 @@ export const useEmailTemplates = () => {
         queryKey: emailTemplateKeys.emailTemplates(),
       })
       queryClient.invalidateQueries({
-        queryKey: sharedKeys.emailTemplates,
+        queryKey: sharedKeys.emailTemplates({}),
       })
       toast.success('Email Template created successfully!')
     },
@@ -40,7 +40,7 @@ export const useEmailTemplates = () => {
         queryKey: emailTemplateKeys.emailTemplateDetail(variables.id),
       })
       queryClient.invalidateQueries({
-        queryKey: sharedKeys.emailTemplates,
+        queryKey: sharedKeys.emailTemplates({}),
       })
       toast.success('Email Template updated successfully!')
     },

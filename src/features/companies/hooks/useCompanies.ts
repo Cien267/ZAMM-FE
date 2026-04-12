@@ -14,7 +14,7 @@ export const useCompanies = () => {
       companyService.createCompany(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: companyKeys.companies() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.companies })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.companies({}) })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Company created successfully!')
     },
@@ -45,7 +45,7 @@ export const useCompanies = () => {
     mutationFn: (id: string) => companyService.deleteCompany(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: companyKeys.companies() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.companies })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.companies({}) })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Company deleted successfully!')
     },

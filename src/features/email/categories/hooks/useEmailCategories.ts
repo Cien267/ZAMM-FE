@@ -18,7 +18,9 @@ export const useEmailCategories = () => {
       queryClient.invalidateQueries({
         queryKey: emailCategoryKeys.emailCategories(),
       })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.emailCategories })
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.emailCategories({}),
+      })
       toast.success('Email Category created successfully!')
     },
     onError: (error: any) => {
@@ -37,7 +39,9 @@ export const useEmailCategories = () => {
       queryClient.invalidateQueries({
         queryKey: emailCategoryKeys.emailCategoryDetail(variables.id),
       })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.emailCategories })
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.emailCategories({}),
+      })
       toast.success('Email Category updated successfully!')
     },
     onError: (error: any) => {
@@ -52,7 +56,9 @@ export const useEmailCategories = () => {
       queryClient.invalidateQueries({
         queryKey: emailCategoryKeys.emailCategories(),
       })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.emailCategories })
+      queryClient.invalidateQueries({
+        queryKey: sharedKeys.emailCategories({}),
+      })
       toast.success('Email Category deleted successfully!')
     },
     onError: (error: any) => {

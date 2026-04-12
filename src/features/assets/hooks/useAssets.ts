@@ -13,7 +13,7 @@ export const useAssets = () => {
     mutationFn: (data: CreateAssetInput) => assetService.createAsset(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: assetKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.assets })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.assets({}) })
       queryClient.invalidateQueries({ queryKey: ['shared', 'assets-person'] })
       queryClient.invalidateQueries({ queryKey: ['shared', 'assets-company'] })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
@@ -29,7 +29,7 @@ export const useAssets = () => {
     mutationFn: (data: UpdateAssetInput) => assetService.updateAsset(data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: assetKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.assets })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.assets({}) })
       queryClient.invalidateQueries({ queryKey: ['shared', 'assets-person'] })
       queryClient.invalidateQueries({ queryKey: ['shared', 'assets-company'] })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
@@ -48,7 +48,7 @@ export const useAssets = () => {
     mutationFn: (id: string) => assetService.deleteAsset(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: assetKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.assets })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.assets({}) })
       queryClient.invalidateQueries({ queryKey: ['shared', 'assets-person'] })
       queryClient.invalidateQueries({ queryKey: ['shared', 'assets-company'] })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })

@@ -15,7 +15,7 @@ export const useLiabilities = () => {
       liabilityService.createLiability(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities({}) })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       queryClient.invalidateQueries({ queryKey: eventKeys.events() })
       queryClient.invalidateQueries({
@@ -37,7 +37,7 @@ export const useLiabilities = () => {
       liabilityService.updateLiability(data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities({}) })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       queryClient.invalidateQueries({ queryKey: eventKeys.events() })
       queryClient.invalidateQueries({
@@ -61,7 +61,7 @@ export const useLiabilities = () => {
     mutationFn: (id: string) => liabilityService.deleteLiability(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: liabilityKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.liabilities({}) })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       queryClient.invalidateQueries({
         queryKey: ['shared', 'liabilities-person'],

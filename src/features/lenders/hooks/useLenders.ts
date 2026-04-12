@@ -12,7 +12,7 @@ export const useLenders = () => {
     mutationFn: (data: CreateLenderInput) => lenderService.createLender(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: lenderKeys.lenders() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.lenders })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.lenders({}) })
       toast.success('Lender created successfully!')
     },
     onError: (error: any) => {
@@ -25,7 +25,7 @@ export const useLenders = () => {
     mutationFn: (data: UpdateLenderInput) => lenderService.updateLender(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: lenderKeys.lenders() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.lenders })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.lenders({}) })
       toast.success('Lender updated successfully!')
     },
     onError: (error: any) => {

@@ -13,7 +13,7 @@ export const usePeople = () => {
     mutationFn: (data: CreatePersonInput) => peopleService.createPerson(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: peopleKeys.people() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.people })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.people({}) })
       queryClient.invalidateQueries({ queryKey: ['shared', 'people-company'] })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Person created successfully!')
@@ -28,7 +28,7 @@ export const usePeople = () => {
     mutationFn: (data: UpdatePersonInput) => peopleService.updatePerson(data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: peopleKeys.people() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.people })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.people({}) })
       queryClient.invalidateQueries({ queryKey: ['shared', 'people-company'] })
       queryClient.invalidateQueries({
         queryKey: peopleKeys.personDetail(variables.id),
@@ -46,7 +46,7 @@ export const usePeople = () => {
     mutationFn: (id: string) => peopleService.deletePerson(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: peopleKeys.people() })
-      queryClient.invalidateQueries({ queryKey: sharedKeys.people })
+      queryClient.invalidateQueries({ queryKey: sharedKeys.people({}) })
       queryClient.invalidateQueries({ queryKey: ['shared', 'people-company'] })
       queryClient.invalidateQueries({ queryKey: reportKeys.report() })
       toast.success('Person deleted successfully!')
