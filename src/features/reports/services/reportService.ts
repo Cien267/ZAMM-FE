@@ -12,6 +12,7 @@ import type { Person } from '@/features/people/types'
 import type { Company } from '@/features/companies/types'
 import type { Asset } from '@/features/assets/types'
 import type { Liability } from '@/features/liabilities/types'
+import type { ExportSettings } from '@/types'
 
 export const reportService = {
   async getReportSummary(): Promise<IReportSummary> {
@@ -51,5 +52,16 @@ export const reportService = {
       { params: query }
     )
     return response.data
+  },
+
+  async exportReport(settings: ExportSettings): Promise<any> {
+    const response = await api.post<ApiResponse<any>>(
+      API_ENDPOINTS.REPORTS.EXPORT,
+      settings,
+      {
+        responseType: 'blob',
+      }
+    )
+    return response
   },
 }
